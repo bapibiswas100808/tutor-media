@@ -51,6 +51,12 @@ const categories: Record<
   },
 };
 
+export async function generateStaticParams() {
+  return Object.keys(categories).map((slug) => ({
+    slug: slug,
+  }));
+}
+
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
