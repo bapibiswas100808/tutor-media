@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Mathematics Tutor Needed - Grade 10",
+    "subject": "Mathematics",
+    "class": "Class 10",
+    "location": "Dhanmondi, Dhaka",
+    "budget": "8,000 - 12,000 BDT/month",
+    "mode": "Home Tutoring",
+    "studentName": "Rahul Ahmed",
+    "description": "Looking for an experienced mathematics tutor for my son who is in grade 10. Need help with algebra, geometry, and trigonometry. Prefer evening sessions.",
+    "requirements": [
+      "Strong background in mathematics",
+      "Experience with SSC curriculum",
+      "Patient and friendly approach"
+    ],
+    "schedule": "4 days a week, 1.5 hours per session",
+    "postedDate": "2024-01-15",
+    "applicants": 12,
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "title": "Physics Tutor Required - HSC Level",
+    "subject": "Physics",
+    "class": "HSC 2nd Year",
+    "location": "Gulshan, Dhaka",
+    "budget": "12,000 - 15,000 BDT/month",
+    "mode": "Online Tutoring",
+    "studentName": "Fatima Khan",
+    "description": "Need an expert physics tutor for HSC board exam preparation. Focus on mechanics, electricity, and modern physics topics.",
+    "requirements": [
+      "MSc in Physics or Engineering background",
+      "HSC exam preparation experience",
+      "Good internet connection for online sessions"
+    ],
+    "schedule": "5 days a week, 2 hours per session",
+    "postedDate": "2024-01-14",
+    "applicants": 8,
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "title": "English Language Tutor - Conversational",
+    "subject": "English",
+    "class": "Adult Learning",
+    "location": "Uttara, Dhaka",
+    "budget": "6,000 - 8,000 BDT/month",
+    "mode": "Group Tutoring",
+    "studentName": "Mohammad Hasan",
+    "description": "Looking for an English tutor for a group of 4 adults. Focus on improving speaking skills and pronunciation for professional development.",
+    "requirements": [
+      "Native or near-native English proficiency",
+      "Experience in teaching adults",
+      "IELTS/TOEFL preparation experience preferred"
+    ],
+    "schedule": "3 days a week, 1 hour per session",
+    "postedDate": "2024-01-13",
+    "applicants": 15,
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "title": "Chemistry Tutor - O Level",
+    "subject": "Chemistry",
+    "class": "O Level",
+    "location": "Banani, Dhaka",
+    "budget": "10,000 - 14,000 BDT/month",
+    "mode": "Home Tutoring",
+    "studentName": "Ayesha Rahman",
+    "description": "Seeking a qualified chemistry tutor for O Level preparation. Need help with organic chemistry, inorganic chemistry, and practical work.",
+    "requirements": [
+      "BSc in Chemistry or related field",
+      "O Level/A Level teaching experience",
+      "Lab practical knowledge"
+    ],
+    "schedule": "3 days a week, 2 hours per session",
+    "postedDate": "2024-01-12",
+    "applicants": 6,
+    "status": "active"
+  },
+  {
+    "id": 5,
+    "title": "Computer Programming Tutor",
+    "subject": "Computer Science",
+    "class": "University Level",
+    "location": "Mirpur, Dhaka",
+    "budget": "15,000 - 20,000 BDT/month",
+    "mode": "Online Tutoring",
+    "studentName": "Sami Islam",
+    "description": "Need a programming tutor for Java and Python. Currently studying Computer Science at university and need extra help with data structures and algorithms.",
+    "requirements": [
+      "Strong programming background",
+      "University-level teaching experience",
+      "Knowledge of data structures and algorithms"
+    ],
+    "schedule": "Flexible timing, 6-8 hours per week",
+    "postedDate": "2024-01-11",
+    "applicants": 20,
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "title": "Bangla Literature Tutor - HSC",
+    "subject": "Bangla",
+    "class": "HSC 1st Year",
+    "location": "Wari, Dhaka",
+    "budget": "7,000 - 10,000 BDT/month",
+    "mode": "Home Tutoring",
+    "studentName": "Nadia Begum",
+    "description": "Looking for a Bangla literature tutor for HSC first year student. Need help with poetry analysis, prose, and essay writing.",
+    "requirements": [
+      "Masters in Bangla Literature",
+      "HSC curriculum knowledge",
+      "Creative writing skills"
+    ],
+    "schedule": "4 days a week, 1.5 hours per session",
+    "postedDate": "2024-01-10",
+    "applicants": 9,
+    "status": "active"
+  }
+]
