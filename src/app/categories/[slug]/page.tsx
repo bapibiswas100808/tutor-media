@@ -75,7 +75,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryDetailPage({ params }: CategoryPageProps) {
+export default async function CategoryDetailPage({
+  params,
+}: CategoryPageProps) {
   const { slug } = await params;
   const category = categories[slug];
 
