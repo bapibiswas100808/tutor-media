@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 interface CategoryPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 const categories: Record<
@@ -60,7 +60,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const category = categories[params.slug];
+  const { slug } = await params;
+  const category = categories[slug];
 
   if (!category) {
     return {
@@ -74,8 +75,9 @@ export async function generateMetadata({
   };
 }
 
-export default function CategoryDetailPage({ params }: CategoryPageProps) {
-  const category = categories[params.slug];
+export default async function CategoryDetailPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
+  const category = categories[slug];
 
   if (!category) {
     notFound();
