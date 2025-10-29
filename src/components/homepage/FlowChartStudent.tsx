@@ -6,12 +6,13 @@ const steps = [
   {
     number: 1,
     title: "Post Your Tuition",
-    description: "Fill out our simple form with your tutoring requirements",
+    description:
+      "Fill out our simple form with your preferred tutoring requirements",
     icon: "📝",
   },
   {
     number: 2,
-    title: "Receive Applications",
+    title: "Get Applications",
     description: "Get applications from qualified tutors within 24 hours",
     icon: "📬",
   },
@@ -61,14 +62,14 @@ export default function FlowChartStudent() {
                 className="text-center relative"
               >
                 {/* Connector line */}
-                {index < steps.length - 1 && (
+                {/* {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-blue-300 z-0"></div>
-                )}
+                )} */}
 
                 <div className="relative z-10">
-                  <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                  {/* <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                     {step.number}
-                  </div>
+                  </div> */}
                   <div className="text-4xl mb-4">{step.icon}</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {step.title}
@@ -80,7 +81,7 @@ export default function FlowChartStudent() {
           </div>
         </div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -90,7 +91,7 @@ export default function FlowChartStudent() {
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300 transform hover:scale-105">
             Get Started Now
           </button>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

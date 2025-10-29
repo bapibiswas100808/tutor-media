@@ -17,7 +17,7 @@ export default function TutorHubPage() {
           {[1, 2, 3, 4, 5, 6].map((tutor) => (
             <div key={tutor} className="bg-white rounded-lg shadow-md p-6">
               <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4"></div>
-              <h3 className="text-xl font-semibold text-center mb-2">
+              <h3 className="text-xl font-semibold text-center mb-2 text-black">
                 John Doe
               </h3>
               <p className="text-gray-600 text-center mb-2">

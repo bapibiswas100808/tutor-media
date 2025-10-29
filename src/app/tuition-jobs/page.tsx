@@ -16,7 +16,7 @@ export default function TuitionJobsPage() {
           {/* Mock job cards */}
           {[1, 2, 3, 4, 5, 6].map((job) => (
             <div key={job} className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-2">
+              <h3 className="text-xl font-semibold mb-2 text-black">
                 Mathematics Tutor Needed
               </h3>
               <p className="text-gray-600 mb-2">Class: Grade 10</p>

@@ -47,7 +47,7 @@ export default function Banner() {
       </div>
 
       {/* Decorative elements */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden">
+      {/* <div className="absolute bottom-0 left-0 w-full overflow-hidden">
         <svg
           className="relative block w-full h-20"
           data-name="Layer 1"
@@ -60,7 +60,7 @@ export default function Banner() {
             fill="white"
           ></path>
         </svg>
-      </div>
+      </div> */}
     </section>
   );
 }

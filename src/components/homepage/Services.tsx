@@ -58,7 +58,7 @@ export default function Services() {
           ))}
         </div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -71,7 +71,7 @@ export default function Services() {
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300">
             View All Subjects
           </button>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

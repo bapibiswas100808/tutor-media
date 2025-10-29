@@ -12,7 +12,7 @@ const steps = [
   {
     number: 2,
     title: "Get Verified",
-    description: "Our team reviews and verifies your credentials",
+    description: "Our team reviews and verifies your credentials shortly",
     icon: "✅",
   },
   {
@@ -24,7 +24,7 @@ const steps = [
   {
     number: 4,
     title: "Start Earning",
-    description: "Begin teaching and earning money immediately",
+    description: "Begin teaching and earning money and experience immediately",
     icon: "💰",
   },
 ];
@@ -61,14 +61,14 @@ export default function FlowChartTutor() {
                 className="text-center relative"
               >
                 {/* Connector line */}
-                {index < steps.length - 1 && (
+                {/* {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-green-300 z-0"></div>
-                )}
+                )} */}
 
                 <div className="relative z-10">
-                  <div className="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                  {/* <div className="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                     {step.number}
-                  </div>
+                  </div> */}
                   <div className="text-4xl mb-4">{step.icon}</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {step.title}
@@ -80,7 +80,7 @@ export default function FlowChartTutor() {
           </div>
         </div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -99,7 +99,7 @@ export default function FlowChartTutor() {
             </p>
             <p className="text-sm text-gray-500">Average tutor earnings</p>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
