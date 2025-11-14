@@ -78,6 +78,38 @@ export default function WhyChooseUs() {
             </motion.div>
           ))}
         </div>
+
+        {/* <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="text-center mt-12"
+        >
+          <div className="bg-white rounded-lg p-8 max-w-2xl mx-auto shadow-lg">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Join Our Growing Community
+            </h3>
+            <div className="grid grid-cols-3 gap-6 mb-6">
+              <div>
+                <div className="text-3xl font-bold text-blue-600">500+</div>
+                <div className="text-gray-600">Verified Tutors</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-green-600">2000+</div>
+                <div className="text-gray-600">Happy Students</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-purple-600">95%</div>
+                <div className="text-gray-600">Success Rate</div>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              Trusted by students and parents across Bangladesh for quality
+              education
+            </p>
+          </div>
+        </motion.div> */}
       </div>
     </section>
   );
