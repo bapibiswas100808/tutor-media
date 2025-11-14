@@ -31,48 +31,12 @@ const becomeTutorSchema = z.object({
 
 type BecomeTutorFormData = z.infer<typeof becomeTutorSchema>;
 
-const subjects = [
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "English",
-  "Bangla",
-  "Computer Science",
-  "Economics",
-  "Accounting",
-  "Statistics",
-  "Geography",
-  "History",
-];
-
-const classLevels = [
-  "Class 1-5",
-  "Class 6-8",
-  "Class 9-10",
-  "HSC (Class 11-12)",
-  "University Level",
-  "Adult Learning",
-];
-
 const experienceLevels = [
   "Less than 1 year",
   "1-2 years",
   "3-5 years",
   "6-10 years",
   "More than 10 years",
-];
-
-const teachingModes = ["Online", "Home Tutoring", "Group Classes"];
-
-const daysOfWeek = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
 ];
 
 export default function BecomeTutorForm() {
@@ -137,10 +101,10 @@ export default function BecomeTutorForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8"
+      className="space-y-8 px-6"
     >
       {/* Personal Information */}
-      <div className="bg-gray-50 rounded-lg p-6">
+      <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Personal Information
         </h3>
@@ -156,7 +120,7 @@ export default function BecomeTutorForm() {
             <input
               {...register("fullName")}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
               placeholder="Enter your full name"
             />
             {errors.fullName && (
@@ -176,7 +140,7 @@ export default function BecomeTutorForm() {
             <input
               {...register("email")}
               type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
               placeholder="your.email@example.com"
             />
             {errors.email && (
@@ -198,7 +162,7 @@ export default function BecomeTutorForm() {
             <input
               {...register("phone")}
               type="tel"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
               placeholder="01XXXXXXXXX"
             />
             {errors.phone && (
@@ -217,7 +181,7 @@ export default function BecomeTutorForm() {
             </label>
             <select
               {...register("gender")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -242,7 +206,7 @@ export default function BecomeTutorForm() {
           <input
             {...register("location")}
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             placeholder="e.g., Dhanmondi, Dhaka"
           />
           {errors.location && (
@@ -254,7 +218,7 @@ export default function BecomeTutorForm() {
       </div>
 
       {/* Educational Background */}
-      <div className="bg-gray-50 rounded-lg p-6">
+      <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Educational Background
         </h3>
@@ -270,7 +234,7 @@ export default function BecomeTutorForm() {
             <input
               {...register("qualification")}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
               placeholder="e.g., BSc in Mathematics, MSc in Physics"
             />
             {errors.qualification && (
@@ -289,7 +253,7 @@ export default function BecomeTutorForm() {
             </label>
             <select
               {...register("experience")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             >
               <option value="">Select experience level</option>
               {experienceLevels.map((level) => (
@@ -307,115 +271,8 @@ export default function BecomeTutorForm() {
         </div>
       </div>
 
-      {/* Teaching Preferences */}
-      <div className="bg-gray-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Teaching Preferences
-        </h3>
-
-        {/* Subjects */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Subjects You Can Teach *
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {subjects.map((subject) => (
-              <label key={subject} className="flex items-center">
-                <input
-                  {...register("subjects")}
-                  type="checkbox"
-                  value={subject}
-                  className="mr-2 text-green-600"
-                />
-                <span className="text-sm">{subject}</span>
-              </label>
-            ))}
-          </div>
-          {errors.subjects && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.subjects.message}
-            </p>
-          )}
-        </div>
-
-        {/* Class Levels */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Preferred Class Levels *
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {classLevels.map((level) => (
-              <label key={level} className="flex items-center">
-                <input
-                  {...register("classLevels")}
-                  type="checkbox"
-                  value={level}
-                  className="mr-2 text-green-600"
-                />
-                <span className="text-sm">{level}</span>
-              </label>
-            ))}
-          </div>
-          {errors.classLevels && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.classLevels.message}
-            </p>
-          )}
-        </div>
-
-        {/* Teaching Mode */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Teaching Mode *
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {teachingModes.map((mode) => (
-              <label key={mode} className="flex items-center">
-                <input
-                  {...register("teachingMode")}
-                  type="checkbox"
-                  value={mode}
-                  className="mr-2 text-green-600"
-                />
-                <span className="text-sm">{mode}</span>
-              </label>
-            ))}
-          </div>
-          {errors.teachingMode && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.teachingMode.message}
-            </p>
-          )}
-        </div>
-
-        {/* Available Days */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Available Days *
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {daysOfWeek.map((day) => (
-              <label key={day} className="flex items-center">
-                <input
-                  {...register("availableDays")}
-                  type="checkbox"
-                  value={day}
-                  className="mr-2 text-green-600"
-                />
-                <span className="text-sm">{day}</span>
-              </label>
-            ))}
-          </div>
-          {errors.availableDays && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.availableDays.message}
-            </p>
-          )}
-        </div>
-      </div>
-
       {/* About You */}
-      <div className="bg-gray-50 rounded-lg p-6">
+      <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">About You</h3>
 
         <div>
@@ -423,12 +280,12 @@ export default function BecomeTutorForm() {
             htmlFor="bio"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Short Bio *
+            Short Bio (optional)
           </label>
           <textarea
             {...register("bio")}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             placeholder="Tell us about your teaching philosophy, approach, and what makes you a great tutor..."
           />
           {errors.bio && (

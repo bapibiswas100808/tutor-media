@@ -124,7 +124,7 @@ export default function HireTutorForm() {
           <input
             {...register("name")}
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
             placeholder="Enter your full name"
           />
           {errors.name && (
@@ -142,7 +142,7 @@ export default function HireTutorForm() {
           <input
             {...register("phone")}
             type="tel"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
             placeholder="01XXXXXXXXX"
           />
           {errors.phone && (
@@ -156,12 +156,12 @@ export default function HireTutorForm() {
           htmlFor="email"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Email Address *
+          Email Address (optional)
         </label>
         <input
           {...register("email")}
           type="email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           placeholder="your.email@example.com"
         />
         {errors.email && (
@@ -180,7 +180,7 @@ export default function HireTutorForm() {
           </label>
           <select
             {...register("subject")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
             <option value="">Select a subject</option>
             {subjects.map((subject) => (
@@ -205,7 +205,7 @@ export default function HireTutorForm() {
           </label>
           <select
             {...register("class")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
             <option value="">Select class/level</option>
             {classes.map((cls) => (
@@ -231,7 +231,7 @@ export default function HireTutorForm() {
           <input
             {...register("area")}
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
             placeholder="e.g., Dhanmondi, Dhaka"
           />
           {errors.area && (
@@ -249,7 +249,7 @@ export default function HireTutorForm() {
           <input
             {...register("budget")}
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
             placeholder="e.g., 8000-12000"
           />
           {errors.budget && (
@@ -271,7 +271,7 @@ export default function HireTutorForm() {
           ].map((mode) => (
             <label
               key={mode.value}
-              className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+              className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer "
             >
               <input
                 {...register("mode")}
@@ -280,7 +280,9 @@ export default function HireTutorForm() {
                 className="mr-3 text-blue-600"
               />
               <span className="text-xl mr-2">{mode.icon}</span>
-              <span className="text-sm font-medium">{mode.label}</span>
+              <span className="text-sm font-medium text-gray-700">
+                {mode.label}
+              </span>
             </label>
           ))}
         </div>
@@ -295,12 +297,12 @@ export default function HireTutorForm() {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Additional Details *
+          Additional Details (optional)
         </label>
         <textarea
           {...register("description")}
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           placeholder="Describe your specific requirements, learning goals, preferred schedule, etc."
         />
         {errors.description && (
