@@ -46,21 +46,120 @@ export default function Banner() {
         </motion.div>
       </div>
 
-      {/* Decorative elements */}
-      {/* <div className="absolute bottom-0 left-0 w-full overflow-hidden">
-        <svg
-          className="relative block w-full h-20"
-          data-name="Layer 1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
+      <div className="flex flex-col sm:flex-row gap-4 items-start">
+        <Link
+          href="/become-a-tutor"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
         >
-          <path
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-            fill="white"
-          ></path>
-        </svg>
-      </div> */}
+          Become a Tutor
+        </Link>
+        <Link
+          href="/hire-tutor"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+        >
+          Hire a Tutor
+        </Link>
+        <Link
+          href="/tuition-jobs"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+        >
+          Tuition Jobs
+        </Link>
+      </div>
+
+      {/* Right Side - Image Collage */}
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="relative h-[600px] hidden lg:block"
+      >
+        {/* Main background blob */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-orange-200 via-amber-100 to-blue-100 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] opacity-60"></div>
+
+        {/* Top Right - Madrasa Student */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-600 to-teal-700 rounded-3xl shadow-2xl overflow-hidden transform rotate-3"
+        >
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-700">
+            <div className="text-white text-center p-6">
+              <div className="text-6xl mb-3">📖</div>
+              <p className="font-semibold">Islamic Studies</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Top Left - Art/Drawing Student */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="absolute top-8 left-0 w-60 h-56 bg-gradient-to-br from-orange-100 to-amber-100 rounded-3xl shadow-xl overflow-hidden transform -rotate-6"
+        >
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-200 to-pink-200">
+            <div className="text-center p-6">
+              <div className="text-6xl mb-3">🎨</div>
+              <p className="font-semibold text-gray-800">Creative Learning</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Bottom Left - Bangla Medium Student */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="absolute bottom-0 left-8 w-64 h-72 bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transform rotate-2"
+        >
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-900">
+            <div className="text-white text-center p-6">
+              <div className="text-6xl mb-3">📚</div>
+              <p className="font-semibold">Bangla Medium</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Bottom Right - English Medium Student */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="absolute bottom-12 right-20 w-56 h-64 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl overflow-hidden transform -rotate-3"
+        >
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-200 to-emerald-300">
+            <div className="text-center p-6">
+              <div className="text-6xl mb-3">🇬🇧</div>
+              <p className="font-semibold text-gray-800">English Medium</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Floating decorative elements */}
+        <motion.div
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute top-32 right-32 text-4xl"
+        >
+          ✏️
+        </motion.div>
+        <motion.div
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+          className="absolute bottom-40 left-40 text-3xl"
+        >
+          📐
+        </motion.div>
+        <motion.div
+          animate={{ rotate: [0, 360] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-1/2 right-10 text-2xl"
+        >
+          ⭐
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

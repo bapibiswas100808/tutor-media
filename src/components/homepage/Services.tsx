@@ -57,21 +57,6 @@ export default function Services() {
             </motion.div>
           ))}
         </div>
-
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <p className="text-gray-600 mb-6">
-            Don&rsquo;t see your subject? We have tutors for many more subjects!
-          </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300">
-            View All Subjects
-          </button>
-        </motion.div> */}
       </div>
     </section>
   );

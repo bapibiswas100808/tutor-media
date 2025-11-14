@@ -5,16 +5,20 @@ import { motion } from "framer-motion";
 const steps = [
   {
     number: 1,
-    title: "Post Your Tuition",
-    description:
-      "Fill out our simple form with your preferred tutoring requirements",
-    icon: "📝",
+    title: "Search for Tutors or Post your tuition requirements",
+    description: "Post Tuition by creating Account or without Account.",
+    icon: "📚",
+    bgColor: "from-orange-400 to-yellow-400",
+    iconBg: "bg-green-500",
   },
   {
     number: 2,
-    title: "Get Applications",
-    description: "Get applications from qualified tutors within 24 hours",
-    icon: "📬",
+    title: "Get one to one demo session for free",
+    description:
+      "Get free one day demo session with the tutor at your preferred location.",
+    icon: "👩‍🏫",
+    bgColor: "from-pink-300 to-red-300",
+    iconBg: "bg-blue-400",
   },
   {
     number: 3,
@@ -50,28 +54,32 @@ export default function FlowChartStudent() {
           </p>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center relative"
-              >
-                {/* Connector line */}
-                {/* {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-blue-300 z-0"></div>
-                )} */}
-
-                <div className="relative z-10">
-                  {/* <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                    {step.number}
-                  </div> */}
-                  <div className="text-4xl mb-4">{step.icon}</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+        {/* Desktop & Tablet Zigzag Layout */}
+        <div className="hidden md:block max-w-5xl mx-auto relative">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              className={`flex items-center mb-16 last:mb-0 ${
+                index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+              }`}
+            >
+              {/* Card */}
+              <div className="w-5/12">
+                <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div
+                    className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                  >
+                    <div
+                      className={`w-12 h-12 ${step.iconBg} rounded-lg flex items-center justify-center text-2xl`}
+                    >
+                      {step.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {step.title}
                   </h3>
                   <p className="text-gray-600">{step.description}</p>
@@ -81,17 +89,54 @@ export default function FlowChartStudent() {
           </div>
         </div>
 
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300 transform hover:scale-105">
-            Get Started Now
-          </button>
-        </motion.div> */}
+        {/* Mobile Layout - Vertical */}
+        <div className="md:hidden max-w-md mx-auto">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <div
+                  className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                >
+                  <div
+                    className={`w-12 h-12 ${step.iconBg} rounded-lg flex items-center justify-center text-2xl`}
+                  >
+                    {step.icon}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+
+              {/* Connector for mobile */}
+              {index < steps.length - 1 && (
+                <div className="flex justify-center">
+                  <svg width="2" height="40" viewBox="0 0 2 40">
+                    <line
+                      x1="1"
+                      y1="0"
+                      x2="1"
+                      y2="40"
+                      stroke="#86EFAC"
+                      strokeWidth="2"
+                      strokeDasharray="4 4"
+                    />
+                  </svg>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
