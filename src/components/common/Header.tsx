@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navigation = [
   { name: "Tuition Jobs", href: "/tuition-jobs" },
   { name: "Tutor Hub", href: "/tutor-hub" },
-  { name: "Categories", href: "/categories" },
+  { name: "Categories", href: "/mediums" },
   { name: "Blog", href: "/blog" },
   { name: "Shop", href: "/shop" },
 ];
