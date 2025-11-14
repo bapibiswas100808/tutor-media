@@ -14,8 +14,9 @@ const steps = [
   },
   {
     number: 2,
-    title: "Get Verified",
-    description: "Our team reviews and verifies your credentials",
+    title: "Get verified",
+    description:
+      "Our team reviews and verifies your credentials to ensure quality.",
     icon: "✅",
     bgColor: "from-green-300 to-emerald-400",
     iconBg: "bg-green-600",
@@ -31,9 +32,12 @@ const steps = [
   },
   {
     number: 4,
-    title: "Start Earning",
-    description: "Begin teaching and earning money immediately",
-    icon: "💰",
+    title: "Start teaching & earning",
+    description:
+      "Connect with students, deliver quality education, and earn money.",
+    icon: "💼",
+    bgColor: "from-orange-300 to-red-400",
+    iconBg: "bg-orange-600",
   },
 ];
 
@@ -121,6 +125,55 @@ export default function FlowChartTutor() {
 
               {/* Empty Space */}
               <div className="w-5/12"></div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Mobile Layout - Vertical */}
+        <div className="md:hidden max-w-md mx-auto relative">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <div
+                  className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                >
+                  <div
+                    className={`w-12 h-12 ${step.iconBg} rounded-lg flex items-center justify-center text-2xl`}
+                  >
+                    {step.icon}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+
+              {/* Connector for mobile */}
+              {index < steps.length - 1 && (
+                <div className="flex justify-center">
+                  <svg width="2" height="40" viewBox="0 0 2 40">
+                    <line
+                      x1="1"
+                      y1="0"
+                      x2="1"
+                      y2="40"
+                      stroke="#86EFAC"
+                      strokeWidth="2"
+                      strokeDasharray="4 4"
+                    />
+                  </svg>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
