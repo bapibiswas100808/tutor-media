@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/common/Header";
@@ -16,7 +16,11 @@ export const metadata: Metadata = {
   keywords:
     "tutoring, education, tutor, student, learning, Bangladesh, online tutoring, home tutoring",
   authors: [{ name: "Tutor Media" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

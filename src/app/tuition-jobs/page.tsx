@@ -8,6 +8,7 @@ import TuitionJobCard from "@/components/tuition/TuitionJobCard";
 import ApplyJobModal from "@/components/tuition/ApplyJobModal";
 
 export default function TuitionJobsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [selectedMode, setSelectedMode] = useState("all");
