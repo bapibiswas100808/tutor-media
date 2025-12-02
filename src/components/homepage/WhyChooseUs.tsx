@@ -5,32 +5,32 @@ import { motion } from "framer-motion";
 const reasons = [
   {
     id: 1,
-    title: "Verified Tutors",
+    title: "The Tutor Media Standard",
     description:
-      "All our tutors are thoroughly screened and verified for quality assurance",
+      "Our educators are not just skilled; they are true mentors. Each one passes a rigorous 4-step vetting process, ensuring they meet our decade-old standard of excellence and a true passion for teaching.",
     icon: "✅",
     color: "bg-green-100 text-green-600",
   },
   {
     id: 2,
-    title: "Flexible Learning",
+    title: "Reliable Pricing, Invaluable Results",
     description:
-      "Choose from home, online, or group tutoring based on your preference",
+      "We believe in transparent and honest pricing. With us, you invest in a premium, reliable service that delivers real academic growth and confidence—a value that lasts a lifetime.",
     icon: "🕐",
     color: "bg-blue-100 text-blue-600",
   },
   {
     id: 3,
-    title: "Easy Communication",
-    description: "Direct communication with tutors through our secure platform",
+    title: "A Decade of Parent Trust",
+    description: "For over 10 years, we have been the trusted choice for discerning parents. Our 98% satisfaction rate is a testament to the peace of mind and success we deliver to families like yours.",
     icon: "💬",
     color: "bg-purple-100 text-purple-600",
   },
   {
     id: 4,
-    title: "Transparent Process",
+    title: "A Partnership in Education",
     description:
-      "Clear pricing, no hidden fees, and transparent tutor selection process",
+      "We build lasting relationships. From our dedicated support team to our committed mentors, we work alongside you and your child at every step of the educational journey.",
     icon: "🔍",
     color: "bg-orange-100 text-orange-600",
   },
@@ -48,11 +48,10 @@ export default function WhyChooseUs() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why Choose Tutor Media?
+            The Tutor Media Promise
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We are committed to providing the best tutoring experience for both
-            students and tutors
+            Our commitment goes beyond tutoring. We are your partners in education.
           </p>
         </motion.div>
 
@@ -64,7 +63,7 @@ export default function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-xl shadow-lg px-6 py-12 text-center hover:shadow-xl transition-shadow duration-300"
             >
               <div
                 className={`${reason.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4`}
