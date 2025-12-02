@@ -20,15 +20,15 @@ const mediums = [
     description: "English version of national curriculum",
   },
   {
-    name: "Madrasa Medium",
+    name: "Madrasah Medium",
     icon: "🕌",
-    description: "Islamic studies and Madrasa education",
+    description: "Islamic studies and Madrasah education",
   },
-  {
-    name: "Vocational",
-    icon: "🛠️",
-    description: "Technical and vocational training",
-  },
+  // {
+  //   name: "Vocational",
+  //   icon: "🛠️",
+  //   description: "Technical and vocational training",
+  // },
   {
     name: "Admission Test",
     icon: "📝",
