@@ -1,11 +1,32 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Tutor Hub - Find Qualified Tutors",
-  description: "Browse and connect with verified tutors for all subjects",
-};
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { tutorsList } from "@/data/tutorsList";
+import TutorCard from "@/components/tutors/TutorCard";
 
 export default function TutorHubPage() {
+  const [filter, setFilter] = useState<"all" | "premium" | "verified">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter tutors
+  const filteredTutors = tutorsList.filter((tutor) => {
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "premium" && tutor.premium) ||
+      (filter === "verified" && tutor.verified);
+
+    const matchesSearch =
+      searchTerm === "" ||
+      tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tutor.subjects.some((subject) =>
+        subject.toLowerCase().includes(searchTerm.toLowerCase())
+      ) ||
+      tutor.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesFilter && matchesSearch;
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
       <div className="container mx-auto px-4 max-w-7xl">

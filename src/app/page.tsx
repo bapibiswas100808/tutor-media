@@ -4,7 +4,6 @@ import {
   TuitionTypes,
   Services,
   FlowChartStudent,
-  FindTutorSection,
   FlowChartTutor,
   BecomeTutorCTA,
   WhyChooseUs,
