@@ -7,8 +7,8 @@ export default function Banner() {
   return (
     <section className="relative min-h-screen flex items-center bg-gradient-to-br from-white via-blue-50 to-purple-50 overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
-      <div className="absolute bottom-20 left-0 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-20"></div>
+      {/* <div className="absolute top-20 right-0 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute bottom-20 left-0 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-20"></div> */}
 
       <div className="container mx-auto px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -20,25 +20,24 @@ export default function Banner() {
             className="space-y-8 text-left"
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight">
-              Hire the Right Tutor Today
+              Connecting Learners to Verified and Qualified Tutors
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-600 max-w-xl">
-              Book one-on-one lessons with verified tutors in your area
+              Hire the Right Tutor or get Tuition in your Area.
             </p>
-
             <div className="flex flex-col sm:flex-row gap-4 items-start">
-              <Link
-                href="/become-a-tutor"
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
-              >
-                Become a Tutor
-              </Link>
               <Link
                 href="/hire-tutor"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Hire a Tutor
+              </Link>
+              <Link
+                href="/become-a-tutor"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+              >
+                Become a Tutor
               </Link>
               <Link
                 href="/tuition-jobs"
@@ -64,7 +63,7 @@ export default function Banner() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-600 to-teal-700 rounded-3xl shadow-2xl overflow-hidden transform rotate-3"
+              className="absolute top-8 right-8 w-64 h-64 bg-gradient-to-br from-teal-600 to-teal-700 rounded-3xl rounded-bl-none shadow-2xl overflow-hidden transform rotate-0"
             >
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-700">
                 <div className="text-white text-center p-6">
@@ -79,7 +78,7 @@ export default function Banner() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="absolute top-8 left-0 w-60 h-56 bg-gradient-to-br from-orange-100 to-amber-100 rounded-3xl shadow-xl overflow-hidden transform -rotate-6"
+              className="absolute top-0 left-32 w-72 h-72 bg-gradient-to-br from-orange-100 to-amber-100 rounded-3xl rounded-br-none shadow-xl overflow-hidden transform -rotate-0"
             >
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-200 to-pink-200">
                 <div className="text-center p-6">
@@ -96,7 +95,7 @@ export default function Banner() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="absolute bottom-0 left-8 w-64 h-72 bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transform rotate-2"
+              className="absolute bottom-8 left-40 w-64 h-64 bg-gray-800 rounded-3xl rounded-tr-none shadow-2xl overflow-hidden transform rotate-0"
             >
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-900">
                 <div className="text-white text-center p-6">
@@ -111,11 +110,11 @@ export default function Banner() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="absolute bottom-12 right-20 w-56 h-64 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl overflow-hidden transform -rotate-3"
+              className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl rounded-tl-none shadow-xl overflow-hidden transform rotate-0"
             >
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-200 to-emerald-300">
                 <div className="text-center p-6">
-                  <div className="text-6xl mb-3">🇬🇧</div>
+                  <div className="text-6xl mb-3">EM</div>
                   <p className="font-semibold text-gray-800">English Medium</p>
                 </div>
               </div>

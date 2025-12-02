@@ -60,6 +60,11 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
 
         {/* Class Level */}
         <p className="text-sm font-medium text-gray-600">{job.class}</p>
+
+        {/* Tutor Gender */}
+        <p className="text-sm font-medium text-gray-600 capitalize">
+          Tutor Gender Preferred: <span className="font-bold">{job.gender}</span>
+        </p>
       </div>
 
       {/* Body */}

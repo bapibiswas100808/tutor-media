@@ -15,6 +15,7 @@ export default function TuitionJobsPage() {
   const [selectedUrgency, setSelectedUrgency] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
+  const [selectedDivision, setSelectedDivision] = useState("all");
 
   // Extract unique subjects for filter
   const subjects = Array.from(
@@ -41,11 +42,16 @@ export default function TuitionJobsPage() {
       (selectedUrgency === "urgent" && job.urgency === "urgent") ||
       (selectedUrgency === "normal" && job.urgency === "normal");
 
+    const matchesDivision =
+      selectedDivision === "all" ||
+      job.division?.toLowerCase() === selectedDivision.toLowerCase();
+
     return (
       matchesSearch &&
       matchesSubject &&
       matchesMode &&
       matchesUrgency &&
+      matchesDivision &&
       job.status === "active"
     );
   });
@@ -54,6 +60,8 @@ export default function TuitionJobsPage() {
     setSelectedJob(job);
     setIsModalOpen(true);
   };
+
+  const formatDivision = (d: string) => d.charAt(0).toUpperCase() + d.slice(1);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
@@ -85,7 +93,7 @@ export default function TuitionJobsPage() {
             <h3 className="font-semibold text-gray-800">Filters</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Subject Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -103,6 +111,29 @@ export default function TuitionJobsPage() {
                     {subject}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            {/* Division Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                Division
+              </label>
+              <select
+                value={selectedDivision}
+                onChange={(e) => setSelectedDivision(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
+              >
+                <option value="all">All Divisions</option>
+                <option value="dhaka">Dhaka</option>
+                <option value="khulna">Khulna</option>
+                <option value="rajshahi">Rajshahi</option>
+                <option value="rangpur">Rangpur</option>
+                <option value="mymensingh">Mymensingh</option>
+                <option value="chattogram">Chattogram</option>
+                <option value="sylhet">Sylhet</option>
+                <option value="barishal">Barishal</option>
               </select>
             </div>
 
@@ -172,6 +203,12 @@ export default function TuitionJobsPage() {
             {selectedUrgency === "urgent" && (
               <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
                 Urgent
+              </span>
+            )}
+
+            {selectedDivision !== "all" && (
+              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                {formatDivision(selectedDivision)}
               </span>
             )}
           </div>

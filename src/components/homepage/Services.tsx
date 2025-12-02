@@ -29,12 +29,13 @@ const mediums = [
   { name: "Bangla Medium", icon: "🇧🇩" },
   { name: "English Medium", icon: "🇬🇧" },
   { name: "English Version", icon: "🇬🇧" },
-  { name: "Madrasa Medium", icon: "🕌" },
-  { name: "Vocational", icon: "🛠️" },
-  { name: "Admission Test", icon: "📝" },
-  { name: "Language Training", icon: "🗣️" },
-  { name: "Arts", icon: "🎨" },
+  { name: "Madrasah Medium", icon: "🕌" },
+  { name: "Admission test", icon: "🛠️" },
   { name: "Religious Studies", icon: "🙏" },
+  { name: "Arts", icon: "🎨" },
+  { name: "Professional Skill Development", icon: "📝" },
+  { name: "Language Training", icon: "🗣️" },
+  { name: "Job Preparation", icon: "📝" },
 ];
 
 export default function Services() {

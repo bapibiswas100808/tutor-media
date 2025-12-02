@@ -19,6 +19,7 @@ export interface TuitionJob {
   days: string[];
   duration: string;
   startDate?: string;
+  division: string;
 }
 
 export const tuitionJobsList: TuitionJob[] = [
@@ -49,6 +50,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Immediately",
+    division: "Dhaka",
   },
   {
     id: 2,
@@ -77,6 +79,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "urgent",
     gender: "female",
     startDate: "Within 3 days",
+    division: "Khulna",
   },
   {
     id: 3,
@@ -104,6 +107,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "urgent",
     gender: "any",
     startDate: "ASAP",
+    division: "Rajshahi",
   },
   {
     id: 4,
@@ -132,6 +136,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Within 1 week",
+    division: "Rangpur",
   },
   {
     id: 5,
@@ -159,6 +164,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Flexible",
+    division: "Mymensingh",
   },
   {
     id: 6,
@@ -187,6 +193,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Within 1 week",
+    division: "Chattogram",
   },
   {
     id: 7,
@@ -215,6 +222,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Next month",
+    division: "Sylhet",
   },
   {
     id: 8,
@@ -243,6 +251,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "urgent",
     gender: "female",
     startDate: "Immediately",
+    division: "Barishal",
   },
   {
     id: 9,
@@ -271,6 +280,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Within 2 weeks",
+    division: "Barishal",
   },
   {
     id: 10,
@@ -298,6 +308,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "male",
     startDate: "Next week",
+    division: "Barishal",
   },
   {
     id: 11,
@@ -326,6 +337,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "urgent",
     gender: "any",
     startDate: "ASAP",
+    division: "Sylhet",
   },
   {
     id: 12,
@@ -354,6 +366,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Within 1 week",
+    division: "Sylhet",
   },
   {
     id: 13,
@@ -382,6 +395,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Flexible",
+    division: "Chattogram",
   },
   {
     id: 14,
@@ -410,6 +424,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Within 1 week",
+    division: "Chattogram",
   },
   {
     id: 15,
@@ -437,6 +452,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Next month",
+    division: "Chattogram",
   },
   {
     id: 16,
@@ -465,6 +481,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Within 2 weeks",
+    division: "Mymensingh",
   },
   {
     id: 17,
@@ -493,6 +510,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Within 1 week",
+    division: "Mymensingh",
   },
   {
     id: 18,
@@ -520,6 +538,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "ASAP",
+    division: "Rangpur",
   },
   {
     id: 19,
@@ -548,6 +567,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Flexible",
+    division: "Rangpur",
   },
   {
     id: 20,
@@ -575,6 +595,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "urgent",
     gender: "any",
     startDate: "Within 1 week",
+    division: "Rajshahi",
   },
   {
     id: 21,
@@ -603,6 +624,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Next week",
+    division: "Khulna",
   },
   {
     id: 22,
@@ -631,6 +653,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "Flexible",
+    division: "Khulna",
   },
   {
     id: 23,
@@ -659,6 +682,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Within 1 week",
+    division: "Khulna",
   },
   {
     id: 24,
@@ -686,6 +710,7 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "any",
     startDate: "ASAP",
+    division: "Dhaka",
   },
   {
     id: 25,
@@ -714,5 +739,6 @@ export const tuitionJobsList: TuitionJob[] = [
     urgency: "normal",
     gender: "female",
     startDate: "Next week",
+    division: "Dhaka",
   },
 ];

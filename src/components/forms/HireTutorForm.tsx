@@ -10,6 +10,7 @@ const hireTutorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   email: z.string().email("Please enter a valid email address"),
+  gender: z.string().min(1, "Please select a gender"),
   subject: z.string().min(1, "Please select a subject"),
   class: z.string().min(1, "Please select a class"),
   area: z.string().min(2, "Please enter your area"),
@@ -23,6 +24,7 @@ const hireTutorSchema = z.object({
 type HireTutorFormData = z.infer<typeof hireTutorSchema>;
 
 const subjects = [
+  "All Subjects",
   "Mathematics",
   "Physics",
   "Chemistry",
@@ -35,6 +37,7 @@ const subjects = [
   "Statistics",
   "Geography",
   "History",
+  "Others",
 ];
 
 const classes = [
@@ -151,22 +154,46 @@ export default function HireTutorForm() {
         </div>
       </div>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Email Address (optional)
-        </label>
-        <input
-          {...register("email")}
-          type="email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          placeholder="your.email@example.com"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Email Address (optional)
+          </label>
+          <input
+            {...register("email")}
+            type="email"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+            placeholder="your.email@example.com"
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="subject"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Gender *
+          </label>
+          <select
+            {...register("gender")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select a gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          {errors.gender && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.gender.message}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Tuition Details */}

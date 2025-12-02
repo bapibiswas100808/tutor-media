@@ -15,12 +15,11 @@ export default function BecomeTutorCTA() {
           className="text-center max-w-4xl mx-auto"
         >
           <div className="text-6xl mb-6">🎓</div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Share Your Knowledge?
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-16">
+            Join a Legacy of Excellence. Become a Tutor Media Mentor
           </h2>
           <p className="text-xl md:text-2xl mb-8 opacity-90">
-            Join thousands of tutors who are making a difference in
-            students&rsquo; lives while building their careers
+            If you have a passion for shaping the next generation, we invite you to apply and become part of Bangladesh&apos;s most trusted community of educators.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -48,13 +47,13 @@ export default function BecomeTutorCTA() {
               href="/become-a-tutor"
               className="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
-              Become a Tutor Now
+              Sign Up
             </Link>
             <Link
               href="/tuition-jobs"
               className="inline-block border-2 border-white hover:bg-white hover:text-green-600 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
             >
-              View Available Jobs
+              Apply Now
             </Link>
           </div>
 
