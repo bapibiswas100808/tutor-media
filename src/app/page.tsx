@@ -9,6 +9,7 @@ import {
   BecomeTutorCTA,
   WhyChooseUs,
 } from "@/components/homepage";
+import FindTutorSection2 from "@/components/homepage/FindTutorSection2";
 
 export const metadata: Metadata = {
   title: "Tutor Media - Connect Students with Perfect Tutors",
@@ -25,7 +26,8 @@ export default function Home() {
       <TuitionTypes />
       <Services />
       <FlowChartStudent />
-      <FindTutorSection />
+      {/* <FindTutorSection /> */}
+      <FindTutorSection2 />
       <FlowChartTutor />
       <BecomeTutorCTA />
       <WhyChooseUs />

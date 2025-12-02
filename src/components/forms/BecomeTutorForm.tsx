@@ -13,8 +13,11 @@ const becomeTutorSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     message: "Please select your gender",
   }),
+  city: z.string().min(1, "Please select your city"),
+  location: z.string().min(1, "Please select your location"),
   qualification: z.string().min(2, "Please enter your qualification"),
   experience: z.string().min(1, "Please select your experience level"),
+
   subjects: z.array(z.string()).min(1, "Please select at least one subject"),
   classLevels: z
     .array(z.string())
@@ -25,7 +28,6 @@ const becomeTutorSchema = z.object({
   availableDays: z
     .array(z.string())
     .min(1, "Please select at least one available day"),
-  location: z.string().min(2, "Please enter your location"),
   bio: z.string().min(20, "Bio must be at least 20 characters"),
 });
 
@@ -108,7 +110,7 @@ export default function BecomeTutorForm() {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Personal Information
         </h3>
-
+        {/* Full Name / Email Address */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
@@ -151,6 +153,7 @@ export default function BecomeTutorForm() {
           </div>
         </div>
 
+        {/* Phone Number / Gender */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label
@@ -196,24 +199,63 @@ export default function BecomeTutorForm() {
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="location"
-            className="block text-sm font-medium text-gray-700 mb-2 mt-6"
-          >
-            Location *
-          </label>
-          <input
-            {...register("location")}
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-            placeholder="e.g., Dhanmondi, Dhaka"
-          />
-          {errors.location && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.location.message}
-            </p>
-          )}
+        {/* City / Location */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              City *
+            </label>
+            <select
+              {...register("city")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+            >
+              <option value="">Select your city</option>
+              <option value="dhaka">Dhaka</option>
+              <option value="rajshahi">Rajshahi</option>
+              <option value="khulna">Khulna</option>
+              <option value="rangpur">Rangpur</option>
+              <option value="mymensingh">Mymensingh</option>
+              <option value="chattogram">Chattogram</option>
+              <option value="sylhet">Sylhet</option>
+              <option value="barishal">Barishal</option>
+            </select>
+            {errors.city && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.city.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Location *
+            </label>
+            <select
+              {...register("location")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+            >
+              <option value="">Select your city</option>
+              <option value="dhaka">Dhaka</option>
+              <option value="rajshahi">Rajshahi</option>
+              <option value="khulna">Khulna</option>
+              <option value="rangpur">Rangpur</option>
+              <option value="mymensingh">Mymensingh</option>
+              <option value="chattogram">Chattogram</option>
+              <option value="sylhet">Sylhet</option>
+              <option value="barishal">Barishal</option>
+            </select>
+            {errors.location && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.location.message}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 

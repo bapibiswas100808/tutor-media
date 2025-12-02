@@ -247,7 +247,7 @@ export default function ApplyJobModal({
                     <textarea
                       {...register("proposal")}
                       rows={6}
-                      placeholder="Write a compelling proposal explaining why you're the best fit for this job. Include your qualifications, experience, and teaching approach..."
+                      placeholder="Write a compelling proposal explaining why you&apos;re the best fit for this job. Include your qualifications, experience, and teaching approach..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                     />
                     <div className="flex items-center justify-between mt-1">
