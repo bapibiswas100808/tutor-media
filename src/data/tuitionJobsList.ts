@@ -20,6 +20,7 @@ export interface TuitionJob {
   duration: string;
   startDate?: string;
   division: string;
+  medium: "banglaMedium" | "englishMedium" | "englishVersion" | "madrasahBackground";
 }
 
 export const tuitionJobsList: TuitionJob[] = [
@@ -44,13 +45,14 @@ export const tuitionJobsList: TuitionJob[] = [
     schedule: "4 days a week, 1.5 hours per session",
     days: ["Sunday", "Monday", "Wednesday", "Thursday"],
     duration: "1.5 hours/session",
-    postedDate: "2024-01-15",
+    postedDate: "2025-12-7",
     applicants: 12,
     status: "active",
     urgency: "normal",
     gender: "any",
     startDate: "Immediately",
     division: "Dhaka",
+    medium: "banglaMedium",
   },
   {
     id: 2,
@@ -73,13 +75,14 @@ export const tuitionJobsList: TuitionJob[] = [
     schedule: "5 days a week, 2 hours per session",
     days: ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"],
     duration: "2 hours/session",
-    postedDate: "2024-01-14",
+    postedDate: "2025-12-6",
     applicants: 18,
     status: "active",
     urgency: "urgent",
     gender: "female",
     startDate: "Within 3 days",
     division: "Khulna",
+    medium: "englishMedium",
   },
   {
     id: 3,
@@ -101,13 +104,14 @@ export const tuitionJobsList: TuitionJob[] = [
     schedule: "4 days a week, 1.5 hours per session",
     days: ["Sunday", "Monday", "Wednesday", "Thursday"],
     duration: "1.5 hours/session",
-    postedDate: "2024-01-13",
+    postedDate: "2025-12-8",
     applicants: 25,
     status: "active",
     urgency: "urgent",
     gender: "any",
     startDate: "ASAP",
     division: "Rajshahi",
+    medium: "englishVersion",
   },
   {
     id: 4,
@@ -137,6 +141,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Within 1 week",
     division: "Rangpur",
+    medium: "madrasahBackground",
   },
   {
     id: 5,
@@ -165,6 +170,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Flexible",
     division: "Mymensingh",
+    medium: "englishMedium",
   },
   {
     id: 6,
@@ -194,6 +200,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Within 1 week",
     division: "Chattogram",
+    medium: "banglaMedium",
   },
   {
     id: 7,
@@ -223,6 +230,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Next month",
     division: "Sylhet",
+    medium: "englishVersion",
   },
   {
     id: 8,
@@ -252,6 +260,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Immediately",
     division: "Barishal",
+    medium: "madrasahBackground",
   },
   {
     id: 9,
@@ -281,6 +290,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Within 2 weeks",
     division: "Barishal",
+    medium: "englishMedium",
   },
   {
     id: 10,
@@ -309,6 +319,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "male",
     startDate: "Next week",
     division: "Barishal",
+    medium: "banglaMedium",
   },
   {
     id: 11,
@@ -338,6 +349,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "ASAP",
     division: "Sylhet",
+    medium: "englishVersion",
   },
   {
     id: 12,
@@ -367,6 +379,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Within 1 week",
     division: "Sylhet",
+    medium: "banglaMedium",
   },
   {
     id: 13,
@@ -396,6 +409,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Flexible",
     division: "Chattogram",
+    medium: "englishMedium",
   },
   {
     id: 14,
@@ -425,6 +439,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Within 1 week",
     division: "Chattogram",
+    medium: "madrasahBackground",
   },
   {
     id: 15,
@@ -453,6 +468,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Next month",
     division: "Chattogram",
+    medium: "englishVersion",
   },
   {
     id: 16,
@@ -482,6 +498,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Within 2 weeks",
     division: "Mymensingh",
+    medium: "banglaMedium",
   },
   {
     id: 17,
@@ -511,6 +528,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Within 1 week",
     division: "Mymensingh",
+    medium: "englishMedium",
   },
   {
     id: 18,
@@ -539,6 +557,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "ASAP",
     division: "Rangpur",
+    medium: "madrasahBackground",
   },
   {
     id: 19,
@@ -568,6 +587,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Flexible",
     division: "Rangpur",
+    medium: "banglaMedium",
   },
   {
     id: 20,
@@ -596,6 +616,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Within 1 week",
     division: "Rajshahi",
+    medium: "englishVersion",
   },
   {
     id: 21,
@@ -625,6 +646,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Next week",
     division: "Khulna",
+    medium: "madrasahBackground",
   },
   {
     id: 22,
@@ -654,6 +676,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "Flexible",
     division: "Khulna",
+    medium: "englishMedium",
   },
   {
     id: 23,
@@ -683,6 +706,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Within 1 week",
     division: "Khulna",
+    medium: "banglaMedium",
   },
   {
     id: 24,
@@ -711,6 +735,7 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "any",
     startDate: "ASAP",
     division: "Dhaka",
+    medium: "englishVersion",
   },
   {
     id: 25,
@@ -740,5 +765,6 @@ export const tuitionJobsList: TuitionJob[] = [
     gender: "female",
     startDate: "Next week",
     division: "Dhaka",
+    medium: "banglaMedium",
   },
 ];
