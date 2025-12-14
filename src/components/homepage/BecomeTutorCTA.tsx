@@ -22,7 +22,7 @@ export default function BecomeTutorCTA() {
             If you have a passion for shaping the next generation, we invite you to apply and become part of Bangladesh&apos;s most trusted community of educators.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
               <div className="text-3xl mb-3">💼</div>
               <h3 className="text-xl font-semibold mb-2">Flexible Schedule</h3>
@@ -40,7 +40,7 @@ export default function BecomeTutorCTA() {
               <h3 className="text-xl font-semibold mb-2">Make Impact</h3>
               <p className="opacity-90">Help students achieve their goals</p>
             </div>
-          </div>
+          </div> */}
 
           <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
             <Link

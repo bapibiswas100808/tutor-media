@@ -10,17 +10,15 @@ import ApplyJobModal from "@/components/tuition/ApplyJobModal";
 export default function TuitionJobsPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("all");
+  const [selectedClass, setSelectedClass] = useState("all");
   const [selectedMode, setSelectedMode] = useState("all");
-  const [selectedUrgency, setSelectedUrgency] = useState("all");
+  const [selectedMedium, setSelectedUMedium] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
   const [selectedDivision, setSelectedDivision] = useState("all");
 
   // Extract unique subjects for filter
-  const subjects = Array.from(
-    new Set(tuitionJobsList.map((job) => job.subject))
-  );
+  const classes = Array.from(new Set(tuitionJobsList.map((job) => job.class)));
 
   // Filter jobs
   const filteredJobs = tuitionJobsList.filter((job) => {
@@ -31,16 +29,19 @@ export default function TuitionJobsPage() {
       job.class.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesSubject =
-      selectedSubject === "all" || job.subject === selectedSubject;
+      selectedClass === "all" || job.class === selectedClass;
 
     const matchesMode =
       selectedMode === "all" ||
       job.mode.toLowerCase().includes(selectedMode.toLowerCase());
 
-    const matchesUrgency =
-      selectedUrgency === "all" ||
-      (selectedUrgency === "urgent" && job.urgency === "urgent") ||
-      (selectedUrgency === "normal" && job.urgency === "normal");
+    const matchesMedium =
+      selectedMedium === "all" ||
+      (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
+      (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
+      (selectedMedium === "englishVersion" && job.medium === "englishVersion") ||
+      (selectedMedium === "madrasahBackground" &&
+        job.medium === "madrasahBackground");
 
     const matchesDivision =
       selectedDivision === "all" ||
@@ -50,7 +51,7 @@ export default function TuitionJobsPage() {
       matchesSearch &&
       matchesSubject &&
       matchesMode &&
-      matchesUrgency &&
+      matchesMedium &&
       matchesDivision &&
       job.status === "active"
     );
@@ -98,15 +99,15 @@ export default function TuitionJobsPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <BookOpen className="w-4 h-4 inline mr-1" />
-                Subject
+                Class
               </label>
               <select
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
-                <option value="all">All Subjects</option>
-                {subjects.map((subject) => (
+                <option value="all">All Classes</option>
+                {classes.map((subject) => (
                   <option key={subject} value={subject}>
                     {subject}
                   </option>
@@ -158,16 +159,19 @@ export default function TuitionJobsPage() {
             {/* Urgency Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Priority
+                <BookOpen className="w-4 h-4 inline mr-1" />
+                Medium
               </label>
               <select
-                value={selectedUrgency}
-                onChange={(e) => setSelectedUrgency(e.target.value)}
+                value={selectedMedium}
+                onChange={(e) => setSelectedUMedium(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
-                <option value="all">All Jobs</option>
-                <option value="urgent">Urgent Only</option>
-                <option value="normal">Normal Priority</option>
+                <option value="">Select a medium</option>
+                <option value="banglaMedium">Bangla Medium</option>
+                <option value="englishMedium">English Medium</option>
+                <option value="englishVersion">English Version</option>
+                <option value="madrasahBackground">Madrasah Background</option>
               </select>
             </div>
           </div>
@@ -190,9 +194,9 @@ export default function TuitionJobsPage() {
 
           {/* Quick Filter Badges */}
           <div className="flex gap-2">
-            {selectedSubject !== "all" && (
+            {selectedClass !== "all" && (
               <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                {selectedSubject}
+                {selectedClass}
               </span>
             )}
             {selectedMode !== "all" && (
@@ -200,9 +204,24 @@ export default function TuitionJobsPage() {
                 {selectedMode}
               </span>
             )}
-            {selectedUrgency === "urgent" && (
+            {selectedMedium === "banglaMedium" && (
               <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                Urgent
+                Bangla Medium
+              </span>
+            )}
+            {selectedMedium === "englishMedium" && (
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                English Medium
+              </span>
+            )}
+            {selectedMedium === "englishVersion" && (
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                English Version
+              </span>
+            )}
+            {selectedMedium === "madrasahBackground" && (
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                Madrasah Background
               </span>
             )}
 
