@@ -173,25 +173,69 @@ export default function HireTutorForm() {
           )}
         </div>
 
+
+        <div>
+          <label
+            htmlFor="area"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Area/Location *
+          </label>
+          <input
+            {...register("area")}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+            placeholder="e.g., Dhanmondi, Dhaka"
+          />
+          {errors.area && (
+            <p className="mt-1 text-sm text-red-600">{errors.area.message}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
             htmlFor="subject"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Gender *
+            Medium *
           </label>
           <select
             {...register("gender")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
-            <option value="">Select a gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="">Select a medium</option>
+            <option value="banglaMedium">Bangla Medium</option>
+            <option value="englishMedium">English Medium</option>
+            <option value="englishVersion">English Version</option>
+            <option value="madrasahBackground">Madrasah Background</option>
           </select>
           {errors.gender && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.gender.message}
-            </p>
+            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="class"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Class/Level *
+          </label>
+          <select
+            {...register("class")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select class/level</option>
+            {classes.map((cls) => (
+              <option key={cls} value={cls}>
+                {cls}
+              </option>
+            ))}
+          </select>
+          {errors.class && (
+            <p className="mt-1 text-sm text-red-600">{errors.class.message}</p>
           )}
         </div>
       </div>
@@ -225,47 +269,27 @@ export default function HireTutorForm() {
 
         <div>
           <label
-            htmlFor="class"
+            htmlFor="subject"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Class/Level *
+            Preferred Teacher Gender *
           </label>
           <select
-            {...register("class")}
+            {...register("gender")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
-            <option value="">Select class/level</option>
-            {classes.map((cls) => (
-              <option key={cls} value={cls}>
-                {cls}
-              </option>
-            ))}
+            <option value="">Select preferred gender</option>
+            <option value="any">Any</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
-          {errors.class && (
-            <p className="mt-1 text-sm text-red-600">{errors.class.message}</p>
+          {errors.gender && (
+            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            htmlFor="area"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Area/Location *
-          </label>
-          <input
-            {...register("area")}
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-            placeholder="e.g., Dhanmondi, Dhaka"
-          />
-          {errors.area && (
-            <p className="mt-1 text-sm text-red-600">{errors.area.message}</p>
-          )}
-        </div>
-
         <div>
           <label
             htmlFor="budget"
@@ -281,6 +305,29 @@ export default function HireTutorForm() {
           />
           {errors.budget && (
             <p className="mt-1 text-sm text-red-600">{errors.budget.message}</p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="budget"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Days (Per Week) *
+          </label>
+          <select
+            {...register("gender")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Days Per Week</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          {errors.gender && (
+            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
           )}
         </div>
       </div>
