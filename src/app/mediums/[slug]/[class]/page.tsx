@@ -203,13 +203,12 @@ export default function ClassDetailPage() {
                         {classItem.icon}
                       </div> */}
                       <div className="">
-                        <Image 
+                        <Image
                           src={classItem.image}
                           alt={classItem.name}
                           fill
                           className="mx-auto mb-6 rounded-lg shadow-lg"
-                          
-                          />
+                        />
                       </div>
                       <h3 className="text-4xl font-bold mb-4">
                         {classItem.name}
@@ -225,7 +224,7 @@ export default function ClassDetailPage() {
               </div>
 
               {/* Floating Stats Cards */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
@@ -253,7 +252,6 @@ export default function ClassDetailPage() {
                   </div>
                 </div>
               </motion.div>
-
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -281,7 +279,7 @@ export default function ClassDetailPage() {
                     <div className="text-sm text-gray-600">Success Rate</div>
                   </div>
                 </div>
-              </motion.div>
+              </motion.div> */}
             </motion.div>
           </div>
         </div>
