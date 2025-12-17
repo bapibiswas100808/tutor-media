@@ -35,7 +35,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Building Foundation for Early Learners",
         description:
           "Our Play Group program focuses on developing fundamental learning skills through interactive play-based activities. We help children develop social skills, basic language abilities, and motor skills in a nurturing environment. Expert teachers use age-appropriate methods to make learning fun and engaging while preparing children for their academic journey.",
-        image: "/images/play-group.jpg",
+        image: "/images/banglaMedium/play.png",
         subjects: [
           "Basic Bangla",
           "Numbers",
@@ -53,7 +53,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Nurturing Young Minds with Care",
         description:
           "The Nursery program builds upon foundational skills with structured learning activities. Children learn basic Bangla alphabets, numbers, and develop early reading skills. Our experienced tutors create a supportive environment that encourages curiosity, creativity, and confidence in young learners.",
-        image: "/images/nursery.jpg",
+        image: "/images/banglaMedium/nursery.png",
         subjects: [
           "Bangla Alphabets",
           "English Basics",
@@ -71,7 +71,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Preparing for Primary School Success",
         description:
           "Our KG program provides comprehensive preparation for primary education. Students strengthen their Bangla and English language skills, develop mathematical thinking, and enhance their problem-solving abilities. We focus on building confidence and independence to ensure smooth transition to formal schooling.",
-        image: "/images/kg.jpg",
+        image: "/images/banglaMedium/kg.png",
         subjects: [
           "Bangla",
           "English",
@@ -89,7 +89,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Starting the Academic Journey Right",
         description:
           "Class 1 marks the beginning of formal education. Our tutors help students adapt to structured learning while making studies enjoyable. We cover all subjects prescribed in the Bangla medium curriculum, ensuring strong fundamentals in language, mathematics, and general knowledge.",
-        image: "/images/class-1.jpg",
+        image: "/images/banglaMedium/class-1.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -107,7 +107,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Starting the Academic Journey Right",
         description:
           "Class 1 marks the beginning of formal education. Our tutors help students adapt to structured learning while making studies enjoyable. We cover all subjects prescribed in the Bangla medium curriculum, ensuring strong fundamentals in language, mathematics, and general knowledge.",
-        image: "/images/class-2.jpg",
+        image: "/images/banglaMedium/class-2.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -125,7 +125,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Starting the Academic Journey Right",
         description:
           "Class 3 marks the beginning of formal education. Our tutors help students adapt to structured learning while making studies enjoyable. We cover all subjects prescribed in the Bangla medium curriculum, ensuring strong fundamentals in language, mathematics, and general knowledge.",
-        image: "/images/class-3.jpg",
+        image: "/images/banglaMedium/class-3.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -143,7 +143,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Starting the Academic Journey Right",
         description:
           "Class 4 marks the beginning of formal education. Our tutors help students adapt to structured learning while making studies enjoyable. We cover all subjects prescribed in the Bangla medium curriculum, ensuring strong fundamentals in language, mathematics, and general knowledge.",
-        image: "/images/class-4.jpg",
+        image: "/images/banglaMedium/class-4.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -161,7 +161,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Excellence in Primary School Certificate",
         description:
           "Class 5 is crucial as students prepare for their first major public examination - PSC. Our expert tutors provide comprehensive coverage of all subjects, regular practice tests, and exam strategies. We focus on concept clarity, problem-solving skills, and exam technique to ensure outstanding results.",
-        image: "/images/class-5.jpg",
+        image: "/images/banglaMedium/class-5.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -180,7 +180,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Excellence in Primary School Certificate",
         description:
           "Class 6 is crucial as students prepare for their first major public examination - PSC. Our expert tutors provide comprehensive coverage of all subjects, regular practice tests, and exam strategies. We focus on concept clarity, problem-solving skills, and exam technique to ensure outstanding results.",
-        image: "/images/class-6.jpg",
+        image: "/images/banglaMedium/class-6.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -199,7 +199,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Excellence in Primary School Certificate",
         description:
           "Class 7 is crucial as students prepare for their first major public examination - PSC. Our expert tutors provide comprehensive coverage of all subjects, regular practice tests, and exam strategies. We focus on concept clarity, problem-solving skills, and exam technique to ensure outstanding results.",
-        image: "/images/class-7.jpg",
+        image: "/images/banglaMedium/class-7.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -218,7 +218,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Preparing for Junior School Certificate",
         description:
           "Class 8 prepares students for JSC examination with in-depth subject knowledge. Our tutors provide specialized guidance in all subjects, helping students master complex concepts in mathematics, science, and languages. Regular assessments and personalized attention ensure academic excellence.",
-        image: "/images/class-8.jpg",
+        image: "/images/banglaMedium/class-8.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -238,7 +238,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Building Strong SSC Foundation",
         description:
           "Class 9 is the foundation year for SSC. Students choose their groups (Science/Commerce/Arts) and begin specialized study. Our experienced tutors provide comprehensive support in all subjects, helping students build strong conceptual understanding and develop effective study habits for success in SSC.",
-        image: "/images/class-9.jpg",
+        image: "/images/banglaMedium/class-9.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -259,7 +259,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Achieving SSC Excellence",
         description:
           "Class 10 is the final year before SSC board examination. Our expert tutors provide intensive preparation with comprehensive revision, problem-solving practice, and exam techniques. We conduct regular mock tests, provide detailed feedback, and ensure students are fully prepared for their SSC examination.",
-        image: "/images/class-10.jpg",
+        image: "/images/banglaMedium/class-10.jpg",
         subjects: [
           "All SSC Subjects",
           "Creative Question Practice",
@@ -276,7 +276,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Starting Higher Secondary Education",
         description:
           "Class 11 introduces advanced concepts in chosen streams (Science/Commerce/Arts). Our qualified tutors help students adapt to college-level studies, providing expert guidance in complex topics. We focus on building analytical skills and deep subject understanding essential for HSC success.",
-        image: "/images/class-11.jpg",
+        image: "/images/banglaMedium/class-11.jpg",
         subjects: [
           "Bangla",
           "English",
@@ -293,7 +293,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Mastering HSC for University Admission",
         description:
           "Class 12 is critical for HSC examination and university admission. Our expert tutors provide comprehensive preparation covering all syllabus topics, advanced problem-solving, and exam strategies. We conduct extensive mock tests and provide personalized guidance to help students achieve their dream results and secure university admission.",
-        image: "/images/class-12.jpg",
+        image: "/images/banglaMedium/class-12.jpg",
         subjects: [
           "All HSC Subjects",
           "Advanced Topics",
@@ -319,7 +319,7 @@ export const mediumsData: MediumData[] = [
         icon: "🧸",
         title: "Early Childhood Learning",
         subtitle: "Foundation of Growth & Play Learning",
-        image: "/images/pre-schooling.jpg",
+        image: "/images/englishMedium/pre-schooling.png",
         description:
           "Pre-schooling focuses on developing social, motor, and early cognitive skills. Our approach is centered on interactive learning, emotional comfort, and growth mindset.",
         subjects: [
@@ -338,7 +338,7 @@ export const mediumsData: MediumData[] = [
         icon: "🎈",
         title: "Play Group Classes",
         subtitle: "Learn Through Games",
-        image: "/images/play-group.jpg",
+        image: "/images/englishMedium/play-group.png",
         description:
           "Play group enhances curiosity through fun learning activities. Children learn through visual, sound, and sensory exploration.",
         subjects: [
@@ -357,7 +357,7 @@ export const mediumsData: MediumData[] = [
         icon: "🎒",
         title: "Kindergarten Program",
         subtitle: "Emotional, Social & Academic Readiness",
-        image: "/images/kg.jpg",
+        image: "/images/englishMedium/kg.png",
         description:
           "KG helps students prepare for primary education with structured academic practices and creative development.",
         subjects: [
@@ -377,7 +377,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-1.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -397,7 +397,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-2.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -417,7 +417,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-3.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -437,7 +437,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-4.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -457,7 +457,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-5.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -477,7 +477,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-6.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -497,7 +497,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-7.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -517,7 +517,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-8.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -537,7 +537,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Primary to Junior Secondary",
         subtitle: "Fundamental Academic Development",
-        image: "/images/standard.jpg",
+        image: "/images/englishMedium/standard-9.png",
         description:
           "We provide full support across school subjects with personalized attention, exam preparation, and guidance for continuous improvement.",
         subjects: [
@@ -559,7 +559,7 @@ export const mediumsData: MediumData[] = [
         icon: "📘",
         title: "O Level Education",
         subtitle: "Cambridge International (IGCSE)",
-        image: "/images/o-level.jpg",
+        image: "/images/englishMedium/o-level.png",
         description:
           "Comprehensive tutoring based on Cambridge and Edexcel syllabuses. We focus on exam strategies, topic mastery, and analytical problem solving.",
         subjects: [
@@ -582,7 +582,7 @@ export const mediumsData: MediumData[] = [
         icon: "📗",
         title: "A Level AS",
         subtitle: "Advanced Subsidiary Level",
-        image: "/images/a-level-as.jpg",
+        image: "/images/englishMedium/a-level-as.png",
         description:
           "AS Level focuses on solid academic foundations for specialized A2 studies. We help learners develop conceptual mastery to secure top grades.",
         subjects: [
@@ -604,7 +604,7 @@ export const mediumsData: MediumData[] = [
         icon: "📕",
         title: "A Level A2",
         subtitle: "Advanced Level Qualification",
-        image: "/images/a-level-a2.jpg",
+        image: "/images/englishMedium/a-level-a2.png",
         description:
           "A2 Level deepens academic understanding and prepares students for university entrance. We emphasize exam techniques, research skills, and advanced reasoning.",
         subjects: [
@@ -636,7 +636,7 @@ export const mediumsData: MediumData[] = [
         icon: "🧸",
         title: "Play Group Early Learning",
         subtitle: "Fun-based Child Development",
-        image: "/images/play-group.jpg",
+        image: "/images/englishVersion/play-group.png",
         description:
           "A playful learning environment for young children. Focus on sensory activities, social interaction, language development, and creativity through songs, toys, and guided play.",
         subjects: [
@@ -657,7 +657,7 @@ export const mediumsData: MediumData[] = [
         icon: "🌱",
         title: "Nursery Level",
         subtitle: "Foundation Stage Learning",
-        image: "/images/nursery.jpg",
+        image: "/images/englishVersion/nursery.png",
         description:
           "Nursery introduces basic early education skills. Students learn letters, shapes, colors, counting, social communication, and curiosity-driven activities.",
         subjects: [
@@ -678,7 +678,7 @@ export const mediumsData: MediumData[] = [
         icon: "🎒",
         title: "Kindergarten Program",
         subtitle: "Emotional, Social & Academic Readiness",
-        image: "/images/kg.jpg",
+        image: "/images/englishVersion/kg.png",
         description:
           "KG helps students prepare for primary education with structured academic practices and creative development.",
         subjects: [
@@ -698,7 +698,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 1 Primary Education",
         subtitle: "Early Formal Education",
-        image: "/images/class-1.jpg",
+        image: "/images/englishVersion/class-1.png",
         description:
           "Introduction to structured learning with fundamental topics in language, math, science, and environment.",
         subjects: [
@@ -718,7 +718,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 2 Primary Education",
         subtitle: "Concept Building & Skill Growth",
-        image: "/images/class-2.jpg",
+        image: "/images/englishVersion/class-2.png",
         description:
           "Strengthening base concepts with improved reading ability, basic calculations, environmental awareness, and creative expression.",
         subjects: [
@@ -738,7 +738,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 3 Primary Education",
         subtitle: "Intermediate Basics",
-        image: "/images/class-3.jpg",
+        image: "/images/englishVersion/class-3.png",
         description:
           "Students learn structured subjects like grammar, basic geometry, science experiments, and beginner-level computing.",
         subjects: [
@@ -758,7 +758,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 4 Primary Education",
         subtitle: "Logical & Analytical Skills",
-        image: "/images/class-4.jpg",
+        image: "/images/englishVersion/class-4.png",
         description:
           "Critical thinking through problem-solving tasks, advanced language structure, project-based science, and basic technology literacy.",
         subjects: [
@@ -778,7 +778,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 5 Primary Final",
         subtitle: "Primary Board Exam Preparation",
-        image: "/images/class-5.jpg",
+        image: "/images/englishVersion/class-5.png",
         description:
           "Foundation-to-exam level preparation for primary certificate exams, focusing on writing, reasoning, science, and math accuracy.",
         subjects: [
@@ -798,7 +798,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 6 Middle School",
         subtitle: "Junior Secondary Academic Growth",
-        image: "/images/class-6.jpg",
+        image: "/images/englishVersion/class-6.png",
         description:
           "Covers standard middle school curriculum for foundational secondary education. Includes science, math, language, and ICT skills.",
         subjects: [
@@ -818,7 +818,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 7 Middle School",
         subtitle: "Academic Development",
-        image: "/images/class-7.jpg",
+        image: "/images/englishVersion/class-7.png",
         description:
           "Students strengthen analytical and problem-solving skills while preparing for higher secondary curriculum.",
         subjects: [
@@ -838,7 +838,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 8 Middle School",
         subtitle: "Academic Growth",
-        image: "/images/class-8.jpg",
+        image: "/images/englishVersion/class-8.png",
         description:
           "Focus on science, mathematics, social knowledge, and English language proficiency to prepare for SSC studies.",
         subjects: [
@@ -858,7 +858,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: "Class 9 Secondary School",
         subtitle: "SSC Preparation",
-        image: "/images/class-9.jpg",
+        image: "/images/englishVersion/class-9.png",
         description:
           "Students prepare for SSC level with strong foundation in core subjects, exam-oriented practice, and analytical skills development.",
         subjects: [
@@ -880,7 +880,7 @@ export const mediumsData: MediumData[] = [
         icon: "📘",
         title: "Class 10 Secondary School",
         subtitle: "SSC Board Examination",
-        image: "/images/class-10.jpg",
+        image: "/images/englishVersion/class-10.png",
         description:
           "Final year before SSC exams. Focus on exam preparation, revision, problem solving, and advanced concept mastery.",
         subjects: [
@@ -902,7 +902,7 @@ export const mediumsData: MediumData[] = [
         icon: "📗",
         title: "Class 11 Higher Secondary",
         subtitle: "HSC Preparation / AS Level",
-        image: "/images/class-11.jpg",
+        image: "/images/englishVersion/class-11.png",
         description:
           "Introduction to higher secondary curriculum. Focus on advanced concepts, subject specialization, and exam strategies.",
         subjects: [
@@ -924,7 +924,7 @@ export const mediumsData: MediumData[] = [
         icon: "📕",
         title: "Class 12 Higher Secondary",
         subtitle: "HSC Preparation / A2 Level",
-        image: "/images/class-12.jpg",
+        image: "/images/englishVersion/class-12.png",
         description:
           "Final year preparation for university entrance and higher secondary completion. Focus on exam readiness, practicals, and subject mastery.",
         subjects: [
@@ -956,7 +956,7 @@ export const mediumsData: MediumData[] = [
         icon: "🧸",
         title: "Play Group Early Learning",
         subtitle: "Fun-based Child Development",
-        image: "/images/play-group.jpg",
+        image: "/images/madrasahMedium/play.png",
         description:
           "A playful learning environment for young children. Focus on sensory activities, social interaction, language development, and creativity through songs, toys, and guided play.",
         subjects: [
@@ -977,7 +977,7 @@ export const mediumsData: MediumData[] = [
         icon: "🌱",
         title: "Nursery Level",
         subtitle: "Foundation Stage Learning",
-        image: "/images/nursery.jpg",
+        image: "/images/madrasahMedium/nursery.png",
         description:
           "Nursery introduces basic early education skills. Students learn letters, shapes, colors, counting, social communication, and curiosity-driven activities.",
         subjects: [
@@ -998,7 +998,7 @@ export const mediumsData: MediumData[] = [
         icon: "🎒",
         title: "Kindergarten Program",
         subtitle: "Emotional, Social & Academic Readiness",
-        image: "/images/kg.jpg",
+        image: "/images/madrasahMedium/kg.png",
         description:
           "KG helps students prepare for primary education with structured academic practices and creative development.",
         subjects: [
@@ -1018,7 +1018,7 @@ export const mediumsData: MediumData[] = [
         icon: "📚",
         title: `Class ${i + 1} Education`,
         subtitle: "Primary to Secondary School Curriculum",
-        image: `/images/class-${i + 1}.jpg`,
+        image: `/images/madrasahMedium/class-${i + 1}.png`,
         description:
           "Structured learning across core subjects with exam preparation, practical exercises, and skill development.",
         subjects: [
@@ -1039,7 +1039,7 @@ export const mediumsData: MediumData[] = [
         icon: "📘",
         title: "Alim 1st Year",
         subtitle: "Higher Secondary Education",
-        image: "/images/alim-1st-year.jpg",
+        image: "/images/madrasahMedium/alim-1st-year.png",
         description:
           "Introduction to higher secondary curriculum with a focus on academic growth, advanced concepts, and exam preparation.",
         subjects: [
@@ -1062,7 +1062,7 @@ export const mediumsData: MediumData[] = [
         icon: "📗",
         title: "Alim 2nd Year",
         subtitle: "Higher Secondary Completion",
-        image: "/images/alim-2nd-year.jpg",
+        image: "/images/madrasahMedium/alim-2nd-year.png",
         description:
           "Final year for Alim program, focusing on exam readiness, research, practicals, and university preparation.",
         subjects: [
@@ -1079,7 +1079,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Admission test
+  // Admission test\
   {
     name: "Admission test",
     slug: "admission-test",
@@ -1217,7 +1217,7 @@ export const mediumsData: MediumData[] = [
         icon: "🕌",
         title: "Islamic Studies",
         subtitle: "Comprehensive Islamic Education",
-        image: "/images/islamic-studies.jpg",
+        image: "/images/religiousStudies/islamic-studies.png",
         description:
           "Learn the fundamentals of Islam including Quran, Hadith, Fiqh, and Islamic history. Focus on moral values, spiritual development, and practical applications in daily life.",
         subjects: [
@@ -1236,7 +1236,7 @@ export const mediumsData: MediumData[] = [
         icon: "🛕",
         title: "Hinduism Studies",
         subtitle: "Comprehensive Hindu Philosophy",
-        image: "/images/hinduism-studies.jpg",
+        image: "/images/religiousStudies/hinduism-studies.png",
         description:
           "Explore Hindu scriptures, philosophies, rituals, and cultural practices. Develop understanding of ethics, spirituality, and traditional values.",
         subjects: [
@@ -1255,7 +1255,7 @@ export const mediumsData: MediumData[] = [
         icon: "🕉️",
         title: "Buddhism Studies",
         subtitle: "Introduction to Buddhist Teachings",
-        image: "/images/buddhism-studies.jpg",
+        image: "/images/religiousStudies/buddhism-studies.png",
         description:
           "Study the teachings of Buddha, Buddhist philosophy, meditation practices, and ethical principles for personal growth and spiritual awareness.",
         subjects: [
@@ -1274,7 +1274,7 @@ export const mediumsData: MediumData[] = [
         icon: "✝️",
         title: "Christianity Studies",
         subtitle: "Comprehensive Christian Education",
-        image: "/images/christianity-studies.jpg",
+        image: "/images/religiousStudies/christianity-studies.png",
         description:
           "Learn about Christian beliefs, Bible teachings, church history, ethics, and spiritual development according to Christian values.",
         subjects: [
@@ -1288,7 +1288,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Arts & Creativity
+  // Arts & Creativity\
   {
     name: "Arts & Creativity",
     slug: "arts-creativity",
@@ -1392,7 +1392,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Skill Development
+  // Skill Development\
   {
     name: "Skill Development",
     slug: "skill-development",
@@ -1515,7 +1515,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Master Communication Skills",
         description:
           "Our English language program develops all four skills: speaking, listening, reading, and writing. Whether for academic purposes, professional advancement, or personal development, our qualified instructors use communicative methods and modern materials to help learners achieve fluency and confidence in English.",
-        image: "/images/english-training.jpg",
+        image: "/images/languageTraining/english.png",
         subjects: [
           "Speaking & Conversation",
           "Grammar",
@@ -1534,7 +1534,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Achieve Your Target Band Score",
         description:
           "IELTS preparation requires strategic training and practice. Our certified instructors provide comprehensive coaching for all four modules: Listening, Reading, Writing, and Speaking. We use official Cambridge materials, conduct regular mock tests, and provide personalized feedback to help you achieve your target band score for study abroad or immigration.",
-        image: "/images/ielts.jpg",
+        image: "/images/languageTraining/ielts.png",
         subjects: [
           "Listening Strategies",
           "Reading Techniques",
@@ -1553,7 +1553,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Excel in TOEFL for US Universities",
         description:
           "TOEFL is essential for admission to North American universities. Our experienced instructors provide expert training in all TOEFL sections: Reading, Listening, Speaking, and Writing. We use ETS materials, provide computer-based practice, and teach time management strategies to help you achieve high scores.",
-        image: "/images/toefl.jpg",
+        image: "/images/languageTraining/toefl.png",
         subjects: [
           "Reading Comprehension",
           "Academic Listening",
@@ -1572,7 +1572,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Learn German from A1 to C2",
         description:
           "German language skills open opportunities for study and work in Germany. Our qualified native and non-native instructors teach all levels from A1 to C2 following the CEFR framework. We focus on practical communication skills, grammar, vocabulary, and cultural understanding essential for success in German-speaking environments.",
-        image: "/images/german.jpg",
+        image: "/images/languageTraining/german.png",
         subjects: [
           "Speaking & Conversation",
           "Grammar & Sentence Structure",
@@ -1591,7 +1591,7 @@ export const mediumsData: MediumData[] = [
         subtitle: "Master PTE for Quick Results",
         description:
           "PTE Academic is a computer-based English test accepted worldwide. Our expert trainers provide comprehensive preparation covering all sections: Speaking & Writing, Reading, and Listening. We use Pearson official materials, provide AI-scored practice, and teach specific strategies for this unique test format to help you achieve your desired score.",
-        image: "/images/pte.jpg",
+        image: "/images/languageTraining/pte.png",
         subjects: [
           "Speaking Tasks",
           "Writing Essays",
@@ -1604,7 +1604,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Job Preparation
+  // Job Preparation\
   {
     name: "Job Preparation",
     slug: "job-preparation",

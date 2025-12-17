@@ -120,8 +120,13 @@ export default async function MediumPage({ params }: MediumPageProps) {
                 {/* Content */}
                 <div className="relative p-8">
                   {/* Icon */}
-                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                    {classItem.icon}
+                  <div className="relative w-full h-40 mb-6">
+                    <Image
+                      src={classItem.image}
+                      alt={classItem.name}
+                      fill
+                      className="object-cover"
+                      />
                   </div>
 
                   {/* Title */}

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { mediumsData, ClassItem, MediumData } from "@/data/mediumsData";
+import Image from "next/image";
 
 export default function ClassDetailPage() {
   const params = useParams();
@@ -75,7 +76,7 @@ export default function ClassDetailPage() {
             >
               {/* Icon Badge */}
               <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                <span className="text-3xl">{classItem.icon}</span>
+                {/* <span className="text-3xl">{classItem.icon}</span> */}
                 <span className="font-semibold">{medium.name}</span>
               </div>
 
@@ -198,8 +199,17 @@ export default function ClassDetailPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400">
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-center text-white p-8">
-                      <div className="text-8xl mb-6 animate-pulse">
+                      {/* <div className="text-8xl mb-6 animate-pulse">
                         {classItem.icon}
+                      </div> */}
+                      <div className="">
+                        <Image 
+                          src={classItem.image}
+                          alt={classItem.name}
+                          fill
+                          className="mx-auto mb-6 rounded-lg shadow-lg"
+                          
+                          />
                       </div>
                       <h3 className="text-4xl font-bold mb-4">
                         {classItem.name}
