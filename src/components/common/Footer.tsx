@@ -1,5 +1,6 @@
 "use client";
 
+import { Facebook, Linkedin, Youtube } from "lucide-react";
 import Link from "next/link";
 
 const footerLinks = {
@@ -47,47 +48,57 @@ export default function Footer() {
               Making quality education accessible to everyone.
             </p>
             <div className="flex space-x-4">
-              <a
-                href="#"
+              {/* Facebook */}
+              <Link
+                href="https://www.facebook.com/share/1CCEtYXsc8"
+                target="_blank"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <span className="sr-only">Facebook</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-              </a>
-              <a
-                href="#"
+                <Facebook className="w-6 h-6" />
+              </Link>
+
+              {/* YouTube */}
+              <Link
+                href="https://youtube.com/@tutormediabd?si=VF46LILnVuZn941X"
+                target="_blank"
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <span className="sr-only">Twitter</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                </svg>
-              </a>
-              <a
-                href="#"
+                <span className="sr-only">YouTube</span>
+                <Youtube className="w-7 h-7" />
+              </Link>
+
+              {/* LinkedIn */}
+              <Link
+                href="https://www.linkedin.com/company/tutor-media"
+                target="_blank"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <span className="sr-only">LinkedIn</span>
+                <Linkedin className="w-6 h-6" />
+              </Link>
+
+              {/* WhatsApp */}
+              <Link
+                href="https://wa.me/https://wa.me/message/ZMWV33J4K2MPO1"
+                target="_blank"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <span className="sr-only">WhatsApp</span>
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  <path d="M12.04 2C6.53 2 2 6.48 2 11.98c0 1.93.5 3.73 1.45 5.33L2 22l4.86-1.39a10.01 10.01 0 0 0 5.18 1.4h.01c5.5 0 10-4.48 10-9.98C22.05 6.48 17.55 2 12.04 2zm5.88 14.37c-.25.7-1.45 1.35-2.01 1.43-.52.08-1.17.11-3.78-.81-3.35-1.18-5.5-4.82-5.67-5.04-.17-.23-1.36-1.82-1.36-3.47 0-1.65.87-2.46 1.18-2.8.3-.34.67-.43.89-.43h.64c.2 0 .48-.08.75.57.27.65.92 2.26 1 2.42.08.16.13.35.02.58-.11.23-.17.35-.33.54-.16.19-.35.42-.5.56-.17.17-.35.35-.15.7.2.35.9 1.48 1.93 2.4 1.32 1.18 2.44 1.55 2.79 1.72.35.17.55.15.75-.09.2-.23.86-1 1.09-1.35.23-.35.46-.29.77-.17.31.12 1.97.93 2.3 1.1.33.17.55.25.63.39.08.14.08.81-.17 1.51z" />
                 </svg>
-              </a>
-              <a
-                href="#"
+              </Link>
+
+              {/* TikTok */}
+              <Link
+                href="https://www.tiktok.com/@tutormedia.edu?_r=1&_t=ZS-92731CQwSdY"
+                target="_blank"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <span className="sr-only">TikTok</span>
@@ -97,39 +108,10 @@ export default function Footer() {
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="M12.728 2h3.07a5.52 5.52 0 0 0 5.51 5.51v3.07a8.59 8.59 0 0 1-5.51-1.9v7.83A7.5 7.5 0 1 1 10.2 8.1v3.14a3.38 3.38 0 1 0 2.53 3.28V2z" />
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.75 2.9 2.9 0 0 1 2.31-4.64 2.88 2.88 0 0 1 .88.13V9.4a5.85 5.85 0 0 0-1-.08A5.7 5.7 0 0 0 5 20.41a5.7 5.7 0 0 0 5.73-.37 5.64 5.64 0 0 0 1.75-2.39A5.63 5.63 0 0 0 13.14 20v-7.86a7.54 7.54 0 0 0 4.58 1.34v-3.4a4.76 4.76 0 0 1-.87-.07z" />
                 </svg>
-              </a>
+              </Link>
 
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <span className="sr-only">Instagram</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7A2.5 2.5 0 1 1 14.5 12 2.5 2.5 0 0 1 12 14.5zM17.25 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.25 6z" />
-                </svg>
-              </a>
-
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <span className="sr-only">YouTube</span>
-                <svg
-                  className="w-7 h-7"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.3 2.5 12 2.5 12 2.5h-.1s-5.3 0-8.6.4c-.4.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S0 8.1 0 10v1.9c0 1.9.5 3.8.5 3.8s.2 1.6.8 2.3c.8.9 1.9.8 2.4.9 1.8.2 7.3.4 7.3.4s5.3 0 8.6-.4c.4-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.5-1.9.5-3.8V10c0-1.9-.5-3.8-.5-3.8ZM9.7 14.8V8.2l6.3 3.3-6.3 3.3Z" />
-                </svg>
-              </a>
             </div>
           </div>
 

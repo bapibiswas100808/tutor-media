@@ -13,7 +13,7 @@ const reasons = [
   },
   {
     id: 2,
-    title: "Reliable Pricing, Invaluable Results",
+    title: "Reliable Price, Valuable Result",
     description:
       "We believe in transparent and honest pricing. With us, you invest in a premium, reliable service that delivers real academic growth and confidence—a value that lasts a lifetime.",
     icon: "🕐",
@@ -63,7 +63,7 @@ export default function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl shadow-lg px-6 py-12 text-center hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-xl shadow-lg px-4 py-12 text-center hover:shadow-xl transition-shadow duration-300"
             >
               <div
                 className={`${reason.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4`}
@@ -73,7 +73,7 @@ export default function WhyChooseUs() {
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {reason.title}
               </h3>
-              <p className="text-gray-600">{reason.description}</p>
+              <p className="text-gray-600 text-balance">{reason.description}</p>
             </motion.div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { mediumsData } from "@/data/mediumsData";
+import Image from "next/image";
 
 interface MediumPageProps {
   params: Promise<{ slug: string }>;
@@ -54,18 +55,29 @@ export default async function MediumPage({ params }: MediumPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden bg-blue-700 text-white">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-        <div className="max-w-7xl mx-auto relative z-10">
+      {/* Hero Section with Background Image */}
+      <section className="relative py-20 px-4 overflow-hidden text-white">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={medium.image}
+            alt={medium.name}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+
+        {/* Content */}
+        <div className="container mx-auto relative z-10 px-2">
           <div className="text-center">
-            <div className="inline-block mb-6 text-7xl animate-bounce">
-              {medium.icon}
-            </div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               {medium.name}
             </h1>
-            <p className="text-xl text-white max-w-3xl mx-auto">
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
               {medium.description}
             </p>
           </div>
