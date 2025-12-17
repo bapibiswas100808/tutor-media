@@ -1,51 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-
-const mediums = [
-  {
-    name: "Bangla Medium",
-    icon: "🇧🇩",
-    description: "SSC, HSC, and all Bangla medium curricula",
-  },
-  {
-    name: "English Medium",
-    icon: "🇬🇧",
-    description: "O Level, A Level, and Cambridge curricula",
-  },
-  {
-    name: "English Version",
-    icon: "🇬🇧",
-    description: "English version of national curriculum",
-  },
-  {
-    name: "Madrasah Medium",
-    icon: "🕌",
-    description: "Islamic studies and Madrasah education",
-  },
-  // {
-  //   name: "Vocational",
-  //   icon: "🛠️",
-  //   description: "Technical and vocational training",
-  // },
-  {
-    name: "Admission Test",
-    icon: "📝",
-    description: "University and college admission prep",
-  },
-  {
-    name: "Language Training",
-    icon: "🗣️",
-    description: "IELTS, TOEFL, and language courses",
-  },
-  { name: "Arts", icon: "🎨", description: "Creative arts and design courses" },
-  {
-    name: "Religious Studies",
-    icon: "🙏",
-    description: "Religious education and studies",
-  },
-];
+import { mediumsData } from "@/data/mediumsData";
 
 export default function MediumsPage() {
   return (
@@ -68,35 +26,38 @@ export default function MediumsPage() {
 
         {/* Mediums Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {mediums.map((medium, index) => {
-            const slug = medium.name.toLowerCase().replace(/\s+/g, "-");
-            return (
-              <motion.div
-                key={medium.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Link href={`/mediums/${slug}`}>
-                  <motion.div
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 border border-gray-100 cursor-pointer h-full flex flex-col items-center justify-center group"
-                  >
-                    <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                      {medium.icon}
-                    </div>
-                    <h3 className="font-bold text-gray-900 text-xl mb-2">
-                      {medium.name}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {medium.description}
-                    </p>
-                  </motion.div>
-                </Link>
-              </motion.div>
-            );
-          })}
+          {mediumsData.map((medium, index) => (
+            <motion.div
+              key={medium.slug}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Link href={`/mediums/${medium.slug}`}>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-5 text-center hover:shadow-2xl transition-all duration-300 border border-gray-100 cursor-pointer h-full flex flex-col items-center justify-center group"
+                >
+                  <div className="relative w-full h-48 overflow-hidden rounded-lg mb-5">
+                    <Image
+                      src={medium.image}
+                      alt={medium.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-xl">
+                    {medium.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {medium.description}
+                  </p>
+                </motion.div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
         {/* Call to Action */}

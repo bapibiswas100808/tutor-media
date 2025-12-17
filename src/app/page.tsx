@@ -18,10 +18,45 @@ export const metadata: Metadata = {
     "tutoring, education, tutor, student, learning, Bangladesh, online tutoring, home tutoring",
 };
 
-export default function Home() {
+interface BannerData {
+  heading: string;
+  subHeading: string;
+}
+
+async function getBannerData(): Promise<BannerData> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/banner?populate=*`,
+      {
+        cache: "no-store", // Remove cache for real-time updates
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch banner: ${res.status}`);
+    }
+
+    const { data } = await res.json();
+    
+    return {
+      heading: data.heading || "Connecting Learners to Verified and Qualified Tutors",
+      subHeading: data.subHeading || "Hire the Right Tutor or get Tuition in your Area.",
+    };
+  } catch (error) {
+    console.error("Banner fetch error:", error);
+    // Return fallback data
+    return {
+      heading: "Connecting Learners to Verified and Qualified Tutors",
+      subHeading: "Hire the Right Tutor or get Tuition in your Area.",
+    };
+  }
+}
+
+export default async function Home() {
+  const bannerData = await getBannerData();
   return (
     <main>
-      <Banner />
+      <Banner bannerData={bannerData} />
       <TuitionTypes />
       <Services />
       <FlowChartStudent />

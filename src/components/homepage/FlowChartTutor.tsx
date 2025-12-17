@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const steps = [
   {
@@ -8,7 +9,7 @@ const steps = [
     title: "Create your profile",
     description:
       "Register and create your tutor profile with qualifications and expertise.",
-    icon: "👤",
+    image: "/images/workForTutors/create-profile.png",
     bgColor: "from-blue-400 to-cyan-400",
     iconBg: "bg-blue-600",
   },
@@ -17,7 +18,7 @@ const steps = [
     title: "Get verified",
     description:
       "Our team reviews and verifies your credentials to ensure quality.",
-    icon: "✅",
+    image: "/images/workForTutors/get-verified.png",
     bgColor: "from-green-300 to-emerald-400",
     iconBg: "bg-green-600",
   },
@@ -26,7 +27,7 @@ const steps = [
     title: "Apply to tuition jobs",
     description:
       "Browse available tuition requests and apply to jobs matching your skills.",
-    icon: "📋",
+    image: "/images/workForTutors/apply-tuition.png",
     bgColor: "from-purple-300 to-indigo-400",
     iconBg: "bg-purple-600",
   },
@@ -35,7 +36,7 @@ const steps = [
     title: "Start teaching & earning",
     description:
       "Connect with students, deliver quality education, and earn money.",
-    icon: "💼",
+    image: "/images/workForTutors/teaching-earning.png",
     bgColor: "from-orange-300 to-red-400",
     iconBg: "bg-orange-600",
   },
@@ -80,10 +81,13 @@ export default function FlowChartTutor() {
                   <div
                     className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
                   >
-                    <div
-                      className={`w-12 h-12 ${step.iconBg} rounded-lg flex items-center justify-center text-2xl`}
-                    >
-                      {step.icon}
+                    <div className="w-full h-full overflow-hidden relative rounded-lg">
+                      <Image
+                        src={step.image}
+                        alt={step.title}
+                        fill
+                        className="object-cover rounded-xl p-1"
+                      />
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -144,11 +148,14 @@ export default function FlowChartTutor() {
                 <div
                   className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
                 >
-                  <div
-                    className={`w-12 h-12 ${step.iconBg} rounded-lg flex items-center justify-center text-2xl`}
-                  >
-                    {step.icon}
-                  </div>
+                  <div className="w-full h-full overflow-hidden relative rounded-lg">
+                      <Image
+                        src={step.image}
+                        alt={step.title}
+                        fill
+                        className="object-cover rounded-xl p-1"
+                      />
+                    </div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   {step.title}

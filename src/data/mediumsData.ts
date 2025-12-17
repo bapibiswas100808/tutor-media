@@ -13,7 +13,7 @@ export interface ClassItem {
 export interface MediumData {
   name: string;
   slug: string;
-  icon: string;
+  image: string;
   description: string;
   classes: ClassItem[];
 }
@@ -23,7 +23,7 @@ export const mediumsData: MediumData[] = [
   {
     name: "Bangla Medium",
     slug: "bangla-medium",
-    icon: "🇧🇩",
+    image: "/images/tutoringServices/bangla-medium.png",
     description:
       "Comprehensive tutoring for Bangla medium students from Play to HSC level",
     classes: [
@@ -308,7 +308,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "English Medium",
     slug: "english-medium",
-    icon: "🇬🇧",
+    image: "/images/tutoringServices/english-medium.png",
+
     description:
       "Expert tutoring for international curricula including Cambridge, Edexcel, and IB",
     classes: [
@@ -623,7 +624,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "English Version",
     slug: "english-version",
-    icon: "🇬🇧",
+    image: "/images/tutoringServices/english-version.png",
+
     description:
       "English Version curriculum following national board with English medium instruction",
     classes: [
@@ -943,7 +945,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "Madrasah Medium",
     slug: "madrasah-medium",
-    icon: "🕌",
+    image: "/images/tutoringServices/madrasah-medium.png",
+
     description: "Islamic education combined with modern academic subjects",
     classes: [
       // Play
@@ -1080,7 +1083,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "Admission test",
     slug: "admission-test",
-    icon: "🛠️",
+    image: "/images/tutoringServices/admission-test.png",
+
     description: "Admission test education for skill development",
     classes: [
       {
@@ -1203,7 +1207,7 @@ export const mediumsData: MediumData[] = [
   {
     name: "Religious Studies",
     slug: "religious-studies",
-    icon: "🙏",
+    image: "/images/tutoringServices/religious-studies.png",
     description:
       "Islamic education and Quranic studies for spiritual development",
     classes: [
@@ -1284,11 +1288,11 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Arts
+  // Arts & Creativity
   {
-    name: "Arts",
-    slug: "arts",
-    icon: "🎨",
+    name: "Arts & Creativity",
+    slug: "arts-creativity",
+    image: "/images/tutoringServices/arts&creativity.png",
     description: "Creative arts education for developing artistic talents",
     classes: [
       {
@@ -1388,11 +1392,12 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Professional Skill Development
+  // Skill Development
   {
-    name: "Professional Skill Development",
-    slug: "professional-skill-development",
-    icon: "💼",
+    name: "Skill Development",
+    slug: "skill-development",
+    image: "/images/tutoringServices/professional-skill-development.png",
+
     description:
       "Courses designed to enhance professional skills for career growth and workplace excellence",
     classes: [
@@ -1497,7 +1502,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "Language Training",
     slug: "language-training",
-    icon: "🗣️",
+    image: "/images/tutoringServices/language-training.png",
+
     description:
       "Professional language courses for communication and certification",
     classes: [
@@ -1602,7 +1608,8 @@ export const mediumsData: MediumData[] = [
   {
     name: "Job Preparation",
     slug: "job-preparation",
-    icon: "💼",
+    image: "/images/tutoringServices/job-preparation.png",
+
     description: "Comprehensive programs to prepare for career and job success",
     classes: [
       {
