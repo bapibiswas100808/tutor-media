@@ -5,6 +5,8 @@ import Link from "next/link";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Image from "next/image";
+import { mediumsData } from "@/data/mediumsData";
 
 // const basicSubjects = [
 //   { name: "Bangla", icon: "📚", students: 250 },
@@ -25,18 +27,48 @@ import "slick-carousel/slick/slick-theme.css";
 // Note: All class data is now centralized in src/data/mediumsData.ts
 // This component displays medium cards that link to detailed class pages
 
-const mediums = [
-  { name: "Bangla Medium", icon: "🇧🇩" },
-  { name: "English Medium", icon: "🇬🇧" },
-  { name: "English Version", icon: "🇬🇧" },
-  { name: "Madrasah Medium", icon: "🕌" },
-  { name: "Admission test", icon: "🛠️" },
-  { name: "Religious Studies", icon: "🙏" },
-  { name: "Arts", icon: "🎨" },
-  { name: "Professional Skill Development", icon: "📝" },
-  { name: "Language Training", icon: "🗣️" },
-  { name: "Job Preparation", icon: "📝" },
-];
+//  const mediums = [
+//   {
+//     name: "Bangla Medium",
+//     image: "/images/tutoringServices/bangla-medium.png",
+//   },
+//   {
+//     name: "English Medium",
+//     image: "/images/tutoringServices/english-medium.png",
+//   },
+//   {
+//     name: "English Version",
+//     image: "/images/tutoringServices/english-version.png",
+//   },
+//   {
+//     name: "Madrasah Medium",
+//     image: "/images/tutoringServices/madrasah-medium.png",
+//   },
+//   {
+//     name: "Admission Test",
+//     image: "/images/tutoringServices/admission-test.png",
+//   },
+//   {
+//     name: "Religious Studies",
+//     image: "/images/tutoringServices/religious-studies.png",
+//   },
+//   {
+//     name: "Arts & Creativity",
+//     image: "/images/tutoringServices/arts&creativity.png",
+//   },
+//   {
+//     name: "Skill Development",
+//     image: "/images/tutoringServices/professional-skill-development.png",
+//   },
+//   {
+//     name: "Language Training",
+//     image: "/images/tutoringServices/language-training.png",
+//   },
+//   {
+//     name: "Job Preparation",
+//     image: "/images/tutoringServices/job-preparation.png",
+//   },
+// ];
 
 export default function Services() {
   const settings = {
@@ -83,7 +115,7 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-6"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Our Tutoring Services
@@ -96,18 +128,26 @@ export default function Services() {
 
         <div className="medium-slider">
           <Slider {...settings}>
-            {mediums.map((medium) => {
+            {mediumsData.map((medium) => {
               const slug = medium.name.toLowerCase().replace(/\s+/g, "-");
               return (
-                <div key={medium.name} className="px-3">
-                  <Link href={`/mediums/${slug}`}>
+                <div key={medium.name} className="p-6">
+                  <Link href={`/mediums/${medium.slug}`}>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}
-                      className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100 cursor-pointer h-40 flex flex-col items-center justify-center"
+                      className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl text-center hover:shadow-lg transition-all duration-200 border border-gray-100 cursor-pointer h-48 flex flex-col items-center justify-center"
                     >
-                      <div className="text-5xl mb-3">{medium.icon}</div>
-                      <h3 className="font-semibold text-gray-900 text-base">
+                      <div className="w-full h-full overflow-hidden relative rounded-t-xl">
+                        <Image
+                          src={medium.image}
+                          alt={medium.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-lg p-3">
                         {medium.name}
                       </h3>
                     </motion.div>

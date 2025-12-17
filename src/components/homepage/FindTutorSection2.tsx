@@ -3,19 +3,19 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import img from "/public/demo.jpg";
+import img from "/public/images/findTutor.png";
 
 export default function FindTutorSection2() {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 items-center justify-center">
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="space-y-3 col-span-2"
+            className="space-y-3 col-span-3"
           >
             <div className="text-3xl md:text-5xl font-bold text-blue-900">
               <h2>Find Your</h2>
@@ -43,29 +43,13 @@ export default function FindTutorSection2() {
             viewport={{ once: true }}
             className="col-span-3"
           >
-            <div className="h-96 grid grid-cols-2 gap-2">
+            <div className="h-80">
               <div className="relative w-full h-full">
                 <Image
                   src={img}
                   alt="Tutor 1"
                   fill
-                  className="object-cover border-2 border-blue-200"
-                />
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={img}
-                  alt="Tutor 1"
-                  fill
-                  className="object-cover  border-2 border-blue-200"
-                />
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={img}
-                  alt="Tutor 1"
-                  fill
-                  className="object-cover  border-2 border-blue-200"
+                  className="object-cover"
                 />
               </div>
               {/* <div className="relative w-full h-full">
