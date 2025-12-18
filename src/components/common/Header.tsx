@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const navigation = [
   { name: "Tuition Jobs", href: "/tuition-jobs" },
@@ -16,16 +17,21 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-blue-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold">
-              TM
-            </div>
-            <span className="text-xl font-bold text-gray-900">Tutor Media</span>
-          </Link>
+          <Link href="/" className="flex-shrink-0 flex items-center relative ">
+            <Image
+              src="/images/logo.png"
+              alt="Tutor Media Logo"
+              width={140}
+              height={50}
+              priority
+              className="object-contain h-auto w-auto"
+            />
+            <div className="absolute h-6 w-29 bg-orange-400 -z-10 bottom-14 left-14"></div>
+          </Link> 
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

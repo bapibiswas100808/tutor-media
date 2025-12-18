@@ -6,6 +6,92 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 
+const divisionsAndDistricts = {
+  dhaka: {
+    name: "Dhaka",
+    districts: [
+      "Dhaka",
+      "Narayanganj",
+      "Gazipur",
+      "Tangail",
+      "Kishoreganj",
+      "Manikganj",
+      "Munshiganj",
+      "Shariatpur",
+      "Rajbari",
+      "Madaripur",
+    ],
+  },
+  rajshahi: {
+    name: "Rajshahi",
+    districts: [
+      "Rajshahi",
+      "Natore",
+      "Naogaon",
+      "Chapainawabganj",
+      "Bogura",
+      "Sirajganj",
+      "Pabna",
+    ],
+  },
+  khulna: {
+    name: "Khulna",
+    districts: [
+      "Khulna",
+      "Bagerhat",
+      "Satkhira",
+      "Jessore",
+      "Magura",
+      "Narail",
+    ],
+  },
+  rangpur: {
+    name: "Rangpur",
+    districts: [
+      "Rangpur",
+      "Gaibandha",
+      "Kurigram",
+      "Dinajpur",
+      "Thakurgaon",
+      "Panchagarh",
+      "Lalmonirhat",
+    ],
+  },
+  mymensingh: {
+    name: "Mymensingh",
+    districts: ["Mymensingh", "Jamalpur", "Sherpur", "Netrokona"],
+  },
+  chattogram: {
+    name: "Chattogram",
+    districts: [
+      "Chattogram",
+      "Cox's Bazar",
+      "Feni",
+      "Noakhali",
+      "Lakshmipur",
+      "Cumilla",
+      "Khagrachari",
+      "Rangamati",
+      "Bandarban",
+    ],
+  },
+  sylhet: {
+    name: "Sylhet",
+    districts: ["Sylhet", "Moulvibazar", "Sunamganj", "Habiganj"],
+  },
+  barishal: {
+    name: "Barishal",
+    districts: [
+      "Barishal",
+      "Pirojpur",
+      "Jhalokati",
+      "Patuakhali",
+      "Bhola",
+      "Borguna",
+    ],
+  },
+};
+
 const becomeTutorSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -13,8 +99,8 @@ const becomeTutorSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     message: "Please select your gender",
   }),
-  city: z.string().min(1, "Please select your city"),
-  location: z.string().min(1, "Please select your location"),
+  city: z.string().min(1, "Please select your division"),
+  location: z.string().min(1, "Please select your district"),
   qualification: z.string().min(2, "Please enter your qualification"),
   experience: z.string().min(1, "Please select your experience level"),
 
@@ -44,12 +130,14 @@ const experienceLevels = [
 export default function BecomeTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string>("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<BecomeTutorFormData>({
     resolver: zodResolver(becomeTutorSchema),
     defaultValues: {
@@ -59,6 +147,14 @@ export default function BecomeTutorForm() {
       availableDays: [],
     },
   });
+
+  const cityValue = watch("city");
+
+  const getDistricts = () => {
+    if (!cityValue) return [];
+    const division = divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
+    return division?.districts || [];
+  };
 
   const onSubmit = async (data: BecomeTutorFormData) => {
     setIsSubmitting(true);
@@ -206,21 +302,18 @@ export default function BecomeTutorForm() {
               htmlFor="city"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              City *
+              Division *
             </label>
             <select
               {...register("city")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             >
-              <option value="">Select your city</option>
-              <option value="dhaka">Dhaka</option>
-              <option value="rajshahi">Rajshahi</option>
-              <option value="khulna">Khulna</option>
-              <option value="rangpur">Rangpur</option>
-              <option value="mymensingh">Mymensingh</option>
-              <option value="chattogram">Chattogram</option>
-              <option value="sylhet">Sylhet</option>
-              <option value="barishal">Barishal</option>
+              <option value="">Select your division</option>
+              {Object.entries(divisionsAndDistricts).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value.name}
+                </option>
+              ))}
             </select>
             {errors.city && (
               <p className="mt-1 text-sm text-red-600">
@@ -234,21 +327,21 @@ export default function BecomeTutorForm() {
               htmlFor="location"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Location *
+              District *
             </label>
             <select
               {...register("location")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+              disabled={!cityValue}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
-              <option value="">Select your city</option>
-              <option value="dhaka">Dhaka</option>
-              <option value="rajshahi">Rajshahi</option>
-              <option value="khulna">Khulna</option>
-              <option value="rangpur">Rangpur</option>
-              <option value="mymensingh">Mymensingh</option>
-              <option value="chattogram">Chattogram</option>
-              <option value="sylhet">Sylhet</option>
-              <option value="barishal">Barishal</option>
+              <option value="">
+                {cityValue ? "Select your district" : "Select division first"}
+              </option>
+              {getDistricts().map((district) => (
+                <option key={district} value={district}>
+                  {district}
+                </option>
+              ))}
             </select>
             {errors.location && (
               <p className="mt-1 text-sm text-red-600">
