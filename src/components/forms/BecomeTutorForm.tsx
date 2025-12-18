@@ -130,7 +130,7 @@ const experienceLevels = [
 export default function BecomeTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<string>("");
+  // const [selectedCity, setSelectedCity] = useState<string>("");
 
   const {
     register,

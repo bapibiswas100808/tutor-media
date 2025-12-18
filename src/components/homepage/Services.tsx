@@ -129,7 +129,7 @@ export default function Services() {
         <div className="medium-slider">
           <Slider {...settings}>
             {mediumsData.map((medium) => {
-              const slug = medium.name.toLowerCase().replace(/\s+/g, "-");
+              // const slug = medium.name.toLowerCase().replace(/\s+/g, "-");
               return (
                 <div key={medium.name} className="p-6">
                   <Link href={`/mediums/${medium.slug}`}>

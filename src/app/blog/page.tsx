@@ -16,7 +16,29 @@ interface BlogPost {
   image?: string;
 }
 
-async function getBlogPosts() {
+interface StrapiResponse {
+  data: StrapiPost[];
+}
+
+interface StrapiPost {
+  id: number;
+  attributes: {
+    title: string;
+    excerpt: string;
+    category?: string;
+    date?: string;
+    createdAt?: string;
+    image?: {
+      data: Array<{
+        attributes: {
+          url: string;
+        };
+      }>;
+    };
+  };
+}
+
+async function getBlogPosts(): Promise<BlogPost[]> {
   const strapiUrl =
     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
@@ -27,22 +49,25 @@ async function getBlogPosts() {
 
     if (!res.ok) {
       console.error(`Strapi API error: ${res.status}`);
-      throw new Error(`Failed to fetch blog posts: ${res.status}`);
+      return [];
     }
 
-    const data = await res.json();
+    const data: StrapiResponse = await res.json();
     console.log("Raw Strapi data:", data);
 
+    if (!data.data || !Array.isArray(data.data)) {
+      return [];
+    }
+
     // Map Strapi response to your interface
-    const blogPosts =
-      data.data?.map((post: any) => ({
-        id: post.id,
-        title: post.attributes?.title || "Untitled",
-        excerpt: post.attributes?.excerpt || "No excerpt",
-        category: post.attributes?.category || "Uncategorized",
-        date: post.attributes?.date || post.attributes?.createdAt || "No date",
-        image: post.attributes?.image?.data?.[0]?.attributes?.url || undefined,
-      })) || [];
+    const blogPosts: BlogPost[] = data.data.map((post: StrapiPost) => ({
+      id: post.id,
+      title: post.attributes?.title || "Untitled",
+      excerpt: post.attributes?.excerpt || "No excerpt",
+      category: post.attributes?.category || "Uncategorized",
+      date: post.attributes?.date || post.attributes?.createdAt || "No date",
+      image: post.attributes?.image?.data?.[0]?.attributes?.url,
+    }));
 
     console.log("Mapped blog posts:", blogPosts);
     return blogPosts;
@@ -79,17 +104,20 @@ export default async function BlogPage() {
                   key={post.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="h-48 bg-linear-to-r from-blue-500 to-purple-600 relative">
-                    {/* <Image
-                      src={
-                        post.image
-                          ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${post.image}`
-                          : "/images/findTutor.png"
-                      }
-                      alt={post.title}
-                      fill
-                      className="object-cover"
-                    /> */}
+                  <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <span className="text-white text-4xl">📚</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-2">
