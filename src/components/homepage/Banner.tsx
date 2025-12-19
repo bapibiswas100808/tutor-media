@@ -23,9 +23,9 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8 text-left"
+            className="space-y-6 text-left"
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
               {bannerData.heading}
             </h1>
 
@@ -35,19 +35,19 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             <div className="flex flex-col sm:flex-row gap-4 items-start">
               <Link
                 href="/hire-tutor"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+                className="bg-[#0D24A0] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Hire a Tutor
               </Link>
               <Link
                 href="/become-a-tutor"
-                className="bg-orange-400 hover:bg-orange-500 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+                className="bg-[#FFCE58] hover:bg-[#ffd572] text-black font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Become a Tutor
               </Link>
               <Link
                 href="/tuition-jobs"
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+                className="bg-[#62B8FF] hover:bg-[#7fc5ff] text-black font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Tuition Jobs
               </Link>
@@ -59,22 +59,24 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:flex flex-wrap justify-center items-center gap-10 relative hidden"
+            className="lg:flex flex-wrap justify-center items-center gap-8 relative hidden"
           >
             {/* Top Left - Art/Drawing Student */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
               className="relative w-72 h-72 rounded-3xl rounded-br-none overflow-hidden"
             >
               <Image
-                src="/images/banner/1.png"
+                src="/images/banner/4.png"
                 alt="Creative Learning"
                 fill
                 className="object-cover"
               />
             </motion.div>
+
+            
             {/* Top Right - Madrasa Student */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -109,11 +111,11 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
               className="relative w-72 h-72 rounded-3xl rounded-tl-none overflow-hidden"
             >
               <Image
-                src="/images/banner/4.png"
+                src="/images/banner/1.png"
                 alt="Creative Learning"
                 fill
                 className="object-cover"

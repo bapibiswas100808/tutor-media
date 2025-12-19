@@ -75,7 +75,7 @@ export default function Services() {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -136,7 +136,8 @@ export default function Services() {
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}
-                      className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl text-center hover:shadow-lg transition-all duration-200 border border-gray-100 cursor-pointer h-48 flex flex-col items-center justify-center"
+                      className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl text-center hover:shadow-lg transition-all duration-200 border border-gray-100 cursor-pointer h-[400px]
+                       flex flex-col items-center justify-center"
                     >
                       <div className="w-full h-full overflow-hidden relative rounded-t-xl">
                         <Image
