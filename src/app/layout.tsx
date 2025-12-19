@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   keywords:
     "tutoring, education, tutor, student, learning, Bangladesh, online tutoring, home tutoring",
   authors: [{ name: "Tutor Media" }],
+  icons: {
+    icon: "/images/logo.png",
+  },
 };
 
 export const viewport: Viewport = {

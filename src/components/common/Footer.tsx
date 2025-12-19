@@ -1,6 +1,7 @@
 "use client";
 
 import { Facebook, Linkedin, Youtube } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const footerLinks = {
@@ -37,12 +38,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-blue-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold">
-                TM
-              </div>
-              <span className="text-xl font-bold">Tutor Media</span>
-            </div>
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/logo.png"
+                alt="Tutor Media Logo"
+                width={140}
+                height={40}
+                priority
+                className="object-contain"
+              />
+            </Link>
             <p className="text-gray-300 mb-6 max-w-md">
               Connecting students with qualified tutors across Bangladesh.
               Making quality education accessible to everyone.
@@ -111,7 +117,6 @@ export default function Footer() {
                   <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.75 2.9 2.9 0 0 1 2.31-4.64 2.88 2.88 0 0 1 .88.13V9.4a5.85 5.85 0 0 0-1-.08A5.7 5.7 0 0 0 5 20.41a5.7 5.7 0 0 0 5.73-.37 5.64 5.64 0 0 0 1.75-2.39A5.63 5.63 0 0 0 13.14 20v-7.86a7.54 7.54 0 0 0 4.58 1.34v-3.4a4.76 4.76 0 0 1-.87-.07z" />
                 </svg>
               </Link>
-
             </div>
           </div>
 
@@ -140,21 +145,25 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-semibold mb-2">Contact Us</h4>
-              <p className="text-gray-300">📧 info@tutormedia.com</p>
-              <p className="text-gray-300">📞 +880 1234-567890</p>
+              <p className="text-gray-300">📧 tutor.media9301@gmail.com</p>
+              <p className="text-gray-300">📞 +880 1990-539200</p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Office Address</h4>
               <p className="text-gray-300">
-                123 Education Street
+                Khulna,
                 <br />
-                Dhaka 1000, Bangladesh
+                Khulna Division, Bangladesh
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Support Hours</h4>
-              <p className="text-gray-300">Mon - Fri: 9:00 AM - 6:00 PM</p>
-              <p className="text-gray-300">Sat - Sun: 10:00 AM - 4:00 PM</p>
+              <p className="text-gray-300">
+                Monday – Thursday: 9:00 AM – 6:00 PM
+              </p>
+              <p className="text-gray-300">
+                Friday – Saturday: 10:00 AM – 4:00 PM
+              </p>
             </div>
           </div>
         </div>
@@ -162,8 +171,9 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Tutor Media. All rights reserved.
+            © {new Date().getFullYear()} Tutor Media. All rights reserved.
           </p>
+
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
               href="#"

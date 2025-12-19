@@ -29,7 +29,7 @@ export default function FindTutorSection2() {
             <div className="pt-4">
               <Link
                 href="/tutor-hub"
-                className="inline-block bg-[#1447E6] hover:bg-[#093ede] text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105"
+                className="inline-block bg-[#1447E6] hover:bg-[#093ede] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
               >
                 Find a Tutor 🔎
               </Link>
@@ -44,7 +44,7 @@ export default function FindTutorSection2() {
             className="col-span-3"
           >
             <div className="h-80">
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-full shadow-2xl shadow-blue-500 rounded-full overflow-hidden">
                 <Image
                   src={img}
                   alt="Tutor 1"
