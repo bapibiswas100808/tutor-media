@@ -26,41 +26,41 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
   const classes = Array.from(new Set(tuitionJobs.map((job) => job.class)));
 
   // Filter jobs
-  const filteredJobs = tuitionJobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.class.toLowerCase().includes(searchQuery.toLowerCase());
+  // const filteredJobs = tuitionJobs.filter((job) => {
+  //   const matchesSearch =
+  //     job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     job.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     job.class.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesSubject =
-      selectedClass === "all" || job.class === selectedClass;
+  //   const matchesSubject =
+  //     selectedClass === "all" || job.class === selectedClass;
 
-    const matchesMode =
-      selectedMode === "all" ||
-      job.mode.toLowerCase().includes(selectedMode.toLowerCase());
+  //   const matchesMode =
+  //     selectedMode === "all" ||
+  //     job.mode.toLowerCase().includes(selectedMode.toLowerCase());
 
-    const matchesMedium =
-      selectedMedium === "all" ||
-      (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
-      (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
-      (selectedMedium === "englishVersion" && job.medium === "englishVersion") ||
-      (selectedMedium === "madrasahBackground" &&
-        job.medium === "madrasahBackground");
+  //   const matchesMedium =
+  //     selectedMedium === "all" ||
+  //     (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
+  //     (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
+  //     (selectedMedium === "englishVersion" && job.medium === "englishVersion") ||
+  //     (selectedMedium === "madrasahBackground" &&
+  //       job.medium === "madrasahBackground");
 
-    const matchesDivision =
-      selectedDivision === "all" ||
-      job.division?.toLowerCase() === selectedDivision.toLowerCase();
+  //   const matchesDivision =
+  //     selectedDivision === "all" ||
+  //     job.division?.toLowerCase() === selectedDivision.toLowerCase();
 
-    return (
-      matchesSearch &&
-      matchesSubject &&
-      matchesMode &&
-      matchesMedium &&
-      matchesDivision &&
-      job.status === "active"
-    );
-  });
+  //   return (
+  //     matchesSearch &&
+  //     matchesSubject &&
+  //     matchesMode &&
+  //     matchesMedium &&
+  //     matchesDivision &&
+  //     job.status === "active"
+  //   );
+  // });
 
   const handleApply = (job: TuitionJob) => {
     setSelectedJob(job);
@@ -192,9 +192,9 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
           <p className="text-gray-600">
             Showing{" "}
             <span className="font-semibold text-gray-800">
-              {filteredJobs.length}
+              {tuitionJobs.length}
             </span>{" "}
-            {filteredJobs.length === 1 ? "job" : "jobs"}
+            {tuitionJobs.length === 1 ? "job" : "jobs"}
           </p>
 
           {/* Quick Filter Badges */}
@@ -239,9 +239,9 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
         </motion.div>
 
         {/* Jobs Grid */}
-        {filteredJobs.length > 0 ? (
+        {tuitionJobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredJobs.map((job) => (
+            {tuitionJobs.map((job) => (
               <TuitionJobCard key={job.id} job={job} onApply={handleApply} />
             ))}
           </div>

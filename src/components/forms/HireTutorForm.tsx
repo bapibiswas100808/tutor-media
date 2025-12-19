@@ -5,14 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
+import { createPublic } from "@/lib/strapi";
 
 const hireTutorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   gender: z.string().min(1, "Please select a gender"),
-  subject: z.string().min(1, "Please select a subject"),
-  class: z.string().min(1, "Please select a class"),
   area: z.string().min(2, "Please enter your area"),
   budget: z.string().min(1, "Please enter your budget"),
   mode: z.enum(["home", "online", "group"], {
@@ -76,13 +75,33 @@ export default function HireTutorForm() {
   const onSubmit = async (data: HireTutorFormData) => {
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await createPublic("tuition-jobs", {
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        location: data.area,
+        budget: data.budget,
+        mode: data.mode,
+        gender: data.gender,
+        description: data.description,
+      });
 
-    console.log("Form submitted:", data);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-    reset();
+      if (response.error) {
+        alert(`Error: ${response.error}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      console.log("Tuition request submitted:", response.data);
+      setIsSubmitted(true);
+      reset();
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(`Error submitting request: ${error instanceof Error ? error.message : "Unknown error"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -199,102 +218,6 @@ export default function HireTutorForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
-            htmlFor="subject"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Medium *
-          </label>
-          <select
-            {...register("gender")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          >
-            <option value="">Select a medium</option>
-            <option value="banglaMedium">Bangla Medium</option>
-            <option value="englishMedium">English Medium</option>
-            <option value="englishVersion">English Version</option>
-            <option value="madrasahBackground">Madrasah Background</option>
-          </select>
-          {errors.gender && (
-            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="class"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Class/Level *
-          </label>
-          <select
-            {...register("class")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          >
-            <option value="">Select class/level</option>
-            {classes.map((cls) => (
-              <option key={cls} value={cls}>
-                {cls}
-              </option>
-            ))}
-          </select>
-          {errors.class && (
-            <p className="mt-1 text-sm text-red-600">{errors.class.message}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Tuition Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            htmlFor="subject"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Subject *
-          </label>
-          <select
-            {...register("subject")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          >
-            <option value="">Select a subject</option>
-            {subjects.map((subject) => (
-              <option key={subject} value={subject}>
-                {subject}
-              </option>
-            ))}
-          </select>
-          {errors.subject && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.subject.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="subject"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Preferred Teacher Gender *
-          </label>
-          <select
-            {...register("gender")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          >
-            <option value="">Select preferred gender</option>
-            <option value="any">Any</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          {errors.gender && (
-            <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
             htmlFor="budget"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
@@ -312,22 +235,19 @@ export default function HireTutorForm() {
         </div>
         <div>
           <label
-            htmlFor="budget"
+            htmlFor="gender"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Days (Per Week) *
+            Preferred Teacher Gender *
           </label>
           <select
             {...register("gender")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
-            <option value="">Days Per Week</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
+            <option value="">Select preferred gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="any">Any</option>
           </select>
           {errors.gender && (
             <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
