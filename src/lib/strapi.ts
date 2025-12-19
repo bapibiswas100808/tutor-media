@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-expect-error qs module has no types
 import qs from 'qs'
 // import { userRevalidate } from "./userRevalidate";
 
