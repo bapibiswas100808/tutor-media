@@ -57,11 +57,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
           {/* Profile Image */}
           <div className="relative h-48 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
             <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-xl">
-              {tutor.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .substring(0, 2)}
+              {tutor.name}
             </div>
           </div>
 
