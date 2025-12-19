@@ -22,19 +22,19 @@ interface StrapiResponse {
 
 interface StrapiPost {
   id: number;
-  attributes: {
-    title: string;
-    excerpt: string;
-    category?: string;
-    date?: string;
-    createdAt?: string;
-    image?: {
-      data: Array<{
-        attributes: {
-          url: string;
-        };
-      }>;
-    };
+  documentId?: string;
+  title: string;
+  excerpt: string;
+  category?: string;
+  date?: string;
+  createdAt?: string;
+  publishedAt?: string;
+  image?: {
+    data: Array<{
+      attributes: {
+        url: string;
+      };
+    }>;
   };
 }
 
@@ -52,25 +52,25 @@ async function getBlogPosts(): Promise<BlogPost[]> {
       return [];
     }
 
-    const data: StrapiResponse = await res.json();
-    console.log("Raw Strapi data:", data);
+    const blogPosts: StrapiResponse = await res.json();
+    console.log("Raw Strapi data:", blogPosts);
 
-    if (!data.data || !Array.isArray(data.data)) {
+    if (!blogPosts.data || !Array.isArray(blogPosts.data)) {
       return [];
     }
 
     // Map Strapi response to your interface
-    const blogPosts: BlogPost[] = data.data.map((post: StrapiPost) => ({
+    const mappedPosts: BlogPost[] = blogPosts.data.map((post: StrapiPost) => ({
       id: post.id,
-      title: post.attributes?.title || "Untitled",
-      excerpt: post.attributes?.excerpt || "No excerpt",
-      category: post.attributes?.category || "Uncategorized",
-      date: post.attributes?.date || post.attributes?.createdAt || "No date",
-      image: post.attributes?.image?.data?.[0]?.attributes?.url,
+      title: post.title || "Untitled",
+      excerpt: post.excerpt || "No excerpt",
+      category: post.category || "Uncategorized",
+      date: post.date || post.publishedAt || post.createdAt || "No date",
+      image: post.image?.data?.[0]?.attributes?.url,
     }));
 
-    console.log("Mapped blog posts:", blogPosts);
-    return blogPosts;
+    console.log("Mapped blog posts:", mappedPosts);
+    return mappedPosts;
   } catch (error) {
     console.error("Error fetching blog posts:", error);
     return [];

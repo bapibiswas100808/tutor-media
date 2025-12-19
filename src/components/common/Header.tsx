@@ -17,20 +17,19 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm overflow-hidden">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm shadow-sm overflow-hidden bg-[#ffd572]">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center relative ">
+          <Link href="/" className="flex-shrink-0 flex items-center ">
             <Image
               src="/images/logo.png"
               alt="Tutor Media Logo"
               width={140}
               height={50}
               priority
-              className="object-contain h-auto w-auto"
+              className="object-contain h-40 w-auto"
             />
-            <div className="absolute h-6 w-29 bg-[#d79e1a] -z-10 bottom-14 left-14"></div>
           </Link> 
 
           {/* Desktop Navigation */}
