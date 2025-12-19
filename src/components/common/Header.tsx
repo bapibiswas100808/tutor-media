@@ -10,7 +10,7 @@ const navigation = [
   { name: "Tutor Hub", href: "/tutor-hub" },
   { name: "Categories", href: "/mediums" },
   { name: "Blog", href: "/blog" },
-  { name: "Shop", href: "/shop" },
+  // { name: "Shop", href: "/shop" },
 ];
 
 export default function Header() {
@@ -30,7 +30,7 @@ export default function Header() {
               priority
               className="object-contain h-auto w-auto"
             />
-            <div className="absolute h-6 w-29 bg-orange-400 -z-10 bottom-14 left-14"></div>
+            <div className="absolute h-6 w-29 bg-[#d79e1a] -z-10 bottom-14 left-14"></div>
           </Link> 
 
           {/* Desktop Navigation */}
@@ -39,7 +39,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="text-gray-700 hover:text-blue-600 font-semibold text-xl transition-colors duration-200"
               >
                 {item.name}
               </Link>
@@ -50,7 +50,7 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-4">
             <Link
               href="/become-a-tutor"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+              className="bg-[#0D24A0] hover:bg-blue-700 text-white px-5 py-2 rounded-full font-medium transition-colors duration-200"
             >
               Become a Tutor
             </Link>

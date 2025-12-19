@@ -118,37 +118,77 @@ export default async function MediumPage({ params }: MediumPageProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                 {/* Content */}
-                <div className="relative p-8">
+                <div className="relative">
                   {/* Icon */}
-                  <div className="relative w-full h-40 mb-6">
+                  <div className="relative w-full h-[400px]">
                     <Image
                       src={classItem.image}
                       alt={classItem.name}
                       fill
                       className="object-cover"
-                      />
+                    />
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                    {classItem.name}
-                  </h3>
+                  <div className="p-6">
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                      {classItem.name}
+                    </h3>
 
-                  {/* Subtitle */}
-                  <p className="text-sm font-medium text-blue-600 mb-3">
-                    {classItem.subtitle}
-                  </p>
+                    {/* Subtitle */}
+                    <p className="text-sm font-medium text-blue-600 mb-3">
+                      {classItem.subtitle}
+                    </p>
 
-                  {/* Description Preview */}
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                    {classItem.description}
-                  </p>
+                    {/* Description Preview */}
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                      {classItem.description}
+                    </p>
 
-                  {/* Duration */}
-                  {classItem.duration && (
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                    {/* Duration */}
+                    {classItem.duration && (
+                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        {classItem.duration}
+                      </div>
+                    )}
+
+                    {/* Subjects */}
+                    {classItem.subjects && classItem.subjects.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {classItem.subjects.slice(0, 3).map((subject, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-gray-100 group-hover:bg-blue-50 text-gray-700 group-hover:text-blue-700 text-xs rounded-full transition-colors"
+                          >
+                            {subject}
+                          </span>
+                        ))}
+                        {classItem.subjects.length > 3 && (
+                          <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                            +{classItem.subjects.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* CTA */}
+                    <div className="flex items-center text-blue-600 font-medium group-hover:text-blue-700">
+                      <span>Learn More</span>
                       <svg
-                        className="w-4 h-4 mr-2"
+                        className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -157,48 +197,10 @@ export default async function MediumPage({ params }: MediumPageProps) {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          d="M9 5l7 7-7 7"
                         />
                       </svg>
-                      {classItem.duration}
                     </div>
-                  )}
-
-                  {/* Subjects */}
-                  {classItem.subjects && classItem.subjects.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {classItem.subjects.slice(0, 3).map((subject, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-gray-100 group-hover:bg-blue-50 text-gray-700 group-hover:text-blue-700 text-xs rounded-full transition-colors"
-                        >
-                          {subject}
-                        </span>
-                      ))}
-                      {classItem.subjects.length > 3 && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                          +{classItem.subjects.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* CTA */}
-                  <div className="flex items-center text-blue-600 font-medium group-hover:text-blue-700">
-                    <span>Learn More</span>
-                    <svg
-                      className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
                   </div>
                 </div>
 

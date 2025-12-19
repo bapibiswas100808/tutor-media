@@ -39,14 +39,14 @@ async function getBannerData(): Promise<BannerData> {
     const { data } = await res.json();
     
     return {
-      heading: data.heading || "Connecting Learners to Verified and Qualified Tutors",
+      heading: data.heading || "Connecting Learners With Verified Tutors.",
       subHeading: data.subHeading || "Hire the Right Tutor or get Tuition in your Area.",
     };
   } catch (error) {
     console.error("Banner fetch error:", error);
     // Return fallback data
     return {
-      heading: "Connecting Learners to Verified and Qualified Tutors",
+      heading: "Connecting Learners With Verified Tutors.",
       subHeading: "Hire the Right Tutor or get Tuition in your Area.",
     };
   }
