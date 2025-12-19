@@ -185,7 +185,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
           {/* Apply Button */}
           <button
             onClick={() => onApply(job)}
-            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer"
+            className="bg-blue-600 text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer"
           >
             Apply Now
           </button>
