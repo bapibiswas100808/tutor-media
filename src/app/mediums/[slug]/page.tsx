@@ -56,7 +56,7 @@ export default async function MediumPage({ params }: MediumPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Hero Section with Background Image */}
-      <section className="relative py-20 px-4 overflow-hidden text-white">
+      <section className="relative py-60 px-4 overflow-hidden text-white">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
