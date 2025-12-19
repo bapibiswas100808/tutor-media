@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
+import { createPublic } from "@/lib/strapi";
 
 const divisionsAndDistricts = {
   dhaka: {
@@ -103,17 +104,6 @@ const becomeTutorSchema = z.object({
   location: z.string().min(1, "Please select your district"),
   qualification: z.string().min(2, "Please enter your qualification"),
   experience: z.string().min(1, "Please select your experience level"),
-
-  subjects: z.array(z.string()).min(1, "Please select at least one subject"),
-  classLevels: z
-    .array(z.string())
-    .min(1, "Please select at least one class level"),
-  teachingMode: z
-    .array(z.string())
-    .min(1, "Please select at least one teaching mode"),
-  availableDays: z
-    .array(z.string())
-    .min(1, "Please select at least one available day"),
   bio: z.string().min(20, "Bio must be at least 20 characters"),
 });
 
@@ -141,10 +131,10 @@ export default function BecomeTutorForm() {
   } = useForm<BecomeTutorFormData>({
     resolver: zodResolver(becomeTutorSchema),
     defaultValues: {
-      subjects: [],
-      classLevels: [],
-      teachingMode: [],
-      availableDays: [],
+      // subjects: [],
+      // classLevels: [],
+      // teachingMode: [],
+      // availableDays: [],
     },
   });
 
@@ -159,13 +149,37 @@ export default function BecomeTutorForm() {
   const onSubmit = async (data: BecomeTutorFormData) => {
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await createPublic("tutor-hubs", {
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        gender: data.gender,
+        city: data.city,
+        location: data.location,
+        qualification: data.qualification,
+        experience: data.experience,
+        bio: data.bio,
+        isVerified: false,
+        isApproved: false,
+        isPremium: false,
+      });
 
-    console.log("Tutor application submitted:", data);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-    reset();
+      if (response.error) {
+        alert(`Error: ${response.error}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      console.log("Tutor application submitted:", response.data);
+      setIsSubmitted(true);
+      reset();
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
