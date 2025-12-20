@@ -1,8 +1,9 @@
 export interface Tutor {
   id: number;
-  name: string;
+  fullName: string;
   email: string;
   phone: string;
+  gender?: "male" | "female" | "other";
   profilePicture: string;
   subjects: string[];
   qualifications: string;
@@ -16,20 +17,31 @@ export interface Tutor {
   bio: string;
   achievements: string[];
   languages: string[];
-  verified: boolean;
-  premium: boolean;
+  isVerified: boolean;
+  isPremium: boolean;
+  isApproved?: boolean;
   joinedDate: string;
   responseTime: string;
   successRate: string;
   specialization?: string;
   education?: string[];
   ageGroup?: string[];
+  qualification?: string;
+  city?: string;
+  image?: {
+    url: string;
+    formats?: {
+      large?: { url: string };
+      medium?: { url: string };
+      small?: { url: string };
+    };
+  };
 }
 
 export const tutorsList: Tutor[] = [
   {
     id: 1,
-    name: "Dr. Ahmed Hassan",
+    fullName: "Dr. Ahmed Hassan",
     email: "ahmed.hassan@email.com",
     phone: "+880 1712-345678",
     profilePicture: "/tutors/ahmed-hassan.jpg",
@@ -50,8 +62,8 @@ export const tutorsList: Tutor[] = [
       "Average grade improvement of 2+ GPA points",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-03-15",
     responseTime: "Within 1 hour",
     successRate: "98%",
@@ -61,7 +73,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 2,
-    name: "Fatima Khatun",
+    fullName: "Fatima Khatun",
     email: "fatima.khatun@email.com",
     phone: "+880 1812-345679",
     profilePicture: "/tutors/fatima-khatun.jpg",
@@ -82,8 +94,8 @@ export const tutorsList: Tutor[] = [
       "Published author of educational content",
     ],
     languages: ["Bengali", "English", "Hindi"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-07-20",
     responseTime: "Within 1 hour",
     successRate: "95%",
@@ -93,7 +105,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 3,
-    name: "Md. Rashidul Islam",
+    fullName: "Md. Rashidul Islam",
     email: "rashid.islam@email.com",
     phone: "+880 1912-345680",
     profilePicture: "/tutors/rashid-islam.jpg",
@@ -114,8 +126,8 @@ export const tutorsList: Tutor[] = [
       "Medical admission coach",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-01-10",
     responseTime: "Within 2 hours",
     successRate: "92%",
@@ -125,7 +137,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 4,
-    name: "Sarah Ahmed",
+    fullName: "Sarah Ahmed",
     email: "sarah.ahmed@email.com",
     phone: "+880 1612-345681",
     profilePicture: "/tutors/sarah-ahmed.jpg",
@@ -146,8 +158,8 @@ export const tutorsList: Tutor[] = [
       "Hackathon winner",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2023-05-05",
     responseTime: "Within 1 hour",
     successRate: "97%",
@@ -157,7 +169,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 5,
-    name: "Prof. Kamal Uddin",
+    fullName: "Prof. Kamal Uddin",
     email: "kamal.uddin@email.com",
     phone: "+880 1512-345682",
     profilePicture: "/tutors/kamal-uddin.jpg",
@@ -178,8 +190,8 @@ export const tutorsList: Tutor[] = [
       "International conference speaker",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2021-11-15",
     responseTime: "Within 3 hours",
     successRate: "96%",
@@ -189,7 +201,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 6,
-    name: "Nasreen Sultana",
+    fullName: "Nasreen Sultana",
     email: "nasreen.sultana@email.com",
     phone: "+880 1412-345683",
     profilePicture: "/tutors/nasreen-sultana.jpg",
@@ -210,8 +222,8 @@ export const tutorsList: Tutor[] = [
       "Women empowerment advocate",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2022-09-12",
     responseTime: "Within 2 hours",
     successRate: "90%",
@@ -221,7 +233,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 7,
-    name: "Imran Khan",
+    fullName: "Imran Khan",
     email: "imran.khan@email.com",
     phone: "+880 1712-555001",
     profilePicture: "/tutors/imran-khan.jpg",
@@ -242,8 +254,8 @@ export const tutorsList: Tutor[] = [
       "Business consultant",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-02-28",
     responseTime: "Within 2 hours",
     successRate: "94%",
@@ -253,7 +265,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 8,
-    name: "Rupa Chowdhury",
+    fullName: "Rupa Chowdhury",
     email: "rupa.chowdhury@email.com",
     phone: "+880 1812-555002",
     profilePicture: "/tutors/rupa-chowdhury.jpg",
@@ -274,8 +286,8 @@ export const tutorsList: Tutor[] = [
       "Community education leader",
     ],
     languages: ["Bengali", "English", "Hindi"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-03-20",
     responseTime: "Within 3 hours",
     successRate: "88%",
@@ -285,7 +297,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 9,
-    name: "Tanvir Rahman",
+    fullName: "Tanvir Rahman",
     email: "tanvir.rahman@email.com",
     phone: "+880 1912-555003",
     profilePicture: "/tutors/tanvir-rahman.jpg",
@@ -306,8 +318,8 @@ export const tutorsList: Tutor[] = [
       "International communication expert",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-06-15",
     responseTime: "Within 2 hours",
     successRate: "93%",
@@ -317,7 +329,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 10,
-    name: "Dr. Sultana Begum",
+    fullName: "Dr. Sultana Begum",
     email: "sultana.begum@email.com",
     phone: "+880 1612-555004",
     profilePicture: "/tutors/sultana-begum.jpg",
@@ -338,8 +350,8 @@ export const tutorsList: Tutor[] = [
       "Science olympiad mentor",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2021-10-05",
     responseTime: "Within 2 hours",
     successRate: "97%",
@@ -349,7 +361,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 11,
-    name: "Karim Hossain",
+    fullName: "Karim Hossain",
     email: "karim.hossain@email.com",
     phone: "+880 1512-555005",
     profilePicture: "/tutors/karim-hossain.jpg",
@@ -370,8 +382,8 @@ export const tutorsList: Tutor[] = [
       "Digital skills advocate",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-04-10",
     responseTime: "Within 1 hour",
     successRate: "91%",
@@ -381,7 +393,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 12,
-    name: "Ayesha Siddique",
+    fullName: "Ayesha Siddique",
     email: "ayesha.siddique@email.com",
     phone: "+880 1412-555006",
     profilePicture: "/tutors/ayesha-siddique.jpg",
@@ -402,8 +414,8 @@ export const tutorsList: Tutor[] = [
       "Published data analyst",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-08-18",
     responseTime: "Within 2 hours",
     successRate: "95%",
@@ -413,7 +425,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 13,
-    name: "Rafiq Ahmed",
+    fullName: "Rafiq Ahmed",
     email: "rafiq.ahmed@email.com",
     phone: "+880 1712-555007",
     profilePicture: "/tutors/rafiq-ahmed.jpg",
@@ -442,8 +454,8 @@ export const tutorsList: Tutor[] = [
       "Islamic scholar",
     ],
     languages: ["Bengali", "Arabic", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2021-12-01",
     responseTime: "Within 4 hours",
     successRate: "89%",
@@ -453,7 +465,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 14,
-    name: "Nadia Islam",
+    fullName: "Nadia Islam",
     email: "nadia.islam@email.com",
     phone: "+880 1812-555008",
     profilePicture: "/tutors/nadia-islam.jpg",
@@ -474,8 +486,8 @@ export const tutorsList: Tutor[] = [
       "STEM education advocate",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-02-14",
     responseTime: "Within 2 hours",
     successRate: "90%",
@@ -485,7 +497,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 15,
-    name: "Mahmud Hassan",
+    fullName: "Mahmud Hassan",
     email: "mahmud.hassan@email.com",
     phone: "+880 1912-555009",
     profilePicture: "/tutors/mahmud-hassan.jpg",
@@ -506,8 +518,8 @@ export const tutorsList: Tutor[] = [
       "Physics olympiad coach",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-05-20",
     responseTime: "Within 1 hour",
     successRate: "96%",
@@ -517,7 +529,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 16,
-    name: "Farzana Akter",
+    fullName: "Farzana Akter",
     email: "farzana.akter@email.com",
     phone: "+880 1612-555010",
     profilePicture: "/tutors/farzana-akter.jpg",
@@ -538,8 +550,8 @@ export const tutorsList: Tutor[] = [
       "Content creation expert",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2022-11-08",
     responseTime: "Within 3 hours",
     successRate: "92%",
@@ -549,7 +561,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 17,
-    name: "Shakil Mahmud",
+    fullName: "Shakil Mahmud",
     email: "shakil.mahmud@email.com",
     phone: "+880 1512-555011",
     profilePicture: "/tutors/shakil-mahmud.jpg",
@@ -570,8 +582,8 @@ export const tutorsList: Tutor[] = [
       "Climate change educator",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-01-25",
     responseTime: "Within 3 hours",
     successRate: "87%",
@@ -581,7 +593,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 18,
-    name: "Dr. Rubina Khan",
+    fullName: "Dr. Rubina Khan",
     email: "rubina.khan@email.com",
     phone: "+880 1412-555012",
     profilePicture: "/tutors/rubina-khan.jpg",
@@ -602,8 +614,8 @@ export const tutorsList: Tutor[] = [
       "Published author in psychology",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-04-12",
     responseTime: "Within 2 hours",
     successRate: "94%",
@@ -613,7 +625,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 19,
-    name: "Jahangir Alam",
+    fullName: "Jahangir Alam",
     email: "jahangir.alam@email.com",
     phone: "+880 1712-555013",
     profilePicture: "/tutors/jahangir-alam.jpg",
@@ -634,8 +646,8 @@ export const tutorsList: Tutor[] = [
       "Educational content creator",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2022-01-15",
     responseTime: "Within 2 hours",
     successRate: "93%",
@@ -645,7 +657,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 20,
-    name: "Taslima Rahman",
+    fullName: "Taslima Rahman",
     email: "taslima.rahman@email.com",
     phone: "+880 1812-555014",
     profilePicture: "/tutors/taslima-rahman.jpg",
@@ -666,8 +678,8 @@ export const tutorsList: Tutor[] = [
       "Startup mentor",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-03-08",
     responseTime: "Within 2 hours",
     successRate: "91%",
@@ -677,7 +689,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 21,
-    name: "Habib Uddin",
+    fullName: "Habib Uddin",
     email: "habib.uddin@email.com",
     phone: "+880 1912-555015",
     profilePicture: "/tutors/habib-uddin.jpg",
@@ -698,8 +710,8 @@ export const tutorsList: Tutor[] = [
       "Technical trainer",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2023-07-01",
     responseTime: "Within 1 hour",
     successRate: "95%",
@@ -709,7 +721,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 22,
-    name: "Shirin Akhter",
+    fullName: "Shirin Akhter",
     email: "shirin.akhter@email.com",
     phone: "+880 1612-555016",
     profilePicture: "/tutors/shirin-akhter.jpg",
@@ -730,8 +742,8 @@ export const tutorsList: Tutor[] = [
       "Creative skills mentor",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2022-06-20",
     responseTime: "Within 4 hours",
     successRate: "88%",
@@ -741,7 +753,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 23,
-    name: "Azizul Haque",
+    fullName: "Azizul Haque",
     email: "azizul.haque@email.com",
     phone: "+880 1512-555017",
     profilePicture: "/tutors/azizul-haque.jpg",
@@ -762,8 +774,8 @@ export const tutorsList: Tutor[] = [
       "Polyglot language expert",
     ],
     languages: ["Bengali", "English", "German", "French"],
-    verified: true,
-    premium: true,
+    isVerified: true,
+    isPremium: true,
     joinedDate: "2022-03-30",
     responseTime: "Within 1 hour",
     successRate: "97%",
@@ -773,7 +785,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 24,
-    name: "Labiba Hasan",
+    fullName: "Labiba Hasan",
     email: "labiba.hasan@email.com",
     phone: "+880 1412-555018",
     profilePicture: "/tutors/labiba-hasan.jpg",
@@ -794,8 +806,8 @@ export const tutorsList: Tutor[] = [
       "Molecular biology specialist",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2023-08-15",
     responseTime: "Within 2 hours",
     successRate: "90%",
@@ -805,7 +817,7 @@ export const tutorsList: Tutor[] = [
   },
   {
     id: 25,
-    name: "Kamrul Islam",
+    fullName: "Kamrul Islam",
     email: "kamrul.islam@email.com",
     phone: "+880 1712-555019",
     profilePicture: "/tutors/kamrul-islam.jpg",
@@ -826,8 +838,8 @@ export const tutorsList: Tutor[] = [
       "Design consultant",
     ],
     languages: ["Bengali", "English"],
-    verified: true,
-    premium: false,
+    isVerified: true,
+    isPremium: false,
     joinedDate: "2022-10-05",
     responseTime: "Within 3 hours",
     successRate: "89%",

@@ -85,27 +85,27 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
 
         {/* Title */}
         <h3 className="text-xl font-bold text-gray-800 mb-2 leading-tight">
-          {job.title}
+          {job.title}title
         </h3>
 
         {/* Class Level */}
-        <p className="text-sm font-medium text-gray-600">{job.class}</p>
+        <p className="text-sm font-medium text-gray-600">{job.class}class</p>
 
         {/* Tutor Gender */}
         <p className="text-sm font-medium text-gray-600 capitalize">
           Tutor Gender Preferred:{" "}
-          <span className="font-bold">{job.gender}</span>
+          <span className="font-bold">{job.gender}gender</span>
         </p>
         {/* Job id */}
         <p className="text-sm font-medium text-gray-600 capitalize">
-          Job id: <span className="font-bold">{job.id}</span>
+          Job id: <span className="font-bold">{job.id}id</span>
         </p>
         {/* Posted Date */}
         {/* <p className="text-sm font-medium text-gray-600 capitalize">
           Posted Date: <span className="font-bold">{job.postedDate}</span>
         </p> */}
         <p className="text-sm font-medium text-gray-600 capitalize">
-          Posted: <span className="font-bold">{timeAgo(job.postedDate)}</span>
+          Posted: <span className="font-bold">{timeAgo(job.postedDate)}postedDate</span>
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div>
               <p className="text-xs text-gray-500 font-medium">Location</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.location}
+                {job.location}location
               </p>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div>
               <p className="text-xs text-gray-500 font-medium">Budget</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.budget}
+                {job.budget}budget
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             {getModeIcon(job.mode)}
             <div>
               <p className="text-xs text-gray-500 font-medium">Mode</p>
-              <p className="text-sm text-gray-700 font-semibold">{job.mode}</p>
+              <p className="text-sm text-gray-700 font-semibold">{job.mode}mode</p>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div>
               <p className="text-xs text-gray-500 font-medium">Schedule</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.duration}
+                {job.duration}duration
               </p>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
         {/* Description */}
         <div className="border-t pt-3">
           <p className="text-sm text-gray-600 line-clamp-3">
-            {job.description}
+            {job.description}description
           </p>
         </div>
 
