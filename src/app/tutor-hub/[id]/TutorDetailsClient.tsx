@@ -14,7 +14,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
       </div>
     );
   } 
-  
+
   const STRAPI_URL =
     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
@@ -134,9 +134,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                           </span>
                         )}
                       </div>
-                      <p className="text-xl text-blue-600 font-semibold mb-2">
+                      {/* <p className="text-xl text-blue-600 font-semibold mb-2">
                         {tutor.fullName}
-                      </p>
+                      </p> */}
                       <div className="flex items-center justify-between gap-10">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-gray-700">
