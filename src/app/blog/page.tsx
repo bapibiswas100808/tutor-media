@@ -22,7 +22,6 @@ interface StrapiResponse {
 
 interface StrapiPost {
   id: number;
-  documentId?: string;
   title: string;
   excerpt: string;
   category?: string;
@@ -30,13 +29,15 @@ interface StrapiPost {
   createdAt?: string;
   publishedAt?: string;
   image?: {
-    data: Array<{
-      attributes: {
-        url: string;
-      };
-    }>;
+    url: string;
+    formats?: {
+      large?: { url: string };
+      medium?: { url: string };
+      small?: { url: string };
+    };
   };
 }
+
 
 async function getBlogPosts(): Promise<BlogPost[]> {
   const strapiUrl =
@@ -66,7 +67,9 @@ async function getBlogPosts(): Promise<BlogPost[]> {
       excerpt: post.excerpt || "No excerpt",
       category: post.category || "Uncategorized",
       date: post.date || post.publishedAt || post.createdAt || "No date",
-      image: post.image?.data?.[0]?.attributes?.url,
+      image: post.image
+    ? `${strapiUrl}${post.image.formats?.large?.url || post.image.url}`
+    : undefined,
     }));
 
     console.log("Mapped blog posts:", mappedPosts);
