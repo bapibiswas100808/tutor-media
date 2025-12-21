@@ -38,7 +38,6 @@ interface StrapiPost {
   };
 }
 
-
 async function getBlogPosts(): Promise<BlogPost[]> {
   const strapiUrl =
     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -68,8 +67,8 @@ async function getBlogPosts(): Promise<BlogPost[]> {
       category: post.category || "Uncategorized",
       date: post.date || post.publishedAt || post.createdAt || "No date",
       image: post.image
-    ? `${strapiUrl}${post.image.formats?.large?.url || post.image.url}`
-    : undefined,
+        ? `${post.image.formats?.large?.url || post.image.url}`
+        : undefined,
     }));
 
     console.log("Mapped blog posts:", mappedPosts);
