@@ -6,11 +6,10 @@ import {
   MapPin,
   DollarSign,
   Calendar,
-  Users,
   Clock,
   BookOpen,
   Home,
-  Video,
+  Video
 } from "lucide-react";
 
 interface TuitionJobCardProps {
@@ -105,7 +104,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
           Posted Date: <span className="font-bold">{job.postedDate}</span>
         </p> */}
         <p className="text-sm font-medium text-gray-600 capitalize">
-          Posted: <span className="font-bold">{timeAgo(job.postedDate)}</span>
+          Posted: <span className="font-bold">{timeAgo(job.createdAt)}</span>
         </p>
       </div>
 
@@ -150,7 +149,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div>
               <p className="text-xs text-gray-500 font-medium">Schedule</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.duration}
+                {job.schedule}
               </p>
             </div>
           </div>
@@ -170,15 +169,11 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               <span>
-                {new Date(job.postedDate).toLocaleDateString("en-US", {
+                {new Date(job.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                 })}
               </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5" />
-              <span>{job.applicants} applied</span>
             </div>
           </div>
 
