@@ -5,38 +5,43 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { createPublic } from "@/lib/strapi";
+// import { createPublic } from "@/lib/strapi";
 
 const hireTutorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
+  title: z.string().min(5, "Title must be at least 5 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  email: z.string().email("Please enter a valid email address"),
-  gender: z.string().min(1, "Please select a gender"),
+  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+  gender: z.enum(["male", "female", "any"], {
+    message: "Please select a gender",
+  }),
   area: z.string().min(2, "Please enter your area"),
   budget: z.string().min(1, "Please enter your budget"),
-  mode: z.enum(["home", "online", "group"], {
-    message: "Please select a tutoring mode",
-  }),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  mode: z.string().min(1, "Please select a tutoring mode"),
+  subject: z.string().optional(),
+  Class: z.string().optional(),
+  description: z.string().min(20, "Description must be at least 20 characters"),
 });
 
 type HireTutorFormData = z.infer<typeof hireTutorSchema>;
 
 const subjects = [
-  "All Subjects",
-  "Mathematics",
+  "All",
+  "Bangla",
+  "English",
+  "Math",
+  "Science",
+  "Commerce",
+  "Accounting",
   "Physics",
   "Chemistry",
   "Biology",
-  "English",
-  "Bangla",
-  "Computer Science",
+  "ICT",
+  "Religious studies",
   "Economics",
-  "Accounting",
-  "Statistics",
-  "Geography",
-  "History",
-  "Others",
+  "Admission",
+  "Arts",
+  "Music",
 ];
 
 const classes = [
@@ -53,11 +58,13 @@ const classes = [
   "Class 8",
   "Class 9",
   "Class 10",
-  "HSC 1st Year",
-  "HSC 2nd Year",
-  "University Level",
-  "Adult Learning",
+  "Class 11",
+  "Class 12",
+  "A Level",
+  "O Level",
 ];
+
+const modes = ["Online", "Home", "Group"];
 
 export default function HireTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,39 +77,49 @@ export default function HireTutorForm() {
     reset,
   } = useForm<HireTutorFormData>({
     resolver: zodResolver(hireTutorSchema),
+    defaultValues: {
+      gender: "any",
+    },
   });
 
-  const onSubmit = async (data: HireTutorFormData) => {
-    setIsSubmitting(true);
+ const onSubmit = async (data: HireTutorFormData) => {
+  setIsSubmitting(true);
 
-    try {
-      const response = await createPublic("tuition-jobs", {
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-        location: data.area,
-        budget: data.budget,
-        mode: data.mode,
-        gender: data.gender,
-        description: data.description,
-      });
+  try {
+    const response = await fetch("http://localhost:5000/allJobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        isVerified: false,
+        isApproved: false,
+        isPremium: false,
+      }),
+    });
 
-      if (response.error) {
-        alert(`Error: ${response.error}`);
-        setIsSubmitting(false);
-        return;
-      }
+    const result = await response.json();
 
-      console.log("Tuition request submitted:", response.data);
-      setIsSubmitted(true);
-      reset();
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert(`Error submitting request: ${error instanceof Error ? error.message : "Unknown error"}`);
-    } finally {
-      setIsSubmitting(false);
+    if (!response.ok) {
+      throw new Error(result?.message || "Failed to submit application");
     }
-  };
+
+    console.log("Tutor application submitted:", result);
+    setIsSubmitted(true);
+    reset();
+  } catch (error) {
+    console.error("Submission error:", error);
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Something went wrong"
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   if (isSubmitted) {
     return (
@@ -159,6 +176,26 @@ export default function HireTutorForm() {
 
         <div>
           <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Job Title *
+          </label>
+          <input
+            {...register("title")}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+            placeholder="e.g., Math Tutor for Class 10"
+          />
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label
             htmlFor="phone"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
@@ -174,9 +211,7 @@ export default function HireTutorForm() {
             <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
           )}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
             htmlFor="email"
@@ -194,8 +229,9 @@ export default function HireTutorForm() {
             <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
           )}
         </div>
+      </div>
 
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
             htmlFor="area"
@@ -213,9 +249,55 @@ export default function HireTutorForm() {
             <p className="mt-1 text-sm text-red-600">{errors.area.message}</p>
           )}
         </div>
+
+        <div>
+          <label
+            htmlFor="subject"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Subject
+          </label>
+          <select
+            {...register("subject")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select a subject</option>
+            {subjects.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
+              </option>
+            ))}
+          </select>
+          {errors.subject && (
+            <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label
+            htmlFor="Class"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Class
+          </label>
+          <select
+            {...register("Class")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select a class</option>
+            {classes.map((cls) => (
+              <option key={cls} value={cls}>
+                {cls}
+              </option>
+            ))}
+          </select>
+          {errors.Class && (
+            <p className="mt-1 text-sm text-red-600">{errors.Class.message}</p>
+          )}
+        </div>
+
         <div>
           <label
             htmlFor="budget"
@@ -233,6 +315,9 @@ export default function HireTutorForm() {
             <p className="mt-1 text-sm text-red-600">{errors.budget.message}</p>
           )}
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
             htmlFor="gender"
@@ -244,48 +329,37 @@ export default function HireTutorForm() {
             {...register("gender")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
-            <option value="">Select preferred gender</option>
+            <option value="any">Any</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-            <option value="any">Any</option>
           </select>
           {errors.gender && (
             <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
           )}
         </div>
-      </div>
 
-      {/* Tutoring Mode */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
-          Preferred Tutoring Mode *
-        </label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { value: "home", label: "Home Tutoring", icon: "🏠" },
-            { value: "online", label: "Online Tutoring", icon: "💻" },
-            { value: "group", label: "Group Tutoring", icon: "👥" },
-          ].map((mode) => (
-            <label
-              key={mode.value}
-              className="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer "
-            >
-              <input
-                {...register("mode")}
-                type="radio"
-                value={mode.value}
-                className="mr-3 text-blue-600"
-              />
-              <span className="text-xl mr-2">{mode.icon}</span>
-              <span className="text-sm font-medium text-gray-700">
-                {mode.label}
-              </span>
-            </label>
-          ))}
+        <div>
+          <label
+            htmlFor="mode"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Preferred Tutoring Mode *
+          </label>
+          <select
+            {...register("mode")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select a mode</option>
+            {modes.map((mode) => (
+              <option key={mode} value={mode}>
+                {mode}
+              </option>
+            ))}
+          </select>
+          {errors.mode && (
+            <p className="mt-1 text-sm text-red-600">{errors.mode.message}</p>
+          )}
         </div>
-        {errors.mode && (
-          <p className="mt-1 text-sm text-red-600">{errors.mode.message}</p>
-        )}
       </div>
 
       {/* Description */}
@@ -294,13 +368,13 @@ export default function HireTutorForm() {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Additional Details (optional)
+          Description *
         </label>
         <textarea
           {...register("description")}
-          rows={4}
+          rows={5}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-          placeholder="Describe your specific requirements, learning goals, preferred schedule, etc."
+          placeholder="Provide details about the tuition job, student's level, expectations, etc."
         />
         {errors.description && (
           <p className="mt-1 text-sm text-red-600">

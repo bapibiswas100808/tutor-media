@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Tutor } from "@/data/tutorsList";
+// import { Tutor } from "@/data/tutorsList";
 import TutorHubPage from "./TutorHubClient";
 
 export const metadata: Metadata = {
@@ -9,27 +9,30 @@ export const metadata: Metadata = {
 
 
 
-const getTutorHubs = async (): Promise<Tutor[]> => {
-  const strapiUrl =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-  try {
-    const res = await fetch(`${strapiUrl}/api/tutor-hubs?populate=*`, {
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new Error(`Failed to fetch tuition jobs: ${res.status}`);
-    }
-    const { data } = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Tutor hubs fetch error:", error);
-    return [];
-  }
-};
+// const getTutorHubs = async (): Promise<Tutor[]> => {
+//   const strapiUrl =
+//     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+//   try {
+//     const res = await fetch(`${strapiUrl}/api/tutor-hubs?populate=*`, {
+//       cache: "no-store",
+//     });
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch tuition jobs: ${res.status}`);
+//     }
+//     const { data } = await res.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Tutor hubs fetch error:", error);
+//     return [];
+//   }
+// };
 
 export default async function TutorHubsPage() {
 
-  const tutorHubs = await getTutorHubs();
+    const res = await fetch("http://localhost:5000/allTutors", {
+      cache: "no-store",
+    });
+    const tutorHubs = await res.json();
 
   console.log("Tutor Hubs Data:", tutorHubs);
   return (
