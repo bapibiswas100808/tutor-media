@@ -22,7 +22,6 @@ interface StrapiResponse {
 
 interface StrapiPost {
   id: number;
-  documentId?: string;
   title: string;
   excerpt: string;
   category?: string;
@@ -30,11 +29,12 @@ interface StrapiPost {
   createdAt?: string;
   publishedAt?: string;
   image?: {
-    data: Array<{
-      attributes: {
-        url: string;
-      };
-    }>;
+    url: string;
+    formats?: {
+      large?: { url: string };
+      medium?: { url: string };
+      small?: { url: string };
+    };
   };
 }
 
