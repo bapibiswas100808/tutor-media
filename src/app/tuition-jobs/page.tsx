@@ -3,8 +3,9 @@ import TuitionJobClient from "./TuitionJobClient";
 
 export const metadata: Metadata = {
   title: "Tuition Jobs - Tutor Media",
-  description: "Browse the latest tuition job listings and find the perfect tutoring opportunity.",
-};  
+  description:
+    "Browse the latest tuition job listings and find the perfect tutoring opportunity.",
+};
 
 export interface TuitionJob {
   id: number;
@@ -28,35 +29,26 @@ export interface TuitionJob {
   duration: string;
   startDate?: string;
   division: string;
-  medium: "banglaMedium" | "englishMedium" | "englishVersion" | "madrasahBackground";
+  medium:
+    | "banglaMedium"
+    | "englishMedium"
+    | "englishVersion"
+    | "madrasahBackground";
 }
 
-const getTuitionJobs = async (): Promise<TuitionJob[]> => {
-  const strapiUrl =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-  try {
-    const res = await fetch(`${strapiUrl}/api/tuition-jobs?populate=*`, {
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new Error(`Failed to fetch tuition jobs: ${res.status}`);
-    }
-    const { data } = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Tuition jobs fetch error:", error);
-    return [];
-  }
-};
-
 export default async function TuitionJobsPage() {
+  const res = await fetch(
+    "https://pro-assignment-twelve-server.vercel.app/allJobs",
+    {
+      cache: "no-store",
+    }
+  );
+  const tests = await res.json();
 
-  const tuitionJobs = await getTuitionJobs();
-
-  console.log("Tuition Jobs Data:", tuitionJobs);
+  console.log("Tuition Jobs Data:", tests);
   return (
-    <div className="min-h-screen bg-gray-50">   
-      <TuitionJobClient tuitionJobs={tuitionJobs} />
+    <div className="min-h-screen bg-gray-50">
+      <TuitionJobClient tuitionJobs={tests} />
     </div>
   );
 }

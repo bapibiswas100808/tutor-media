@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { createPublic } from "@/lib/strapi";
+// import { createPublic } from "@/lib/strapi";
 
 const divisionsAndDistricts = {
   dhaka: {
@@ -142,41 +142,91 @@ export default function BecomeTutorForm() {
 
   const getDistricts = () => {
     if (!cityValue) return [];
-    const division = divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
+    const division =
+      divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
     return division?.districts || [];
   };
 
+  // const onSubmit = async (data: BecomeTutorFormData) => {
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     const response = await createPublic("tutor-hubs", {
+  //       fullName: data.fullName,
+  //       email: data.email,
+  //       phone: data.phone,
+  //       gender: data.gender,
+  //       city: data.city,
+  //       location: data.location,
+  //       qualification: data.qualification,
+  //       experience: data.experience,
+  //       bio: data.bio,
+  //       isVerified: false,
+  //       isApproved: false,
+  //       isPremium: false,
+  //     });
+
+  //     if (response.error) {
+  //       alert(`Error: ${response.error}`);
+  //       setIsSubmitting(false);
+  //       return;
+  //     }
+
+  //     console.log("Tutor application submitted:", response.data);
+  //     setIsSubmitted(true);
+  //     reset();
+  //   } catch (error) {
+  //     console.error("Submission error:", error);
+  //     alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
   const onSubmit = async (data: BecomeTutorFormData) => {
     setIsSubmitting(true);
 
     try {
-      const response = await createPublic("tutor-hubs", {
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        gender: data.gender,
-        city: data.city,
-        location: data.location,
-        qualification: data.qualification,
-        experience: data.experience,
-        bio: data.bio,
-        isVerified: false,
-        isApproved: false,
-        isPremium: false,
-      });
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/allTutors",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            phone: data.phone,
+            gender: data.gender,
+            city: data.city,
+            location: data.location,
+            qualification: data.qualification,
+            experience: data.experience,
+            bio: data.bio,
+            isVerified: false,
+            isApproved: false,
+            isPremium: false,
+          }),
+        }
+      );
 
-      if (response.error) {
-        alert(`Error: ${response.error}`);
-        setIsSubmitting(false);
-        return;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit application");
       }
 
-      console.log("Tutor application submitted:", response.data);
+      const result = await response.json();
+      console.log("Tutor application submitted:", result);
+
       setIsSubmitted(true);
       reset();
     } catch (error) {
       console.error("Submission error:", error);
-      alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
+      alert(
+        `Error submitting application: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -330,9 +380,7 @@ export default function BecomeTutorForm() {
               ))}
             </select>
             {errors.city && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.city.message}
-              </p>
+              <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
             )}
           </div>
 

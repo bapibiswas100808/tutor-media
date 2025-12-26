@@ -6,7 +6,6 @@ import {
   MapPin,
   DollarSign,
   Calendar,
-  Users,
   Clock,
   BookOpen,
   Home,
@@ -21,21 +20,21 @@ interface TuitionJobCardProps {
 const getModeIcon = (mode: string) => {
   if (mode.toLowerCase().includes("online"))
     return <Video className="w-4 h-4" />;
-    if (mode.toLowerCase().includes("home")) return <Home className="w-4 h-4" />;
-    return <BookOpen className="w-4 h-4" />;
-  };
+  if (mode.toLowerCase().includes("home")) return <Home className="w-4 h-4" />;
+  return <BookOpen className="w-4 h-4" />;
+};
 
-  interface TimeInterval {
-    label: string;
-    seconds: number;
-  }
+interface TimeInterval {
+  label: string;
+  seconds: number;
+}
 
-  function timeAgo(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+function timeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    const intervals: TimeInterval[] = [
+  const intervals: TimeInterval[] = [
     { label: "year", seconds: 31536000 },
     { label: "month", seconds: 2592000 },
     { label: "week", seconds: 604800 },
@@ -43,7 +42,7 @@ const getModeIcon = (mode: string) => {
     { label: "hour", seconds: 3600 },
     { label: "minute", seconds: 60 },
     { label: "second", seconds: 1 },
-    ];
+  ];
 
   for (const interval of intervals) {
     const count = Math.floor(seconds / interval.seconds);
@@ -85,27 +84,27 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
 
         {/* Title */}
         <h3 className="text-xl font-bold text-gray-800 mb-2 leading-tight">
-          {job.title}title
+          {job.title}
         </h3>
 
         {/* Class Level */}
-        <p className="text-sm font-medium text-gray-600">{job.class}class</p>
+        <p className="text-sm font-medium text-gray-600">{job.class}</p>
 
         {/* Tutor Gender */}
         <p className="text-sm font-medium text-gray-600 capitalize">
           Tutor Gender Preferred:{" "}
-          <span className="font-bold">{job.gender}gender</span>
+          <span className="font-bold">{job.gender}</span>
         </p>
         {/* Job id */}
         <p className="text-sm font-medium text-gray-600 capitalize">
-          Job id: <span className="font-bold">{job.id}id</span>
+          Job id: <span className="font-bold">{job.id}</span>
         </p>
         {/* Posted Date */}
         {/* <p className="text-sm font-medium text-gray-600 capitalize">
           Posted Date: <span className="font-bold">{job.postedDate}</span>
         </p> */}
         <p className="text-sm font-medium text-gray-600 capitalize">
-          Posted: <span className="font-bold">{timeAgo(job.postedDate)}postedDate</span>
+          Posted: <span className="font-bold">{timeAgo(job.createdAt)}</span>
         </p>
       </div>
 
@@ -118,9 +117,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <MapPin className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500 font-medium">Location</p>
-              <p className="text-sm text-gray-700 font-semibold">
-                {job.location}location
-              </p>
+              <p className="text-sm text-gray-700 font-semibold">{job.area}</p>
             </div>
           </div>
 
@@ -130,36 +127,39 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div>
               <p className="text-xs text-gray-500 font-medium">Budget</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.budget}budget
+                {job.budget}
               </p>
             </div>
           </div>
 
           {/* Mode */}
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 text-gray-600">
             {getModeIcon(job.mode)}
             <div>
               <p className="text-xs text-gray-500 font-medium">Mode</p>
-              <p className="text-sm text-gray-700 font-semibold">{job.mode}mode</p>
+              <p className="text-sm text-gray-700 font-semibold">{job.mode}</p>
             </div>
           </div>
 
           {/* Schedule */}
-          <div className="flex items-start gap-2">
+          {/* <div className="flex items-start gap-2">
             <Clock className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500 font-medium">Schedule</p>
               <p className="text-sm text-gray-700 font-semibold">
-                {job.duration}duration
+                {job.schedule}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Description */}
         <div className="border-t pt-3">
           <p className="text-sm text-gray-600 line-clamp-3">
-            {job.description}description
+            <p className="text-xs text-gray-500 font-medium">
+              Schedule Description
+            </p>
+            {job.description}
           </p>
         </div>
 
@@ -170,15 +170,11 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               <span>
-                {new Date(job.postedDate).toLocaleDateString("en-US", {
+                {new Date(job.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                 })}
               </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5" />
-              <span>{job.applicants} applied</span>
             </div>
           </div>
 

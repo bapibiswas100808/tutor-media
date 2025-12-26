@@ -12,7 +12,9 @@ interface TuitionJobClientProps {
   tuitionJobs: TuitionJob[];
 }
 
-export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps) {
+export default function TuitionJobClient({
+  tuitionJobs,
+}: TuitionJobClientProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("all");
@@ -23,44 +25,63 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
   const [selectedDivision, setSelectedDivision] = useState("all");
 
   // Extract unique subjects for filter
-  const classes = Array.from(new Set(tuitionJobs.map((job) => job.class)));
+  const classes = [
+    "Play",
+    "Nursery",
+    "KG",
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+    "Class 11",
+    "Class 12",
+    "A Level",
+    "O Level",
+  ];
 
   // Filter jobs
-  // const filteredJobs = tuitionJobs.filter((job) => {
-  //   const matchesSearch =
-  //     job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     job.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     job.class.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredJobs = tuitionJobs.filter((job) => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.class.toLowerCase().includes(searchQuery.toLowerCase());
 
-  //   const matchesSubject =
-  //     selectedClass === "all" || job.class === selectedClass;
+    const matchesSubject =
+      selectedClass === "all" || job.class === selectedClass;
 
-  //   const matchesMode =
-  //     selectedMode === "all" ||
-  //     job.mode.toLowerCase().includes(selectedMode.toLowerCase());
+    const matchesMode =
+      selectedMode === "all" ||
+      job.mode.toLowerCase().includes(selectedMode.toLowerCase());
 
-  //   const matchesMedium =
-  //     selectedMedium === "all" ||
-  //     (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
-  //     (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
-  //     (selectedMedium === "englishVersion" && job.medium === "englishVersion") ||
-  //     (selectedMedium === "madrasahBackground" &&
-  //       job.medium === "madrasahBackground");
+    const matchesMedium =
+      selectedMedium === "all" ||
+      (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
+      (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
+      (selectedMedium === "englishVersion" &&
+        job.medium === "englishVersion") ||
+      (selectedMedium === "madrasahBackground" &&
+        job.medium === "madrasahBackground");
 
-  //   const matchesDivision =
-  //     selectedDivision === "all" ||
-  //     job.division?.toLowerCase() === selectedDivision.toLowerCase();
+    const matchesDivision =
+      selectedDivision === "all" ||
+      job.division?.toLowerCase() === selectedDivision.toLowerCase();
 
-  //   return (
-  //     matchesSearch &&
-  //     matchesSubject &&
-  //     matchesMode &&
-  //     matchesMedium &&
-  //     matchesDivision &&
-  //     job.status === "active"
-  //   );
-  // });
+    return (
+      matchesSearch &&
+      matchesSubject &&
+      matchesMode &&
+      matchesMedium &&
+      matchesDivision &&
+      job.status === "active"
+    );
+  });
 
   const handleApply = (job: TuitionJob) => {
     setSelectedJob(job);
@@ -82,8 +103,8 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
             Find Your Perfect Tuition Job
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Browse through {tuitionJobs.length}+ available tuition
-            opportunities and apply directly with your proposal
+            Browse through {tuitionJobs.length}+ available tuition opportunities
+            and apply directly with your proposal
           </p>
         </motion.div>
 
@@ -112,8 +133,8 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Classes</option>
-                {classes.map((subject) => (
-                  <option key={subject} value={subject}>
+                {classes.map((subject, idx) => (
+                  <option key={idx} value={subject}>
                     {subject}
                   </option>
                 ))}
@@ -192,9 +213,9 @@ export default function TuitionJobClient({ tuitionJobs }: TuitionJobClientProps)
           <p className="text-gray-600">
             Showing{" "}
             <span className="font-semibold text-gray-800">
-              {tuitionJobs.length}
+              {filteredJobs.length}
             </span>{" "}
-            {tuitionJobs.length === 1 ? "job" : "jobs"}
+            {filteredJobs.length === 1 ? "job" : "jobs"}
           </p>
 
           {/* Quick Filter Badges */}

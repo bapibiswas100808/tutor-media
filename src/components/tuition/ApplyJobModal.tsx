@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, User, Mail, Phone, DollarSign, Calendar } from "lucide-react";
+import { X, Send, DollarSign, Calendar, AlertCircle, Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,14 +9,12 @@ import { TuitionJob } from "@/data/tuitionJobsList";
 import { useState } from "react";
 
 const proposalSchema = z.object({
-  tutorName: z.string().min(3, "Name must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(11, "Phone number must be at least 11 digits"),
-  expectedRate: z.string().min(1, "Please specify your expected rate"),
-  availability: z.string().min(10, "Please provide your availability details"),
+  id: z.string().min(1, "Teacher ID is required"), // Tutor/Teacher ID is mandatory
+  rate: z.string().min(1, "Please specify your expected rate"),
+  schedule: z.string().min(10, "Please provide your availability details"),
   proposal: z
     .string()
-    .min(50, "Proposal must be at least 50 characters")
+    .min(20, "Proposal must be at least 20 characters")
     .max(1000, "Proposal must not exceed 1000 characters"),
 });
 
@@ -26,14 +24,17 @@ interface ApplyJobModalProps {
   isOpen: boolean;
   onClose: () => void;
   job: TuitionJob | null;
+  tutorId?: string | number; // Optional tutor ID passed from parent
 }
 
 export default function ApplyJobModal({
   isOpen,
   onClose,
   job,
+  tutorId,
 }: ApplyJobModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -44,24 +45,123 @@ export default function ApplyJobModal({
     resolver: zodResolver(proposalSchema),
   });
 
+  // const onSubmit = async (data: ProposalFormData) => {
+  //   try {
+  //     setSubmitError(null);
+
+  //     // Determine which tutor ID to use - from prop or from form
+  //     const tutorIdFromForm = data.id && data.id.trim() ? parseInt(data.id) : null;
+  //     const finalTutorId: number | null = tutorId ? parseInt(String(tutorId)) : tutorIdFromForm;
+
+  //     // Build application payload with tuition_job relation
+  //     const applicationPayload: any = {
+  //       rate: parseInt(data.rate),
+  //       schedule: data.schedule,
+  //       proposal: data.proposal,
+  //       tuition_job: job?.id, // Pass job ID for oneToOne relation (inversedBy format)
+  //       publishedAt: new Date().toISOString(), // Publish immediately
+  //     };
+
+  //     // Only add tutor_hubs if we have a valid tutor ID from form or prop
+  //     if (finalTutorId && finalTutorId > 0) {
+  //       applicationPayload.tutor_hubs = [finalTutorId];
+  //     }
+
+  //     console.log("Submitting application payload:", applicationPayload);
+  //     console.log("Job ID being linked:", job?.id, "Type:", typeof job?.id);
+
+  //     // Create application record linked to the tuition job and tutor
+  //     const response = await createPublic("applications", applicationPayload);
+
+  //     console.log("Strapi response:", response);
+
+  //     if (response.error) {
+  //       setSubmitError(`${response.error} - Check console for details`);
+  //       return;
+  //     }
+
+  //     // Verify the relation was created
+  //     const appData = response.data;
+  //     console.log("Created application:", appData);
+  //     console.log("Tuition job relation:", appData?.tuition_job);
+  //     console.log("Tutor hubs relation:", appData?.tutor_hubs);
+  //     setIsSubmitted(true);
+
+  //     // Reset form and close modal after 2 seconds
+  //     setTimeout(() => {
+  //       setIsSubmitted(false);
+  //       reset();
+  //       onClose();
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error("Application submission error:", error);
+  //     setSubmitError(
+  //       error instanceof Error ? error.message : "Failed to submit application"
+  //     );
+  //   }
+  // };
+
   const onSubmit = async (data: ProposalFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      setSubmitError(null);
 
-    console.log("Application submitted:", {
-      jobId: job?.id,
-      jobTitle: job?.title,
-      ...data,
-    });
+      const tutorIdFromForm =
+        data.id && data.id.trim() ? parseInt(data.id, 10) : null;
 
-    setIsSubmitted(true);
+      const finalTutorId =
+        tutorId != null ? parseInt(String(tutorId), 10) : tutorIdFromForm;
 
-    // Reset form and close modal after 2 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      reset();
-      onClose();
-    }, 2000);
+      interface ApplicationPayload {
+        rate: number;
+        schedule: string;
+        proposal: string;
+        tuitionJobId?: string | number;
+        tutorId?: number | null;
+      }
+      const applicationPayload: ApplicationPayload = {
+        rate: parseInt(data.rate, 10),
+        schedule: data.schedule,
+        proposal: data.proposal,
+        tuitionJobId: job?._id,
+      };
+
+      if (finalTutorId && finalTutorId > 0) {
+        applicationPayload.tutorId = finalTutorId;
+      }
+
+      console.log("Submitting application payload:", applicationPayload);
+
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationPayload),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.message || "Failed to submit application");
+      }
+
+      console.log("Application created:", result);
+      setIsSubmitted(true);
+
+      setTimeout(() => {
+        setIsSubmitted(false);
+        reset();
+        onClose();
+      }, 2000);
+    } catch (error) {
+      console.error("Application submission error:", error);
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to submit application"
+      );
+    }
   };
 
   const handleClose = () => {
@@ -112,6 +212,14 @@ export default function ApplyJobModal({
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
               {!isSubmitted ? (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  {/* Error Message */}
+                  {submitError && (
+                    <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-red-700 text-sm">{submitError}</p>
+                    </div>
+                  )}
+
                   {/* Job Summary */}
                   <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-100">
                     <div className="grid grid-cols-2 gap-3 text-sm">
@@ -142,64 +250,24 @@ export default function ApplyJobModal({
                     </div>
                   </div>
 
-                  {/* Tutor Name */}
+                  {/* Teacher ID */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      <User className="w-4 h-4 inline mr-2" />
-                      Full Name *
+                      <Info className="w-4 h-4 inline mr-2" />
+                      Teacher ID*
                     </label>
                     <input
-                      {...register("tutorName")}
+                      {...register("id")}
                       type="text"
-                      placeholder="Enter your full name"
+                      placeholder="e.g., 1 (Strapi auto-generated ID)"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
-                    {errors.tutorName && (
+                    {errors.id && (
                       <p className="mt-1 text-sm text-red-600">
-                        {errors.tutorName.message}
+                        {errors.id.message}
                       </p>
                     )}
                   </div>
-
-                  {/* Email & Phone */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        <Mail className="w-4 h-4 inline mr-2" />
-                        Email Address *
-                      </label>
-                      <input
-                        {...register("email")}
-                        type="email"
-                        placeholder="your.email@example.com"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                      />
-                      {errors.email && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {errors.email.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        <Phone className="w-4 h-4 inline mr-2" />
-                        Phone Number *
-                      </label>
-                      <input
-                        {...register("phone")}
-                        type="tel"
-                        placeholder="01XXXXXXXXX"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                      />
-                      {errors.phone && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
                   {/* Expected Rate */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -207,33 +275,33 @@ export default function ApplyJobModal({
                       Expected Rate (BDT/month) *
                     </label>
                     <input
-                      {...register("expectedRate")}
-                      type="text"
-                      placeholder="e.g., 10,000 - 15,000 BDT/month"
+                      {...register("rate")}
+                      type="number"
+                      placeholder="e.g., 10000"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
-                    {errors.expectedRate && (
+                    {errors.rate && (
                       <p className="mt-1 text-sm text-red-600">
-                        {errors.expectedRate.message}
+                        {errors.rate.message}
                       </p>
                     )}
                   </div>
 
-                  {/* Availability */}
+                  {/* Schedule */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       <Calendar className="w-4 h-4 inline mr-2" />
-                      Availability *
+                      Schedule *
                     </label>
                     <input
-                      {...register("availability")}
+                      {...register("schedule")}
                       type="text"
                       placeholder="e.g., Sunday to Thursday, 4-6 PM"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
-                    {errors.availability && (
+                    {errors.schedule && (
                       <p className="mt-1 text-sm text-red-600">
-                        {errors.availability.message}
+                        {errors.schedule.message}
                       </p>
                     )}
                   </div>
@@ -247,7 +315,7 @@ export default function ApplyJobModal({
                     <textarea
                       {...register("proposal")}
                       rows={6}
-                      placeholder="Write a compelling proposal explaining why you&apos;re the best fit for this job. Include your qualifications, experience, and teaching approach..."
+                      placeholder="Write a compelling proposal explaining why you're the best fit for this job. Include your qualifications, experience, and teaching approach..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                     />
                     <div className="flex items-center justify-between mt-1">

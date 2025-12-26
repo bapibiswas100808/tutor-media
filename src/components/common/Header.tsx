@@ -17,7 +17,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm shadow-sm overflow-hidden bg-[#ffd572]">
+    <header className="fixed top-0 left-0 right-0 z-50  overflow-hidden  bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -28,9 +28,9 @@ export default function Header() {
               width={140}
               height={50}
               priority
-              className="object-contain h-40 w-auto"
+              className="object-contain h-50 w-auto"
             />
-          </Link> 
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

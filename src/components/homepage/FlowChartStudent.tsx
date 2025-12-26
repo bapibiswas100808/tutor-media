@@ -74,12 +74,12 @@ export default function FlowChartStudent() {
               }`}
             >
               {/* Card */}
-              <div className="w-5/12">
-                <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+              <div className="w-9/12">
+                <div className="bg-white rounded-2xl shadow-xl p-4 hover:shadow-2xl transition-shadow duration-300 grid grid-cols-2 gap-3">
                   <div
-                    className={`w-full h-[400px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                    className={`w-full h-[170px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center`}
                   >
-                    <div className="w-full h-full overflow-hidden relative rounded-lg">
+                    <div className="w-full h-full overflow-hidden relative rounded-lg ">
                       <Image
                         src={step.image}
                         alt={step.title}
@@ -88,12 +88,14 @@ export default function FlowChartStudent() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {step.description}
-                  </p>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 text-lg leading-5">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -108,7 +110,7 @@ export default function FlowChartStudent() {
                   <svg
                     className="absolute top-0"
                     width="4"
-                    height="610"
+                    height="180"
                     viewBox="0 200 2 20"
                   >
                     <line
