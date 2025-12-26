@@ -8,7 +8,7 @@ import * as z from "zod";
 import { TuitionJob } from "@/data/tuitionJobsList";
 import { useState } from "react";
 
-const proposalSchema = z.object({ 
+const proposalSchema = z.object({
   id: z.string().min(1, "Teacher ID is required"), // Tutor/Teacher ID is mandatory
   rate: z.string().min(1, "Please specify your expected rate"),
   schedule: z.string().min(10, "Please provide your availability details"),
@@ -102,64 +102,67 @@ export default function ApplyJobModal({
   // };
 
   const onSubmit = async (data: ProposalFormData) => {
-  try {
-    setSubmitError(null);
+    try {
+      setSubmitError(null);
 
-    const tutorIdFromForm =
-      data.id && data.id.trim() ? parseInt(data.id, 10) : null;
+      const tutorIdFromForm =
+        data.id && data.id.trim() ? parseInt(data.id, 10) : null;
 
-    const finalTutorId =
-      tutorId != null ? parseInt(String(tutorId), 10) : tutorIdFromForm;
+      const finalTutorId =
+        tutorId != null ? parseInt(String(tutorId), 10) : tutorIdFromForm;
 
-    interface ApplicationPayload {
-      rate: number;
-      schedule: string;
-      proposal: string;
-      tuitionJobId?: string | number;
-      tutorId?: number | null;
+      interface ApplicationPayload {
+        rate: number;
+        schedule: string;
+        proposal: string;
+        tuitionJobId?: string | number;
+        tutorId?: number | null;
+      }
+      const applicationPayload: ApplicationPayload = {
+        rate: parseInt(data.rate, 10),
+        schedule: data.schedule,
+        proposal: data.proposal,
+        tuitionJobId: job?._id,
+      };
+
+      if (finalTutorId && finalTutorId > 0) {
+        applicationPayload.tutorId = finalTutorId;
+      }
+
+      console.log("Submitting application payload:", applicationPayload);
+
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationPayload),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.message || "Failed to submit application");
+      }
+
+      console.log("Application created:", result);
+      setIsSubmitted(true);
+
+      setTimeout(() => {
+        setIsSubmitted(false);
+        reset();
+        onClose();
+      }, 2000);
+    } catch (error) {
+      console.error("Application submission error:", error);
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to submit application"
+      );
     }
-    const applicationPayload: ApplicationPayload = {
-      rate: parseInt(data.rate, 10),
-      schedule: data.schedule,
-      proposal: data.proposal,
-      tuitionJobId: job?._id,
-    };
-
-    if (finalTutorId && finalTutorId > 0) {
-      applicationPayload.tutorId = finalTutorId;
-    }
-
-    console.log("Submitting application payload:", applicationPayload);
-
-    const response = await fetch("http://localhost:5000/applications", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(applicationPayload),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result?.message || "Failed to submit application");
-    }
-
-    console.log("Application created:", result);
-    setIsSubmitted(true);
-
-    setTimeout(() => {
-      setIsSubmitted(false);
-      reset();
-      onClose();
-    }, 2000);
-  } catch (error) {
-    console.error("Application submission error:", error);
-    setSubmitError(
-      error instanceof Error ? error.message : "Failed to submit application"
-    );
-  }
-};
+  };
 
   const handleClose = () => {
     if (!isSubmitting) {
@@ -312,7 +315,7 @@ export default function ApplyJobModal({
                     <textarea
                       {...register("proposal")}
                       rows={6}
-                      placeholder="Write a compelling proposal explaining why you&apos;re the best fit for this job. Include your qualifications, experience, and teaching approach..."
+                      placeholder="Write a compelling proposal explaining why you're the best fit for this job. Include your qualifications, experience, and teaching approach..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                     />
                     <div className="flex items-center justify-between mt-1">

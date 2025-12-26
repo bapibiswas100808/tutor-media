@@ -4,7 +4,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
-import { BadgeCheck, BaggageClaim, LocationEdit, NotebookText, Paperclip, ShieldCheck, Star } from "lucide-react";
+import {
+  BadgeCheck,
+  BaggageClaim,
+  LocationEdit,
+  NotebookText,
+  Paperclip,
+  ShieldCheck,
+  Star,
+} from "lucide-react";
 
 interface TutorCardProps {
   tutor: Tutor;
@@ -71,7 +79,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
-                  {tutor.fullName.charAt(0)}
+                  {tutor.fullName?.slice(0, 1).toUpperCase()}
                 </div>
               )}
             </div>
@@ -123,7 +131,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
-                  {tutor.qualification}
+                {tutor.qualification}
               </div>
             </div>
 

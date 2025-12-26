@@ -9,34 +9,29 @@ import { LocationEdit, NotebookText, Paperclip } from "lucide-react";
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   if (!tutor) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
-        Tutor not found
-      </div>
-    );
-  } 
-
-  const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-  const imageUrl = tutor.image?.formats?.large?.url
-    ? `${STRAPI_URL}${tutor.image.formats.large.url}`
-    : tutor.image?.url
-    ? `${STRAPI_URL}${tutor.image.url}`
-    : null;
-
-  if (!tutor) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Tutor Not Found
           </h1>
-          <Link
-            href="/tutor-hub"
-            className="text-blue-600 hover:text-blue-700 underline"
-          >
-            Return to Tutor Hub
-          </Link>
+          <p className="text-gray-600 mb-4">
+            We could not find a tutor with that ID. The tutor may have been
+            removed or the ID is invalid.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Link
+              href="/tutor-hub"
+              className="text-blue-600 hover:text-blue-700 underline font-medium"
+            >
+              Return to Tutor Hub
+            </Link>
+            <Link
+              href="/"
+              className="text-gray-700 hover:text-gray-900 underline"
+            >
+              Go Home
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -79,9 +74,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 {/* Profile Image */}
                 <div className="relative">
                   <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
-                    {imageUrl ? (
+                    {tutor?.imageUrl ? (
                       <Image
-                        src={imageUrl}
+                        src={tutor.imageUrl}
                         alt={tutor.fullName}
                         fill
                         className="object-cover"
@@ -90,7 +85,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
-                        {tutor.fullName.charAt(0)}
+                        {tutor.fullName?.charAt(0)}
                       </div>
                     )}
                   </div>
@@ -167,17 +162,17 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
                   {/* Quick Stats */}
                   <div className="flex items-center justify-between ">
-                     {/* Info Grid */}
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-600">
-                <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
-                {tutor.experience}
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
-                  {tutor.qualification}
-              </div>
-            </div>
+                    {/* Info Grid */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
+                        {tutor.experience}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
+                        {tutor.qualification}
+                      </div>
+                    </div>
                     {/* CTA Buttons */}
                     <div className="flex justify-center">
                       <Link

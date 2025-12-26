@@ -4,10 +4,9 @@ import TutorHubPage from "./TutorHubClient";
 
 export const metadata: Metadata = {
   title: "Tutor Hub - Tutor Media",
-  description: "Explore our expert tutors and find the perfect match for your learning needs.",
-};  
-
-
+  description:
+    "Explore our expert tutors and find the perfect match for your learning needs.",
+};
 
 // const getTutorHubs = async (): Promise<Tutor[]> => {
 //   const strapiUrl =
@@ -28,15 +27,17 @@ export const metadata: Metadata = {
 // };
 
 export default async function TutorHubsPage() {
-
-    const res = await fetch("http://localhost:5000/allTutors", {
+  const res = await fetch(
+    "https://pro-assignment-twelve-server.vercel.app/allTutors",
+    {
       cache: "no-store",
-    });
-    const tutorHubs = await res.json();
+    }
+  );
+  const tutorHubs = await res.json();
 
   console.log("Tutor Hubs Data:", tutorHubs);
   return (
-    <div className="min-h-screen bg-gray-50">   
+    <div className="min-h-screen bg-gray-50">
       <TutorHubPage tutorHubs={tutorHubs} />
     </div>
   );

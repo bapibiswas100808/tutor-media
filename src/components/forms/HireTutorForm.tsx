@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,19 +11,119 @@ const hireTutorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   title: z.string().min(5, "Title must be at least 5 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+  email: z
+    .string()
+    .email("Please enter a valid email address")
+    .optional()
+    .or(z.literal("")),
   gender: z.enum(["male", "female", "any"], {
     message: "Please select a gender",
   }),
   area: z.string().min(2, "Please enter your area"),
+  city: z.string().min(1, "Please select a division"),
+  location: z.string().min(1, "Please select a district"),
   budget: z.string().min(1, "Please enter your budget"),
   mode: z.string().min(1, "Please select a tutoring mode"),
   subject: z.string().optional(),
-  Class: z.string().optional(),
+  class: z.string().optional(),
+  medium: z.string().min(1, "Please select a medium"),
   description: z.string().min(20, "Description must be at least 20 characters"),
 });
 
 type HireTutorFormData = z.infer<typeof hireTutorSchema>;
+
+const media = [
+  "Bangla Version",
+  "English Version",
+  "English Medium",
+  "Madrasah Background",
+];
+
+const divisionsAndDistricts = {
+  dhaka: {
+    name: "Dhaka",
+    districts: [
+      "Dhaka",
+      "Narayanganj",
+      "Gazipur",
+      "Tangail",
+      "Kishoreganj",
+      "Manikganj",
+      "Munshiganj",
+      "Shariatpur",
+      "Rajbari",
+      "Madaripur",
+    ],
+  },
+  rajshahi: {
+    name: "Rajshahi",
+    districts: [
+      "Rajshahi",
+      "Natore",
+      "Naogaon",
+      "Chapainawabganj",
+      "Bogura",
+      "Sirajganj",
+      "Pabna",
+    ],
+  },
+  khulna: {
+    name: "Khulna",
+    districts: [
+      "Khulna",
+      "Bagerhat",
+      "Satkhira",
+      "Jessore",
+      "Magura",
+      "Narail",
+    ],
+  },
+  rangpur: {
+    name: "Rangpur",
+    districts: [
+      "Rangpur",
+      "Gaibandha",
+      "Kurigram",
+      "Dinajpur",
+      "Thakurgaon",
+      "Panchagarh",
+      "Lalmonirhat",
+    ],
+  },
+  mymensingh: {
+    name: "Mymensingh",
+    districts: ["Mymensingh", "Jamalpur", "Sherpur", "Netrokona"],
+  },
+  chattogram: {
+    name: "Chattogram",
+    districts: [
+      "Chattogram",
+      "Cox's Bazar",
+      "Feni",
+      "Noakhali",
+      "Lakshmipur",
+      "Cumilla",
+      "Khagrachari",
+      "Rangamati",
+      "Bandarban",
+    ],
+  },
+  sylhet: {
+    name: "Sylhet",
+    districts: ["Sylhet", "Moulvibazar", "Sunamganj", "Habiganj"],
+  },
+  barishal: {
+    name: "Barishal",
+    districts: [
+      "Barishal",
+      "Pirojpur",
+      "Jhalokati",
+      "Patuakhali",
+      "Bhola",
+      "Borguna",
+    ],
+  },
+};
 
 const subjects = [
   "All",
@@ -64,7 +164,7 @@ const classes = [
   "O Level",
 ];
 
-const modes = ["Online", "Home", "Group"];
+const modes = ["Online Tutoring", "Home Tutoring", "Group Classes", "All"];
 
 export default function HireTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,53 +173,69 @@ export default function HireTutorForm() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<HireTutorFormData>({
     resolver: zodResolver(hireTutorSchema),
     defaultValues: {
       gender: "any",
+      city: "",
+      location: "",
     },
   });
 
- const onSubmit = async (data: HireTutorFormData) => {
-  setIsSubmitting(true);
+  const cityValue = watch("city");
 
-  try {
-    const response = await fetch("http://localhost:5000/allJobs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...data,
-        isVerified: false,
-        isApproved: false,
-        isPremium: false,
-      }),
-    });
+  const getDistricts = () => {
+    if (!cityValue) return [];
+    const division =
+      divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
+    return division?.districts || [];
+  };
 
-    const result = await response.json();
+  useEffect(() => {
+    // Clear district when division changes
+    setValue("location", "");
+  }, [cityValue, setValue]);
 
-    if (!response.ok) {
-      throw new Error(result?.message || "Failed to submit application");
+  const onSubmit = async (data: HireTutorFormData) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/allJobs",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...data,
+            isVerified: false,
+            isApproved: false,
+            isPremium: false,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.message || "Failed to submit application");
+      }
+
+      console.log("Tutor application submitted:", result);
+      setIsSubmitted(true);
+      reset();
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    console.log("Tutor application submitted:", result);
-    setIsSubmitted(true);
-    reset();
-  } catch (error) {
-    console.error("Submission error:", error);
-    alert(
-      error instanceof Error
-        ? error.message
-        : "Something went wrong"
-    );
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
 
   if (isSubmitted) {
     return (
@@ -269,7 +385,9 @@ export default function HireTutorForm() {
             ))}
           </select>
           {errors.subject && (
-            <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.subject.message}
+            </p>
           )}
         </div>
       </div>
@@ -283,7 +401,7 @@ export default function HireTutorForm() {
             Class
           </label>
           <select
-            {...register("Class")}
+            {...register("class")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
           >
             <option value="">Select a class</option>
@@ -293,8 +411,8 @@ export default function HireTutorForm() {
               </option>
             ))}
           </select>
-          {errors.Class && (
-            <p className="mt-1 text-sm text-red-600">{errors.Class.message}</p>
+          {errors.class && (
+            <p className="mt-1 text-sm text-red-600">{errors.class.message}</p>
           )}
         </div>
 
@@ -362,13 +480,91 @@ export default function HireTutorForm() {
         </div>
       </div>
 
+      {/* City / Location */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div>
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Division *
+          </label>
+          <select
+            {...register("city")}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+          >
+            <option value="">Select your division</option>
+            {Object.entries(divisionsAndDistricts).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value.name}
+              </option>
+            ))}
+          </select>
+          {errors.city && (
+            <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="location"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            District *
+          </label>
+          <select
+            {...register("location")}
+            disabled={!cityValue}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <option value="">
+              {cityValue ? "Select your district" : "Select division first"}
+            </option>
+            {getDistricts().map((district) => (
+              <option key={district} value={district}>
+                {district}
+              </option>
+            ))}
+          </select>
+          {errors.location && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.location.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* medium */}
+      <div>
+        <label
+          htmlFor="medium"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Medium *
+        </label>
+        <select
+          {...register("medium")}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+        >
+          <option value="">Select a medium</option>
+          {media.map((medium) => (
+            <option key={medium} value={medium}>
+              {medium}
+            </option>
+          ))}
+        </select>
+        {errors.medium && (
+          <p className="mt-1 text-sm text-red-600">{errors.medium.message}</p>
+        )}
+      </div>
+
       {/* Description */}
       <div>
         <label
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Description *
+          Schedule Description *
         </label>
         <textarea
           {...register("description")}

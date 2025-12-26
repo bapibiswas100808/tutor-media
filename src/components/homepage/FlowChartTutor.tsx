@@ -76,10 +76,10 @@ export default function FlowChartTutor() {
               }`}
             >
               {/* Card */}
-              <div className="w-5/12">
-                <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+              <div className="w-9/12">
+                <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300  grid grid-cols-2 gap-3">
                   <div
-                    className={`w-full h-[400px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                    className={`w-full h-[170px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-baseline justify-end`}
                   >
                     <div className="w-full h-full overflow-hidden relative rounded-lg">
                       <Image
@@ -90,12 +90,14 @@ export default function FlowChartTutor() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {step.description}
-                  </p>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 leading-5">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -110,7 +112,7 @@ export default function FlowChartTutor() {
                   <svg
                     className="absolute top-0"
                     width="4"
-                    height="610"
+                    height="180"
                     viewBox="0 200 2 20"
                   >
                     <line
@@ -149,13 +151,13 @@ export default function FlowChartTutor() {
                   className={`w-full h-40 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
                 >
                   <div className="w-full h-full overflow-hidden relative rounded-lg">
-                      <Image
-                        src={step.image}
-                        alt={step.title}
-                        fill
-                        className="object-cover rounded-xl p-1"
-                      />
-                    </div>
+                    <Image
+                      src={step.image}
+                      alt={step.title}
+                      fill
+                      className="object-cover rounded-xl p-1"
+                    />
+                  </div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   {step.title}

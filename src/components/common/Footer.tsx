@@ -41,7 +41,7 @@ export default function Footer() {
             {/* Logo */}
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo.png"
+                src="/images/logo1.png"
                 alt="Tutor Media Logo"
                 width={140}
                 height={40}

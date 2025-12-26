@@ -22,40 +22,44 @@ interface BannerData {
   heading: string;
   subHeading: string;
 }
+const bannerData: BannerData = {
+  heading: "Connecting Learners With Verified Tutors.",
+  subHeading: "Hire the Right Tutor or get Tuition in your Area.",
+};
 
-async function getBannerData(): Promise<BannerData> {
-   const strapiUrl =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-  try {
-    const res = await fetch(
-      `${strapiUrl}/api/banner?populate=*`,
-      {
-        cache: "no-store", // Remove cache for real-time updates
-      }
-    );
+// async function getBannerData(): Promise<BannerData> {
+//    const strapiUrl =
+//     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+//   try {
+//     const res = await fetch(
+//       `${strapiUrl}/api/banner?populate=*`,
+//       {
+//         cache: "no-store", // Remove cache for real-time updates
+//       }
+//     );
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch banner: ${res.status}`);
-    }
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch banner: ${res.status}`);
+//     }
 
-    const { data } = await res.json();
-    
-    return {
-      heading: data.heading || "Connecting Learners With Verified Tutors.",
-      subHeading: data.subHeading || "Hire the Right Tutor or get Tuition in your Area.",
-    };
-  } catch (error) {
-    console.error("Banner fetch error:", error);
-    // Return fallback data
-    return {
-      heading: "Connecting Learners With Verified Tutors.",
-      subHeading: "Hire the Right Tutor or get Tuition in your Area.",
-    };
-  }
-}
+//     const { data } = await res.json();
+
+//     return {
+//       heading: data.heading || "Connecting Learners With Verified Tutors.",
+//       subHeading: data.subHeading || "Hire the Right Tutor or get Tuition in your Area.",
+//     };
+//   } catch (error) {
+//     console.error("Banner fetch error:", error);
+//     // Return fallback data
+//     return {
+//       heading: "Connecting Learners With Verified Tutors.",
+//       subHeading: "Hire the Right Tutor or get Tuition in your Area.",
+//     };
+//   }
+// }
 
 export default async function Home() {
-  const bannerData = await getBannerData();
+  // const bannerData = await getBannerData();
   return (
     <main>
       <Banner bannerData={bannerData} />
