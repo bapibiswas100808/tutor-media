@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { createPublic } from "@/lib/strapi";
+// import { createPublic } from "@/lib/strapi";
 
 const divisionsAndDistricts = {
   dhaka: {
@@ -146,11 +146,51 @@ export default function BecomeTutorForm() {
     return division?.districts || [];
   };
 
-  const onSubmit = async (data: BecomeTutorFormData) => {
-    setIsSubmitting(true);
+  // const onSubmit = async (data: BecomeTutorFormData) => {
+  //   setIsSubmitting(true);
 
-    try {
-      const response = await createPublic("tutor-hubs", {
+  //   try {
+  //     const response = await createPublic("tutor-hubs", {
+  //       fullName: data.fullName,
+  //       email: data.email,
+  //       phone: data.phone,
+  //       gender: data.gender,
+  //       city: data.city,
+  //       location: data.location,
+  //       qualification: data.qualification,
+  //       experience: data.experience,
+  //       bio: data.bio,
+  //       isVerified: false,
+  //       isApproved: false,
+  //       isPremium: false,
+  //     });
+
+  //     if (response.error) {
+  //       alert(`Error: ${response.error}`);
+  //       setIsSubmitting(false);
+  //       return;
+  //     }
+
+  //     console.log("Tutor application submitted:", response.data);
+  //     setIsSubmitted(true);
+  //     reset();
+  //   } catch (error) {
+  //     console.error("Submission error:", error);
+  //     alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+  const onSubmit = async (data: BecomeTutorFormData) => {
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch("http://localhost:5000/allTutors", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         fullName: data.fullName,
         email: data.email,
         phone: data.phone,
@@ -163,24 +203,31 @@ export default function BecomeTutorForm() {
         isVerified: false,
         isApproved: false,
         isPremium: false,
-      });
+      }),
+    });
 
-      if (response.error) {
-        alert(`Error: ${response.error}`);
-        setIsSubmitting(false);
-        return;
-      }
-
-      console.log("Tutor application submitted:", response.data);
-      setIsSubmitted(true);
-      reset();
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
-    } finally {
-      setIsSubmitting(false);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to submit application");
     }
-  };
+
+    const result = await response.json();
+    console.log("Tutor application submitted:", result);
+
+    setIsSubmitted(true);
+    reset();
+  } catch (error) {
+    console.error("Submission error:", error);
+    alert(
+      `Error submitting application: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   if (isSubmitted) {
     return (
