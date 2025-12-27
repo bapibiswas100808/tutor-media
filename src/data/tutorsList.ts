@@ -28,6 +28,7 @@ export interface Tutor {
   ageGroup?: string[];
   qualification?: string;
   city?: string;
+  imageUrl?: string;
   image?: {
     url: string;
     formats?: {

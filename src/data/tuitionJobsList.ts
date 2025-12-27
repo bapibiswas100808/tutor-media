@@ -11,7 +11,7 @@ export interface TuitionJob {
   description: string;
   requirements: string[];
   schedule: string;
- createdAt: string;
+  createdAt: string;
   applicants: number;
   status: "active" | "closed" | "filled";
   urgency?: "urgent" | "normal";
@@ -21,7 +21,12 @@ export interface TuitionJob {
   duration: string;
   startDate?: string;
   division: string;
-  medium: "banglaMedium" | "englishMedium" | "englishVersion" | "madrasahBackground";
+  medium:
+    | "banglaMedium"
+    | "englishMedium"
+    | "englishVersion"
+    | "madrasahBackground";
+  area?: string;
 }
 
 // export const tuitionJobsList: TuitionJob[] = [

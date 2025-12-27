@@ -80,9 +80,12 @@ interface StrapiPost {
 export default async function BlogPage() {
   // const blogPosts = await getBlogPosts();
 
-  const res = await fetch("http://localhost:5000/allBlogs", {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    "https://pro-assignment-twelve-server.vercel.app/allBlogs",
+    {
+      cache: "no-store",
+    }
+  );
   const tests = await res.json();
 
   return (
@@ -92,9 +95,7 @@ export default async function BlogPage() {
           Our Blog
         </h1>
 
-      
-
-         <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {tests?.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">
@@ -148,7 +149,7 @@ export default async function BlogPage() {
               ))}
             </div>
           )}
-        </div> 
+        </div>
       </div>
     </div>
   );
