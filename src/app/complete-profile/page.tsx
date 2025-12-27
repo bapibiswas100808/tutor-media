@@ -1,32 +1,25 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import BasicInfo, { BasicInfoData } from "./tabs/basicInfo";
 import Education, { EducationEntry } from "./tabs/education";
 import Availability, { AvailabilityData } from "./tabs/availability";
 
 const tabs = ["Basic Info", "Education", "Availability"];
 
-// Props for existing data (optional)
-interface CompleteProfilePageProps {
-  existingData?: {
-    basicInfo?: BasicInfoData;
-    education?: EducationEntry;
-    availability?: AvailabilityData;
-  };
-}
-
-export default function CompleteProfilePage({
-  existingData,
-}: CompleteProfilePageProps) {
-  // === States for each tab ===
+export default function CompleteProfilePage() {
+  // =========================
+  // STATES
+  // =========================
   const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
-    fullName: existingData?.basicInfo?.fullName || "",
-    email: existingData?.basicInfo?.email || "",
-    phone: existingData?.basicInfo?.phone || "",
-    gender: existingData?.basicInfo?.gender || "",
-    city: existingData?.basicInfo?.city || "",
-    location: existingData?.basicInfo?.location || "",
+    image: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    city: "",
+    location: "",
   });
 
   const [education, setEducation] = useState<EducationEntry[]>([
@@ -40,17 +33,68 @@ export default function CompleteProfilePage({
 
   const [activeTab, setActiveTab] = useState(0);
 
-  // Save function: combine all tab data
-  const handleSave = () => {
+  // =========================
+  // VALIDATION
+  // =========================
+  const validateBasicInfo = () => {
+    const required: (keyof BasicInfoData)[] = [
+      "fullName",
+      "email",
+      "phone",
+      "gender",
+    ];
+
+    return required.every((field) => (basicInfo[field] ?? "").trim() !== "");
+  };
+
+  const validateEducation = () =>
+    education.length > 0 &&
+    education.every((e) => e.academy.trim() !== "" && e.year !== "");
+
+  const validateAvailability = () =>
+    availability.days.length > 0 && availability.mode !== "";
+
+  const isFormValid =
+    validateBasicInfo() && validateEducation() && validateAvailability();
+
+  // =========================
+  // SAVE HANDLER
+  // =========================
+  const handleSave = async () => {
+    if (!isFormValid) {
+      if (!validateBasicInfo()) setActiveTab(0);
+      else if (!validateEducation()) setActiveTab(1);
+      else setActiveTab(2);
+
+      alert("Please fill all required fields");
+      return;
+    }
+
     const profileData = {
       basicInfo,
       education,
       availability,
     };
-    console.log("Saved Profile Data:", profileData);
-    // TODO: send `profileData` to backend API
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileData),
+      });
+
+      if (!res.ok) throw new Error("Failed to save profile");
+
+      alert("Profile saved successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    }
   };
 
+  // =========================
+  // UI
+  // =========================
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">Complete Tutor Profile</h1>
@@ -61,7 +105,7 @@ export default function CompleteProfilePage({
           <button
             key={tab}
             onClick={() => setActiveTab(index)}
-            className={`pb-2 font-medium ${
+            className={`pb-2 font-medium transition ${
               activeTab === index
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-500"
@@ -72,8 +116,14 @@ export default function CompleteProfilePage({
         ))}
       </div>
 
-      {/* Tab Content */}
-      <div className="mb-6">
+      {/* Animated Content */}
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mb-8"
+      >
         {activeTab === 0 && (
           <BasicInfo data={basicInfo} setData={setBasicInfo} />
         )}
@@ -83,13 +133,18 @@ export default function CompleteProfilePage({
         {activeTab === 2 && (
           <Availability data={availability} setData={setAvailability} />
         )}
-      </div>
+      </motion.div>
 
       {/* Save Button */}
       <div className="flex justify-center">
         <button
           onClick={handleSave}
-          className="bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-green-600 hover:to-teal-700 transition"
+          disabled={!isFormValid}
+          className={`bg-[#0D24A0] text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all ${
+            !isFormValid
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-blue-700 hover:scale-105"
+          }`}
         >
           Save Profile
         </button>

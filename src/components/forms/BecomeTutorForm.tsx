@@ -206,6 +206,7 @@ export default function BecomeTutorForm() {
             isVerified: false,
             isApproved: false,
             isPremium: false,
+            image: "",
           }),
         }
       );
