@@ -140,7 +140,7 @@ export default function CompleteProfilePage() {
         <button
           onClick={handleSave}
           disabled={!isFormValid}
-          className={`bg-[#0D24A0] text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all ${
+          className={`bg-[#0D24A0] w-full text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all ${
             !isFormValid
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-blue-700 hover:scale-105"

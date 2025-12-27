@@ -53,7 +53,7 @@ export default function Availability({ data, setData }: Props) {
         <select
           value={data.mode}
           onChange={handleModeChange}
-          className="w-full border rounded-lg px-3 py-2 bg-gray-800 text-white"
+          className="w-full border rounded-lg px-3 py-2.5 bg-gray-800 text-white"
           disabled={data.days.length === 0}
         >
           <option value="">Select Mode</option>

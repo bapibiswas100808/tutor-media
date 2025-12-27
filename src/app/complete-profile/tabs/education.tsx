@@ -80,7 +80,7 @@ export default function Education({ data, setData }: Props) {
     <div className="space-y-4">
       {data.map((entry, index) => (
         <div key={index} className="md:flex gap-4 items-start">
-          <div className="flex-1">
+          <div className="md:flex-1 mb-4 md:mb-0">
             <label className="block font-medium">Academy Name</label>
             <input
               type="text"
@@ -96,13 +96,13 @@ export default function Education({ data, setData }: Props) {
             )}
           </div>
 
-          <div className="flex-1">
+          <div className="md:flex-1">
             <label className="block font-medium">Passing Year</label>
             <select
               name="year"
               value={entry.year}
               onChange={(e) => handleChange(index, e)}
-              className={`w-full border rounded-lg px-3 py-2 bg-gray-800 ${
+              className={`w-full border rounded-lg px-3 py-2.5 bg-gray-800 ${
                 errors[index]?.year ? "border-red-500" : ""
               }`}
             >

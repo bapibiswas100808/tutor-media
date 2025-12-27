@@ -150,7 +150,7 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
           name="gender"
           value={data.gender}
           onChange={handleChange}
-          className={`w-full border rounded-lg px-3 py-2 bg-gray-800 ${
+          className={`w-full border rounded-lg px-3 py-2.5 bg-gray-800 ${
             errors.gender ? "border-red-500" : ""
           }`}
         >
