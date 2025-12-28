@@ -115,6 +115,9 @@ export default function AdminDashboard({
   useEffect(() => setTutorPage(1), [tutorEmailQuery]);
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
+  const BACKEND_BASE =
+    process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000";
+
   async function toggleField(
     type: "tutor" | "job",
     id: number | string,
@@ -125,7 +128,16 @@ export default function AdminDashboard({
     setLoadingMap((s) => ({ ...s, [key]: true }));
     setError(null);
 
-    // optimistic update
+    // The backend endpoints only set flags to TRUE and add timestamps.
+    // Un-setting (value === false) isn't supported by those endpoints, so
+    // prevent unchecking from the UI.
+    if (!value) {
+      setError("Clearing this flag is not supported from the UI.");
+      setLoadingMap((s) => ({ ...s, [key]: false }));
+      return;
+    }
+
+    // optimistic update (only for enabling)
     if (type === "tutor") {
       setTutors((prev) =>
         prev.map((t) => (t.id === id ? { ...t, [field]: value } : t))
@@ -138,24 +150,42 @@ export default function AdminDashboard({
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(
-        `/api/admin/${type === "tutor" ? "tutors" : "tuition-jobs"}/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ [field]: value }),
-        }
-      );
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err?.error || "Failed to update");
+      let url = "";
+      if (type === "tutor") {
+        if (field === "isVerified")
+          url = `${BACKEND_BASE}/allTutors/isVerified/${id}`;
+        else if (field === "isApproved")
+          url = `${BACKEND_BASE}/allTutors/isApproved/${id}`;
+        else if (field === "isPremium")
+          url = `${BACKEND_BASE}/allTutors/isPremium/${id}`;
+      } else {
+        if (field === "isApproved")
+          url = `${BACKEND_BASE}/allJobs/isApproved/${id}`;
       }
 
-      // can use returned updated object if needed
+      if (!url) throw new Error("Unsupported operation");
+
+      const res = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        // try parse error body
+        let errMessage = "Failed to update";
+        try {
+          const body = await res.json();
+          errMessage = body?.message || body?.error || errMessage;
+        } catch {
+          // ignore
+        }
+        throw new Error(errMessage);
+      }
+
+      // optionally, could refresh resource or use returned payload
     } catch (err: unknown) {
       // revert optimistic update
       if (type === "tutor") {
@@ -296,7 +326,9 @@ export default function AdminDashboard({
                             <input
                               type="checkbox"
                               checked={!!t.isVerified}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
+                              disabled={
+                                !!loadingMap[`tutor-${t.id}`] || !!t.isVerified
+                              }
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
@@ -305,13 +337,20 @@ export default function AdminDashboard({
                                   e.target.checked
                                 )
                               }
+                              title={
+                                t.isVerified
+                                  ? "Already verified — unchecking not supported"
+                                  : "Mark as verified"
+                              }
                             />
                           </td>
                           <td className="px-3 py-2">
                             <input
                               type="checkbox"
                               checked={!!t.isApproved}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
+                              disabled={
+                                !!loadingMap[`tutor-${t.id}`] || !!t.isApproved
+                              }
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
@@ -320,13 +359,20 @@ export default function AdminDashboard({
                                   e.target.checked
                                 )
                               }
+                              title={
+                                t.isApproved
+                                  ? "Already approved — unchecking not supported"
+                                  : "Approve tutor"
+                              }
                             />
                           </td>
                           <td className="px-3 py-2">
                             <input
                               type="checkbox"
                               checked={!!t.isPremium}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
+                              disabled={
+                                !!loadingMap[`tutor-${t.id}`] || !!t.isPremium
+                              }
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
@@ -334,6 +380,11 @@ export default function AdminDashboard({
                                   "isPremium",
                                   e.target.checked
                                 )
+                              }
+                              title={
+                                t.isPremium
+                                  ? "Already premium — unchecking not supported"
+                                  : "Make premium"
                               }
                             />
                           </td>
@@ -436,7 +487,9 @@ export default function AdminDashboard({
                             <input
                               type="checkbox"
                               checked={!!j.isApproved}
-                              disabled={!!loadingMap[`job-${j.id}`]}
+                              disabled={
+                                !!loadingMap[`job-${j.id}`] || !!j.isApproved
+                              }
                               onChange={(e) =>
                                 toggleField(
                                   "job",
@@ -444,6 +497,11 @@ export default function AdminDashboard({
                                   "isApproved",
                                   e.target.checked
                                 )
+                              }
+                              title={
+                                j.isApproved
+                                  ? "Already approved — unchecking not supported"
+                                  : "Approve job"
                               }
                             />
                           </td>
