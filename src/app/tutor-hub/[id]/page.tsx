@@ -19,9 +19,12 @@ export default async function TutorHubsPage({
   let tutor: Tutor | null = null;
 
   try {
-    const res = await fetch(`http://localhost:5000/allTutors/${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${id}`,
+      {
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
       console.warn(`Tutor not found (status ${res.status}) for id ${id}`);

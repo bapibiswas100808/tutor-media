@@ -77,7 +77,7 @@ export default function Education({ data, setData }: Props) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-gray-700">
       {data.map((entry, index) => (
         <div key={index} className="md:flex gap-4 items-start">
           <div className="md:flex-1 mb-4 md:mb-0">
@@ -87,6 +87,7 @@ export default function Education({ data, setData }: Props) {
               name="academy"
               value={entry.academy}
               onChange={(e) => handleChange(index, e)}
+              placeholder="Academy Name"
               className={`w-full border rounded-lg px-3 py-2 ${
                 errors[index]?.academy ? "border-red-500" : ""
               }`}
@@ -102,7 +103,7 @@ export default function Education({ data, setData }: Props) {
               name="year"
               value={entry.year}
               onChange={(e) => handleChange(index, e)}
-              className={`w-full border rounded-lg px-3 py-2.5 bg-gray-800 ${
+              className={`w-full border rounded-lg px-3 py-2.5 ${
                 errors[index]?.year ? "border-red-500" : ""
               }`}
             >

@@ -186,30 +186,26 @@ export default function BecomeTutorForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        "https://pro-assignment-twelve-server.vercel.app/allTutors",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fullName: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            gender: data.gender,
-            city: data.city,
-            location: data.location,
-            qualification: data.qualification,
-            experience: data.experience,
-            bio: data.bio,
-            isVerified: false,
-            isApproved: false,
-            isPremium: false,
-            image: "",
-          }),
-        }
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          gender: data.gender,
+          city: data.city,
+          location: data.location,
+          qualification: data.qualification,
+          experience: data.experience,
+          bio: data.bio,
+          isVerified: false,
+          isApproved: false,
+          isPremium: false,
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
