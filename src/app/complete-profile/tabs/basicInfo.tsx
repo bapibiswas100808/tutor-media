@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export interface BasicInfoData {
-  fullName: string;
-  email: string;
-  phone: string;
-  gender: string;
-  city: string;
-  location: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  gender?: string;
+  password?: string;
+  confirmPassword?: string;
   image?: string;
 }
 
@@ -18,18 +19,60 @@ interface BasicInfoProps {
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
   const [uploading, setUploading] = useState(false);
-  const [errors, setErrors] = useState<Partial<BasicInfoData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
-    setData({ ...data, [name]: value });
+    // update data
+    const newData = { ...data, [name]: value };
+    setData(newData);
 
-    // clear error on typing
-    if (errors[name as keyof BasicInfoData]) {
-      setErrors({ ...errors, [name]: undefined });
+    // clear field-specific error
+    if (errors[name]) {
+      const { [name]: _, ...rest } = errors;
+      setErrors(rest);
+    }
+
+    // Password validations
+    if (name === "password" || name === "confirmPassword") {
+      const pass = name === "password" ? value : newData.password || "";
+      const confirm =
+        name === "confirmPassword" ? value : newData.confirmPassword || "";
+
+      // password length check
+      if (
+        newData.password &&
+        newData.password.length > 0 &&
+        newData.password.length < 6
+      ) {
+        setErrors((prev) => ({
+          ...prev,
+          password: "Password must be at least 6 characters",
+        }));
+      } else {
+        setErrors((prev) => {
+          const { password, ...rest } = prev;
+          return rest;
+        });
+      }
+
+      // match check
+      if (pass && confirm && pass !== confirm) {
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: "Passwords do not match",
+        }));
+      } else {
+        setErrors((prev) => {
+          const { confirmPassword, ...rest } = prev;
+          return rest;
+        });
+      }
     }
   };
 
@@ -98,94 +141,73 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
         <input
           type="text"
           name="fullName"
-          value={data.fullName}
+          value={data.fullName || ""}
           onChange={handleChange}
           className={`w-full border rounded-lg px-3 py-2 ${
-            errors.fullName ? "border-red-500" : ""
+            errors["fullName"] ? "border-red-500" : ""
           }`}
         />
-        {errors.fullName && (
-          <p className="text-red-500 text-sm">{errors.fullName}</p>
+        {errors["fullName"] && (
+          <p className="text-red-500 text-sm">{errors["fullName"]}</p>
         )}
       </div>
 
-      {/* Email */}
+      {/* Password */}
       <div>
-        <label className="block font-medium">Email *</label>
-        <input
-          type="email"
-          name="email"
-          value={data.email}
-          onChange={handleChange}
-          className={`w-full border rounded-lg px-3 py-2 ${
-            errors.email ? "border-red-500" : ""
-          }`}
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email}</p>
+        <label className="block font-medium">Password</label>
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={data.password || ""}
+            onChange={handleChange}
+            className={`w-full border rounded-lg px-3 py-2 pr-12 ${
+              errors["password"] ? "border-red-500" : ""
+            }`}
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((s) => !s)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 p-1"
+          >
+            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
+        </div>
+
+        {errors["password"] && (
+          <p className="text-red-500 text-sm">{errors["password"]}</p>
         )}
       </div>
 
-      {/* Phone */}
+      {/* Retype Password */}
       <div>
-        <label className="block font-medium">Phone *</label>
-        <input
-          type="tel"
-          name="phone"
-          value={data.phone}
-          onChange={handleChange}
-          className={`w-full border rounded-lg px-3 py-2 ${
-            errors.phone ? "border-red-500" : ""
-          }`}
-        />
-        {errors.phone && (
-          <p className="text-red-500 text-sm">{errors.phone}</p>
+        <label className="block font-medium">Retype Password</label>
+        <div className="relative">
+          <input
+            type={showConfirm ? "text" : "password"}
+            name="confirmPassword"
+            value={data.confirmPassword || ""}
+            onChange={handleChange}
+            className={`w-full border rounded-lg px-3 py-2 pr-12 ${
+              errors["confirmPassword"] ? "border-red-500" : ""
+            }`}
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowConfirm((s) => !s)}
+            aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 p-1"
+          >
+            {showConfirm ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
+        </div>
+
+        {errors["confirmPassword"] && (
+          <p className="text-red-500 text-sm">{errors["confirmPassword"]}</p>
         )}
-      </div>
-
-      {/* Gender */}
-      <div>
-        <label className="block font-medium">Gender *</label>
-        <select
-          name="gender"
-          value={data.gender}
-          onChange={handleChange}
-          className={`w-full border rounded-lg px-3 py-2.5 bg-gray-800 ${
-            errors.gender ? "border-red-500" : ""
-          }`}
-        >
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-        {errors.gender && (
-          <p className="text-red-500 text-sm">{errors.gender}</p>
-        )}
-      </div>
-
-      {/* City */}
-      <div>
-        <label className="block font-medium">City</label>
-        <input
-          type="text"
-          name="city"
-          value={data.city}
-          onChange={handleChange}
-          className="w-full border rounded-lg px-3 py-2"
-        />
-      </div>
-
-      {/* Location */}
-      <div>
-        <label className="block font-medium">Location</label>
-        <input
-          type="text"
-          name="location"
-          value={data.location}
-          onChange={handleChange}
-          className="w-full border rounded-lg px-3 py-2"
-        />
       </div>
     </div>
   );

@@ -14,12 +14,7 @@ export default function CompleteProfilePage() {
   // =========================
   const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
     image: "",
-    fullName: "",
-    email: "",
-    phone: "",
-    gender: "",
-    city: "",
-    location: "",
+    password: "",
   });
 
   const [education, setEducation] = useState<EducationEntry[]>([
@@ -44,7 +39,17 @@ export default function CompleteProfilePage() {
       "gender",
     ];
 
-    return required.every((field) => (basicInfo[field] ?? "").trim() !== "");
+    const baseValid = required.every(
+      (field) => (basicInfo[field] ?? "").toString().trim() !== ""
+    );
+
+    // if the user provided a password, ensure it meets length and matches confirm
+    const passwordValid =
+      !basicInfo.password ||
+      (basicInfo.password.length >= 6 &&
+        basicInfo.password === basicInfo.confirmPassword);
+
+    return baseValid && passwordValid;
   };
 
   const validateEducation = () =>
