@@ -27,6 +27,7 @@ export interface TuitionJob {
     | "englishVersion"
     | "madrasahBackground";
   area?: string;
+  isApproved?: boolean;
 }
 
 // export const tuitionJobsList: TuitionJob[] = [
