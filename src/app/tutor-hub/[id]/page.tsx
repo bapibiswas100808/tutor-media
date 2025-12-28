@@ -20,7 +20,7 @@ export default async function TutorHubsPage({
 
   try {
     const res = await fetch(
-      `${process.env.APP_URL}/allTutors/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${id}`,
       {
         cache: "no-store",
       }

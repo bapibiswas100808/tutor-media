@@ -11,7 +11,15 @@ interface Props {
 }
 
 export default function Availability({ data, setData }: Props) {
-  const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const weekDays = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
 
   const handleModeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setData({ ...data, mode: e.target.value as AvailabilityData["mode"] });
@@ -19,14 +27,14 @@ export default function Availability({ data, setData }: Props) {
 
   const handleDayToggle = (day: string) => {
     if (data.days.includes(day)) {
-      setData({ ...data, days: data.days.filter(d => d !== day) });
+      setData({ ...data, days: data.days.filter((d) => d !== day) });
     } else {
       setData({ ...data, days: [...data.days, day] });
     }
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-gray-700">
       <div>
         <label className="block font-medium mb-2">Available Days</label>
         <div className="flex flex-wrap gap-2">
@@ -36,10 +44,10 @@ export default function Availability({ data, setData }: Props) {
               type="button"
               aria-pressed={data.days.includes(day)}
               onClick={() => handleDayToggle(day)}
-              className={`px-3 py-1 rounded-lg border ${
+              className={`px-3 py-2 rounded-lg border  ${
                 data.days.includes(day)
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-gray-800 text-white border-gray-600"
+                  ? "bg-[#0C259F] text-white border-[#0C259F]"
+                  : "bg-gray-400 text-white border-gray-200"
               }`}
             >
               {day}
@@ -53,7 +61,7 @@ export default function Availability({ data, setData }: Props) {
         <select
           value={data.mode}
           onChange={handleModeChange}
-          className="w-full border rounded-lg px-3 py-2.5 bg-gray-800 text-white"
+          className="w-full border rounded-lg px-3 py-2.5"
           disabled={data.days.length === 0}
         >
           <option value="">Select Mode</option>

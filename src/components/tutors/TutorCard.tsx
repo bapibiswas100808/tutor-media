@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Tutor } from "@/data/tutorsList";
+// import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
 import {
   BadgeCheck,
@@ -14,20 +14,62 @@ import {
   Star,
 } from "lucide-react";
 
+
+interface EducationEntry {
+  academy: string;
+  year: string;
+}
+
+export interface BasicInfo {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  image?: string;
+}
+
+export interface Tutor {
+  _id: string;
+  id: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender?: "male" | "female" | "other";
+  city?: string;
+  location?: string;
+  qualification?: string;
+  experience?: string;
+  bio?: string;
+  isVerified?: boolean;
+  isApproved?: boolean;
+  isPremium?: boolean;
+  createdAt?: string;
+  availability?: {
+    days: string[];
+    mode: string;
+  };
+  basicInfo?: BasicInfo;  // 🔥 Add this
+  education?: EducationEntry[];
+  // ... any other fields you need
+}
+
 interface TutorCardProps {
   tutor: Tutor;
   index: number;
 }
 
-export default function TutorCard({ tutor, index }: TutorCardProps) {
-  const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
-  const imageUrl = tutor.image?.formats?.large?.url
-    ? `${STRAPI_URL}${tutor.image.formats.large.url}`
-    : tutor.image?.url
-    ? `${STRAPI_URL}${tutor.image.url}`
-    : null;
+export default function TutorCard({ tutor, index }: TutorCardProps) {
+  // console.log("tutor card data", tutor.basicInfo.image);
+  const imageUrl = tutor.basicInfo?.image
+
+  // const STRAPI_URL =
+  //   process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+  // const imageUrl = tutor.image?.formats?.large?.url
+  //   ? `${STRAPI_URL}${tutor.image.formats.large.url}`
+  //   : tutor.image?.url
+  //   ? `${STRAPI_URL}${tutor.image.url}`
+  //   : null;
 
   return (
     <motion.div
@@ -75,7 +117,8 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                   fill
                   className="object-cover"
                   sizes="128px"
-                  priority
+                  // priority
+                  unoptimized
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
@@ -178,7 +221,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
             </div> */}
 
             {/* CTA Button */}
-            <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform group-hover:scale-105 shadow-md">
+            <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform group-hover:scale-105 shadow-md cursor-pointer">
               View Full Profile
             </button>
           </div>

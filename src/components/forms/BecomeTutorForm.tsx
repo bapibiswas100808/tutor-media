@@ -186,7 +186,7 @@ export default function BecomeTutorForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://localhost:5000/allTutors", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +204,6 @@ export default function BecomeTutorForm() {
           isVerified: false,
           isApproved: false,
           isPremium: false,
-          image: "",
         }),
       });
 
