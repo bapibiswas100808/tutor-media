@@ -174,12 +174,18 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       </div>
                     </div>
                     {/* CTA Buttons */}
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap-3">
                       <Link
                         href="/hire-tutor"
                         className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
                       >
                         Hire Tutor
+                      </Link>
+                      <Link
+                        href="/complete-profile"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
+                      >
+                        Complete Profile
                       </Link>
                     </div>
                   </div>
