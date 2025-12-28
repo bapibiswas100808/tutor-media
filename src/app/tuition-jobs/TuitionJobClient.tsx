@@ -91,7 +91,7 @@ export default function TuitionJobClient({
   const formatDivision = (d: string) => d.charAt(0).toUpperCase() + d.slice(1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 via-white to-purple-50 py-20">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -99,7 +99,7 @@ export default function TuitionJobClient({
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Find Your Perfect Tuition Job
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">

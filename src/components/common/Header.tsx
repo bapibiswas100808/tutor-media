@@ -48,6 +48,12 @@ export default function Header() {
           {/* CTA Button - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
             <Link
+              href="/login"
+              className="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-full transition-colors duration-200"
+            >
+              Login
+            </Link>
+            <Link
               href="/become-a-tutor"
               className="bg-[#0D24A0] hover:bg-blue-700 text-white px-5 py-2 rounded-full font-medium transition-colors duration-200"
             >
@@ -106,6 +112,13 @@ export default function Header() {
                     {item.name}
                   </Link>
                 ))}
+                <Link
+                  href="/login"
+                  className="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </Link>
                 <div className="px-4 pt-4 border-t border-gray-200">
                   <Link
                     href="/become-a-tutor"

@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import TuitionJobClient from "./TuitionJobClient";
+import { TuitionJob } from "@/data/tuitionJobsList";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Tuition Jobs - Tutor Media",
@@ -7,45 +9,23 @@ export const metadata: Metadata = {
     "Browse the latest tuition job listings and find the perfect tutoring opportunity.",
 };
 
-export interface TuitionJob {
-  id: number;
-  title: string;
-  subject: string;
-  class: string;
-  location: string;
-  budget: string;
-  mode: string;
-  studentName: string;
-  description: string;
-  requirements: string[];
-  schedule: string;
-  postedDate: string;
-  applicants: number;
-  status: "active" | "closed" | "filled";
-  urgency?: "urgent" | "normal";
-  gender?: "male" | "female" | "any";
-  studentGender?: "male" | "female";
-  days: string[];
-  duration: string;
-  startDate?: string;
-  division: string;
-  medium:
-    | "banglaMedium"
-    | "englishMedium"
-    | "englishVersion"
-    | "madrasahBackground";
-}
-
 export default async function TuitionJobsPage() {
-  const res = await fetch(
-    "https://pro-assignment-twelve-server.vercel.app/allJobs",
-    {
-      cache: "no-store",
-    }
-  );
-  const tests = await res.json();
+  let tests: TuitionJob[] = [];
 
-  console.log("Tuition Jobs Data:", tests);
+  try {
+    const res = await fetch("http://localhost:5000/allJobs", {
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      tests = Array.isArray(data) ? data : [];
+    }
+  } catch (error) {
+    console.error("Backend not available:", error);
+    tests = []; // fallback
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TuitionJobClient tuitionJobs={tests} />
