@@ -100,7 +100,7 @@ const becomeTutorSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     message: "Please select your gender",
   }),
-  city: z.string().min(1, "Please select your division"),
+  division: z.string().min(1, "Please select your division"),
   location: z.string().min(1, "Please select your district"),
   qualification: z.string().min(2, "Please enter your qualification"),
   experience: z.string().min(1, "Please select your experience level"),
@@ -120,7 +120,7 @@ const experienceLevels = [
 export default function BecomeTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  // const [selectedCity, setSelectedCity] = useState<string>("");
+  // const [selectedDivision, setSelectedDivision] = useState<string>("");
 
   const {
     register,
@@ -138,12 +138,12 @@ export default function BecomeTutorForm() {
     },
   });
 
-  const cityValue = watch("city");
+  const divisionValue = watch("division");
 
   const getDistricts = () => {
-    if (!cityValue) return [];
+    if (!divisionValue) return [];
     const division =
-      divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
+      divisionsAndDistricts[divisionValue as keyof typeof divisionsAndDistricts];
     return division?.districts || [];
   };
 
@@ -156,7 +156,7 @@ export default function BecomeTutorForm() {
   //       email: data.email,
   //       phone: data.phone,
   //       gender: data.gender,
-  //       city: data.city,
+  //       division: data.division,
   //       location: data.location,
   //       qualification: data.qualification,
   //       experience: data.experience,
@@ -182,6 +182,7 @@ export default function BecomeTutorForm() {
   //     setIsSubmitting(false);
   //   }
   // };
+  
   const onSubmit = async (data: BecomeTutorFormData) => {
     setIsSubmitting(true);
 
@@ -196,7 +197,7 @@ export default function BecomeTutorForm() {
           email: data.email,
           phone: data.phone,
           gender: data.gender,
-          city: data.city,
+          division: data.division,
           location: data.location,
           qualification: data.qualification,
           experience: data.experience,
@@ -356,17 +357,17 @@ export default function BecomeTutorForm() {
           </div>
         </div>
 
-        {/* City / Location */}
+        {/* Division / Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label
-              htmlFor="city"
+              htmlFor="division"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
               Division *
             </label>
             <select
-              {...register("city")}
+              {...register("division")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
             >
               <option value="">Select your division</option>
@@ -376,8 +377,8 @@ export default function BecomeTutorForm() {
                 </option>
               ))}
             </select>
-            {errors.city && (
-              <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
+            {errors.division && (
+              <p className="mt-1 text-sm text-red-600">{errors.division.message}</p>
             )}
           </div>
 
@@ -390,11 +391,11 @@ export default function BecomeTutorForm() {
             </label>
             <select
               {...register("location")}
-              disabled={!cityValue}
+              disabled={!divisionValue}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value="">
-                {cityValue ? "Select your district" : "Select division first"}
+                {divisionValue ? "Select your district" : "Select division first"}
               </option>
               {getDistricts().map((district) => (
                 <option key={district} value={district}>
