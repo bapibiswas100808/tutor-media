@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -105,6 +106,11 @@ const becomeTutorSchema = z.object({
   qualification: z.string().min(2, "Please enter your qualification"),
   experience: z.string().min(1, "Please select your experience level"),
   bio: z.string().min(20, "Bio must be at least 20 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 type BecomeTutorFormData = z.infer<typeof becomeTutorSchema>;
@@ -118,6 +124,7 @@ const experienceLevels = [
 ];
 
 export default function BecomeTutorForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   // const [selectedCity, setSelectedCity] = useState<string>("");
@@ -201,6 +208,7 @@ export default function BecomeTutorForm() {
           qualification: data.qualification,
           experience: data.experience,
           bio: data.bio,
+          password: data.password,
           isVerified: false,
           isApproved: false,
           isPremium: false,
@@ -215,8 +223,14 @@ export default function BecomeTutorForm() {
       const result = await response.json();
       console.log("Tutor application submitted:", result);
 
-      setIsSubmitted(true);
-      reset();
+      // Redirect to complete profile with the tutor ID
+      if (result.id || result._id) {
+        const tutorId = result.id || result._id;
+        router.push(`/complete-profile/${tutorId}`);
+      } else {
+        setIsSubmitted(true);
+        reset();
+      }
     } catch (error) {
       console.error("Submission error:", error);
       alert(
@@ -485,6 +499,53 @@ export default function BecomeTutorForm() {
           {errors.bio && (
             <p className="mt-1 text-sm text-red-600">{errors.bio.message}</p>
           )}
+        </div>
+      </div>
+
+      {/* Security */}
+      <div className="rounded-lg">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Security</h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Password *
+            </label>
+            <input
+              {...register("password")}
+              type="password"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+              placeholder="Enter a secure password (minimum 6 characters)"
+            />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Confirm Password *
+            </label>
+            <input
+              {...register("confirmPassword")}
+              type="password"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+              placeholder="Confirm your password"
+            />
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
