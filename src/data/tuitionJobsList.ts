@@ -1,5 +1,5 @@
 export interface TuitionJob {
-  _id: string | undefined;
+  _id?: string | number;
   id: number;
   title: string;
   subject: string;

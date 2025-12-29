@@ -61,7 +61,7 @@ export default async function AdminDashboardPage() {
       <div className="container mx-auto">
         <AdminDashboard
           tutors={tutorHubs}
-          jobs={tuituionJobs}
+          jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
           applications={applications}
         />
       </div>

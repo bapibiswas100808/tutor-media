@@ -85,11 +85,7 @@ export default function TuitionJobClient({
         normalize(job.status) === "open";
 
       return (
-        matchesClass &&
-        matchesMode &&
-        matchesMedium &&
-        matchesDivision &&
-        isActive // ✅ optional but recommended
+        matchesClass && matchesMode && matchesMedium && matchesDivision
       );
     });
 
@@ -155,8 +151,8 @@ export default function TuitionJobClient({
             Find Your Perfect Tuition Job
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Browse through {approvedJobs.length}+ available tuition opportunities
-            and apply directly with your proposal
+            Browse through {approvedJobs.length}+ available tuition
+            opportunities and apply directly with your proposal
           </p>
         </motion.div>
 
