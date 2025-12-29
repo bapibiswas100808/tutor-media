@@ -81,7 +81,7 @@ export default function Education({ data, setData }: Props) {
       {data.map((entry, index) => (
         <div key={index} className="md:flex gap-4 items-start">
           <div className="md:flex-1 mb-4 md:mb-0">
-            <label className="block font-medium">Academy Name</label>
+            <label className="block font-medium">Institution</label>
             <input
               type="text"
               name="academy"

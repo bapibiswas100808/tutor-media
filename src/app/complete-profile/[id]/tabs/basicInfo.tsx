@@ -6,8 +6,8 @@ import { Eye, EyeOff } from "lucide-react";
 
 export interface BasicInfoData {
   email: string;
-  password: string;
-  confirmPassword: string;
+  password?: string;
+  confirmPassword?: string;
   image?: string;
 }
 
@@ -128,10 +128,11 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
 
         {/* Email */}
         <div className="flex-1">
-          <label className="block font-medium">Email Address *
+          <label className="block font-medium">
+            Email Address *
             <p className="text-sm text-gray-500 mt-1">
-            Email is linked to your account and cannot be changed
-          </p>
+              Email is linked to your account and cannot be changed
+            </p>
           </label>
           <input
             type="email"
@@ -141,7 +142,6 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
             disabled
             className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed"
           />
-
         </div>
       </div>
 

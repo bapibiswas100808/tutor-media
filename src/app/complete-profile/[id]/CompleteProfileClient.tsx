@@ -100,21 +100,46 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         return;
       }
 
-      const profileData = { basicInfo, education, availability };
+      // Build the profile update data in the correct format
+      const updateData = {
+        password: basicInfo.password,
+        image: basicInfo.image,
+        education: education,
+        availability: availability,
+      };
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${tutorId}`, // numeric id
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(profileData),
-        }
-      );
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${tutorId}`;
+      console.log("Sending request to:", apiUrl);
+      console.log("Update data:", updateData);
+
+      const res = await fetch(apiUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData),
+      });
+
+      console.log("Response status:", res.status);
+      console.log("Response headers:", res.headers);
+
+      // Check if response is JSON
+      const contentType = res.headers.get("content-type");
+      if (!contentType?.includes("application/json")) {
+        const text = await res.text();
+        console.error("Response text:", text);
+        throw new Error(
+          `Server returned non-JSON response (${res.status}): ${text.substring(
+            0,
+            100
+          )}`
+        );
+      }
 
       const responseData = await res.json();
 
       if (!res.ok) {
-        throw new Error(responseData.message || "Update failed");
+        throw new Error(
+          responseData.message || `Update failed (Status: ${res.status})`
+        );
       }
 
       console.log("Updated tutor:", responseData);
