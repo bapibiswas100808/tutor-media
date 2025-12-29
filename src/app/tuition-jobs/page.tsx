@@ -13,9 +13,12 @@ export default async function TuitionJobsPage() {
   let tests: TuitionJob[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allJobs", {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/allJobs",
+      {
+        cache: "no-store",
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();

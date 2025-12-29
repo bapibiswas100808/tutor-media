@@ -131,13 +131,16 @@ export default function ApplyJobModal({
 
       console.log("Submitting application payload:", applicationPayload);
 
-      const response = await fetch("http://localhost:5000/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(applicationPayload),
-      });
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationPayload),
+        }
+      );
 
       const result = await response.json();
 

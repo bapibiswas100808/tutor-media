@@ -191,7 +191,9 @@ export default function HireTutorForm() {
   const getDistricts = () => {
     if (!divisionValue) return [];
     const division =
-      divisionsAndDistricts[divisionValue as keyof typeof divisionsAndDistricts];
+      divisionsAndDistricts[
+        divisionValue as keyof typeof divisionsAndDistricts
+      ];
     return division?.districts || [];
   };
 
@@ -204,18 +206,21 @@ export default function HireTutorForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/allJobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...data,
-          isVerified: false,
-          isApproved: false,
-          isPremium: false,
-        }),
-      });
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/allJobs",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...data,
+            isVerified: false,
+            isApproved: false,
+            isPremium: false,
+          }),
+        }
+      );
 
       const result = await response.json();
 
@@ -498,7 +503,9 @@ export default function HireTutorForm() {
             ))}
           </select>
           {errors.division && (
-            <p className="mt-1 text-sm text-red-600">{errors.division.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.division.message}
+            </p>
           )}
         </div>
 
