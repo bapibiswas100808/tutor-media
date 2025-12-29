@@ -20,7 +20,7 @@ const hireTutorSchema = z.object({
     message: "Please select a gender",
   }),
   area: z.string().min(2, "Please enter your area"),
-  city: z.string().min(1, "Please select a division"),
+  division: z.string().min(1, "Please select a division"),
   location: z.string().min(1, "Please select a district"),
   budget: z.string().min(1, "Please enter your budget"),
   mode: z.string().min(1, "Please select a tutoring mode"),
@@ -33,9 +33,9 @@ const hireTutorSchema = z.object({
 type HireTutorFormData = z.infer<typeof hireTutorSchema>;
 
 const media = [
-  "Bangla Version",
-  "English Version",
+  "Bangla Medium",
   "English Medium",
+  "English Version",
   "Madrasah Background",
 ];
 
@@ -181,24 +181,24 @@ export default function HireTutorForm() {
     resolver: zodResolver(hireTutorSchema),
     defaultValues: {
       gender: "any",
-      city: "",
+      division: "",
       location: "",
     },
   });
 
-  const cityValue = watch("city");
+  const divisionValue = watch("division");
 
   const getDistricts = () => {
-    if (!cityValue) return [];
+    if (!divisionValue) return [];
     const division =
-      divisionsAndDistricts[cityValue as keyof typeof divisionsAndDistricts];
+      divisionsAndDistricts[divisionValue as keyof typeof divisionsAndDistricts];
     return division?.districts || [];
   };
 
   useEffect(() => {
     // Clear district when division changes
     setValue("location", "");
-  }, [cityValue, setValue]);
+  }, [divisionValue, setValue]);
 
   const onSubmit = async (data: HireTutorFormData) => {
     setIsSubmitting(true);
@@ -422,7 +422,7 @@ export default function HireTutorForm() {
           </label>
           <input
             {...register("budget")}
-            type="text"
+            type="number"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
             placeholder="e.g., 8000-12000"
           />
@@ -477,17 +477,17 @@ export default function HireTutorForm() {
         </div>
       </div>
 
-      {/* City / Location */}
+      {/* Division / Location */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div>
           <label
-            htmlFor="city"
+            htmlFor="division"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             Division *
           </label>
           <select
-            {...register("city")}
+            {...register("division")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
           >
             <option value="">Select your division</option>
@@ -497,8 +497,8 @@ export default function HireTutorForm() {
               </option>
             ))}
           </select>
-          {errors.city && (
-            <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
+          {errors.division && (
+            <p className="mt-1 text-sm text-red-600">{errors.division.message}</p>
           )}
         </div>
 
@@ -511,11 +511,11 @@ export default function HireTutorForm() {
           </label>
           <select
             {...register("location")}
-            disabled={!cityValue}
+            disabled={!divisionValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
             <option value="">
-              {cityValue ? "Select your district" : "Select division first"}
+              {divisionValue ? "Select your district" : "Select division first"}
             </option>
             {getDistricts().map((district) => (
               <option key={district} value={district}>
