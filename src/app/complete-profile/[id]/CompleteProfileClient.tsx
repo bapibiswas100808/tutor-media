@@ -100,7 +100,7 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         return;
       }
 
-      // Build the profile update data in the correct format
+      // Build the profile update data
       const updateData = {
         password: basicInfo.password,
         image: basicInfo.image,
@@ -108,38 +108,27 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         availability: availability,
       };
 
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${tutorId}`;
-      console.log("Sending request to:", apiUrl);
-      console.log("Update data:", updateData);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${tutorId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updateData),
+        }
+      );
 
-      const res = await fetch(apiUrl, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData),
-      });
-
-      console.log("Response status:", res.status);
-      console.log("Response headers:", res.headers);
-
-      // Check if response is JSON
+      // Check response content type
       const contentType = res.headers.get("content-type");
       if (!contentType?.includes("application/json")) {
         const text = await res.text();
-        console.error("Response text:", text);
-        throw new Error(
-          `Server returned non-JSON response (${res.status}): ${text.substring(
-            0,
-            100
-          )}`
-        );
+        console.error("Non-JSON response:", text);
+        throw new Error(`Server error: ${text.substring(0, 100)}`);
       }
 
       const responseData = await res.json();
 
       if (!res.ok) {
-        throw new Error(
-          responseData.message || `Update failed (Status: ${res.status})`
-        );
+        throw new Error(responseData.message || "Update failed");
       }
 
       console.log("Updated tutor:", responseData);
