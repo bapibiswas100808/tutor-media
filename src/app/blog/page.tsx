@@ -16,77 +16,24 @@ interface BlogPost {
   image?: string;
 }
 
-interface StrapiResponse {
-  data: StrapiPost[];
-}
-
-interface StrapiPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  category?: string;
-  date?: string;
-  createdAt?: string;
-  publishedAt?: string;
-  image?: {
-    url: string;
-    formats?: {
-      large?: { url: string };
-      medium?: { url: string };
-      small?: { url: string };
-    };
-  };
-}
-
-// async function getBlogPosts(): Promise<BlogPost[]> {
-//   const strapiUrl =
-//     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
-//   try {
-//     const res = await fetch(`${strapiUrl}/api/blogs?populate=*`, {
-//       cache: "no-store",
-//     });
-
-//     if (!res.ok) {
-//       console.error(`Strapi API error: ${res.status}`);
-//       return [];
-//     }
-
-//     const blogPosts: StrapiResponse = await res.json();
-//     console.log("Raw Strapi data:", blogPosts);
-
-//     if (!blogPosts.data || !Array.isArray(blogPosts.data)) {
-//       return [];
-//     }
-
-//     // Map Strapi response to your interface
-//     const mappedPosts: BlogPost[] = blogPosts.data.map((post: StrapiPost) => ({
-//       id: post.id,
-//       title: post.title || "Untitled",
-//       excerpt: post.excerpt || "No excerpt",
-//       category: post.category || "Uncategorized",
-//       date: post.date || post.publishedAt || post.createdAt || "No date",
-//       image: post.image?.data?.[0]?.attributes?.url,
-//     }));
-
-//     console.log("Mapped blog posts:", mappedPosts);
-//     return mappedPosts;
-//   } catch (error) {
-//     console.error("Error fetching blog posts:", error);
-//     return [];
-//   }
-// }
-
 export default async function BlogPage() {
-  // const blogPosts = await getBlogPosts();
+  let blogs: BlogPost[] = [];
 
-  const res = await fetch(
-    "https://pro-assignment-twelve-server.vercel.app/allBlogs",
-    {
+  try {
+    const res = await fetch("http://localhost:5000/allBlogs", {
       cache: "no-store",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      blogs = Array.isArray(data) ? data : [];
+    } else {
+      console.error("Fetch failed:", res.status, res.statusText);
     }
-  );
-  const tests = await res.json();
+  } catch (error) {
+    console.error("Backend not available:", error);
+    blogs = [];
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -96,7 +43,7 @@ export default async function BlogPage() {
         </h1>
 
         <div className="max-w-6xl mx-auto">
-          {tests?.length === 0 ? (
+          {blogs?.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">
                 No blog posts available yet.
@@ -108,12 +55,12 @@ export default async function BlogPage() {
             </div>
           ) : (
             <div className="grid gap-8 md:grid-cols-3">
-              {tests?.map((post: BlogPost, idx: number) => (
+              {blogs?.map((post: BlogPost, idx: number) => (
                 <article
                   key={idx}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+                  <div className="h-48 bg-linear-to-r from-blue-500 to-purple-600 relative">
                     {post?.image ? (
                       <Image
                         src={post.image}

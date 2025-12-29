@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-// import { Tutor } from "@/data/tutorsList";
 import TutorHubPage from "./TutorHubClient";
+import { Tutor } from "@/data/tutorsList";
 
 export const metadata: Metadata = {
   title: "Tutor Hub - Tutor Media",
@@ -8,34 +8,27 @@ export const metadata: Metadata = {
     "Explore our expert tutors and find the perfect match for your learning needs.",
 };
 
-// const getTutorHubs = async (): Promise<Tutor[]> => {
-//   const strapiUrl =
-//     process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-//   try {
-//     const res = await fetch(`${strapiUrl}/api/tutor-hubs?populate=*`, {
-//       cache: "no-store",
-//     });
-//     if (!res.ok) {
-//       throw new Error(`Failed to fetch tuition jobs: ${res.status}`);
-//     }
-//     const { data } = await res.json();
-//     return data;
-//   } catch (error) {
-//     console.error("Tutor hubs fetch error:", error);
-//     return [];
-//   }
-// };
+export const dynamic = "force-dynamic";
 
 export default async function TutorHubsPage() {
-  const res = await fetch(
-    "https://pro-assignment-twelve-server.vercel.app/allTutors",
-    {
-      cache: "no-store",
-    }
-  );
-  const tutorHubs = await res.json();
+  let tutorHubs: Tutor[] = [];
 
-  console.log("Tutor Hubs Data:", tutorHubs);
+  try {
+    const res = await fetch("http://localhost:5000/allTutors", {
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      tutorHubs = Array.isArray(data) ? data : [];
+    } else {
+      console.error("Fetch failed:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error("Backend not available:", error);
+    tutorHubs = [];
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TutorHubPage tutorHubs={tutorHubs} />

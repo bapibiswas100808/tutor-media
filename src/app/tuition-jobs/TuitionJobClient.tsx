@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Filter, MapPin, BookOpen } from "lucide-react";
+import {
+  Search,
+  Filter,
+  MapPin,
+  BookOpen,
+  User,
+  DoorOpen,
+  School,
+  RotateCcw,
+} from "lucide-react";
 // import { tuitionJobsList, TuitionJob } from "@/data/tuitionJobsList";
 import TuitionJobCard from "@/components/tuition/TuitionJobCard";
 import ApplyJobModal from "@/components/tuition/ApplyJobModal";
@@ -16,13 +25,13 @@ export default function TuitionJobClient({
   tuitionJobs,
 }: TuitionJobClientProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("all");
+  const [selectedDivision, setSelectedDivision] = useState("all");
   const [selectedMode, setSelectedMode] = useState("all");
-  const [selectedMedium, setSelectedUMedium] = useState("all");
+  const [selectedMedium, setSelectedMedium] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
-  const [selectedDivision, setSelectedDivision] = useState("all");
 
   // Extract unique subjects for filter
   const classes = [
@@ -46,52 +55,79 @@ export default function TuitionJobClient({
   ];
 
   // Filter jobs
-  const filteredJobs = tuitionJobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.class.toLowerCase().includes(searchQuery.toLowerCase());
+  const normalize = (value?: string) =>
+    value?.toLowerCase().replace(/\s+/g, "");
 
-    const matchesSubject =
-      selectedClass === "all" || job.class === selectedClass;
+  const filteredJobs = tuitionJobs.filter((job) => {
+    const matchesClass =
+      selectedClass === "all" ||
+      normalize(job.class) === normalize(selectedClass);
 
     const matchesMode =
-      selectedMode === "all" ||
-      job.mode.toLowerCase().includes(selectedMode.toLowerCase());
+      selectedMode === "all" || normalize(job.mode) === normalize(selectedMode);
 
     const matchesMedium =
       selectedMedium === "all" ||
-      (selectedMedium === "banglaMedium" && job.medium === "banglaMedium") ||
-      (selectedMedium === "englishMedium" && job.medium === "englishMedium") ||
-      (selectedMedium === "englishVersion" &&
-        job.medium === "englishVersion") ||
-      (selectedMedium === "madrasahBackground" &&
-        job.medium === "madrasahBackground");
+      normalize(job.medium) === normalize(selectedMedium);
 
     const matchesDivision =
       selectedDivision === "all" ||
-      job.division?.toLowerCase() === selectedDivision.toLowerCase();
+      normalize(job.division) === normalize(selectedDivision);
 
-    return (
-      matchesSearch &&
-      matchesSubject &&
-      matchesMode &&
-      matchesMedium &&
-      matchesDivision &&
-      job.status === "active"
-    );
+    const isActive =
+      normalize(job.status) === "active" ||
+      normalize(job.status) === "published" ||
+      normalize(job.status) === "open";
+
+    return matchesClass && matchesMode && matchesMedium && matchesDivision;
   });
 
+  // handleResetFilters
+  const handleResetFilters = () => {
+    setSelectedClass("all");
+    setSelectedDivision("all");
+    setSelectedMode("all");
+    setSelectedMedium("all");
+    setSelectedJob(null);
+    setIsModalOpen(false);
+  };
+
+  // handleApply
   const handleApply = (job: TuitionJob) => {
     setSelectedJob(job);
     setIsModalOpen(true);
   };
-
+  // formatting functions
   const formatDivision = (d: string) => d.charAt(0).toUpperCase() + d.slice(1);
+  const formatMode = (m: string) => {
+    switch (m.toLowerCase()) {
+      case "hometutoring":
+        return "Home Tutoring";
+      case "onlinetutoring":
+        return "Online Tutoring";
+      case "groupclasses":
+        return "Group Classes";
+      default:
+        return m;
+    }
+  };
+  const formatMedium = (m: string) => {
+    switch (m.toLowerCase()) {
+      case "banglamedium":
+        return "Bangla Medium";
+      case "englishmedium":
+        return "English Medium";
+      case "englishversion":
+        return "English Version";
+      case "madrasahbackground":
+        return "Madrasah Background";
+      default:
+        return m;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 via-white to-purple-50 py-20">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -99,7 +135,7 @@ export default function TuitionJobClient({
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Find Your Perfect Tuition Job
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -115,13 +151,26 @@ export default function TuitionJobClient({
           transition={{ delay: 0.2 }}
           className="mb-8 bg-white rounded-xl shadow-sm p-6 border border-gray-100 mt-10"
         >
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-5 h-5 text-gray-600" />
-            <h3 className="font-semibold text-gray-800">Filters</h3>
+          <div className="flex items-center justify-between mb-4">
+            {/* filter */}
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-gray-600" />
+              <h3 className="font-semibold text-gray-800">Filters</h3>
+            </div>
+            {/* reset button*/}
+            <div
+              onClick={handleResetFilters}
+              className="flex items-center gap-2 cursor-pointer select-none
+             px-3 py-2 rounded-lg border border-gray-300
+             hover:bg-gray-100 active:scale-95 transition"
+            >
+              <RotateCcw className="w-5 h-5 text-gray-600" />
+              <h3 className="font-semibold text-gray-800">Reset</h3>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Subject Filter */}
+            {/* Class Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <BookOpen className="w-4 h-4 inline mr-1" />
@@ -153,7 +202,7 @@ export default function TuitionJobClient({
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Divisions</option>
-                <option value="dhaka">Dhaka</option>
+                <option value="Dhaka">Dhaka</option>
                 <option value="khulna">Khulna</option>
                 <option value="rajshahi">Rajshahi</option>
                 <option value="rangpur">Rangpur</option>
@@ -167,7 +216,7 @@ export default function TuitionJobClient({
             {/* Mode Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                <MapPin className="w-4 h-4 inline mr-1" />
+                <DoorOpen className="w-4 h-4 inline mr-1" />
                 Teaching Mode
               </label>
               <select
@@ -176,28 +225,28 @@ export default function TuitionJobClient({
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Modes</option>
-                <option value="home">Home Tutoring</option>
-                <option value="online">Online Tutoring</option>
-                <option value="group">Group Classes</option>
+                <option value="hometutoring">Home Tutoring</option>
+                <option value="onlinetutoring">Online Tutoring</option>
+                <option value="groupclasses">Group Classes</option>
               </select>
             </div>
 
-            {/* Urgency Filter */}
+            {/* Medium Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                <BookOpen className="w-4 h-4 inline mr-1" />
+                <School className="w-4 h-4 inline mr-1" />
                 Medium
               </label>
               <select
                 value={selectedMedium}
-                onChange={(e) => setSelectedUMedium(e.target.value)}
+                onChange={(e) => setSelectedMedium(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
-                <option value="">Select a medium</option>
-                <option value="banglaMedium">Bangla Medium</option>
-                <option value="englishMedium">English Medium</option>
-                <option value="englishVersion">English Version</option>
-                <option value="madrasahBackground">Madrasah Background</option>
+                <option value="all">All Mediums</option>
+                <option value="banglamedium">Bangla Medium</option>
+                <option value="englishmedium">English Medium</option>
+                <option value="englishversion">English Version</option>
+                <option value="madrasahbackground">Madrasah Background</option>
               </select>
             </div>
           </div>
@@ -227,27 +276,13 @@ export default function TuitionJobClient({
             )}
             {selectedMode !== "all" && (
               <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                {selectedMode}
+                {formatMode(selectedMode)}
               </span>
             )}
-            {selectedMedium === "banglaMedium" && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                Bangla Medium
-              </span>
-            )}
-            {selectedMedium === "englishMedium" && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                English Medium
-              </span>
-            )}
-            {selectedMedium === "englishVersion" && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                English Version
-              </span>
-            )}
-            {selectedMedium === "madrasahBackground" && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                Madrasah Background
+
+            {selectedMedium !== "all" && (
+              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                {formatMedium(selectedMedium)}
               </span>
             )}
 
@@ -260,9 +295,9 @@ export default function TuitionJobClient({
         </motion.div>
 
         {/* Jobs Grid */}
-        {tuitionJobs.length > 0 ? (
+        {filteredJobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tuitionJobs.map((job) => (
+            {filteredJobs.map((job) => (
               <TuitionJobCard key={job.id} job={job} onApply={handleApply} />
             ))}
           </div>

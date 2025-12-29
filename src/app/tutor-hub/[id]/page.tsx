@@ -20,7 +20,7 @@ export default async function TutorHubsPage({
 
   try {
     const res = await fetch(
-      `https://pro-assignment-twelve-server.vercel.app/allTutors/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${id}`,
       {
         cache: "no-store",
       }

@@ -11,7 +11,7 @@ interface BannerData {
 
 export default function Banner({ bannerData }: { bannerData: BannerData }) {
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-white via-blue-300 to-orange-400 overflow-hidden">
+    <section className="relative min-h-screen flex items-center bg-linear-to-br from-white via-blue-300 to-gray-200 overflow-hidden">
       {/* Decorative background elements */}
       {/* <div className="absolute top-20 right-0 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
       <div className="absolute bottom-20 left-0 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-20"></div> */}
@@ -37,13 +37,13 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                 href="/hire-tutor"
                 className="bg-[#0D24A0] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
-                Hire a Tutor
+                Find a Mentor
               </Link>
               <Link
                 href="/become-a-tutor"
                 className="bg-[#FFCE58] hover:bg-[#ffd572] text-black font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
-                Become a Tutor
+                Become a Mentor
               </Link>
               <Link
                 href="/tuition-jobs"
@@ -76,7 +76,6 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
               />
             </motion.div>
 
-            
             {/* Top Right - Madrasa Student */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
