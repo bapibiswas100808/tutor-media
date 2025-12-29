@@ -58,29 +58,45 @@ export default function TuitionJobClient({
   const normalize = (value?: string) =>
     value?.toLowerCase().replace(/\s+/g, "");
 
-  const filteredJobs = tuitionJobs.filter((job) => {
-    const matchesClass =
-      selectedClass === "all" ||
-      normalize(job.class) === normalize(selectedClass);
+  const filteredJobs = tuitionJobs
+    // ✅ 1. Only approved jobs
+    .filter((job) => job.isApproved)
+    // ✅ 2. Apply filters
+    .filter((job) => {
+      const matchesClass =
+        selectedClass === "all" ||
+        normalize(job.class) === normalize(selectedClass);
 
-    const matchesMode =
-      selectedMode === "all" || normalize(job.mode) === normalize(selectedMode);
+      const matchesMode =
+        selectedMode === "all" ||
+        normalize(job.mode) === normalize(selectedMode);
 
-    const matchesMedium =
-      selectedMedium === "all" ||
-      normalize(job.medium) === normalize(selectedMedium);
+      const matchesMedium =
+        selectedMedium === "all" ||
+        normalize(job.medium) === normalize(selectedMedium);
 
-    const matchesDivision =
-      selectedDivision === "all" ||
-      normalize(job.division) === normalize(selectedDivision);
+      const matchesDivision =
+        selectedDivision === "all" ||
+        normalize(job.division) === normalize(selectedDivision);
 
-    const isActive =
-      normalize(job.status) === "active" ||
-      normalize(job.status) === "published" ||
-      normalize(job.status) === "open";
+      const isActive =
+        normalize(job.status) === "active" ||
+        normalize(job.status) === "published" ||
+        normalize(job.status) === "open";
 
-    return matchesClass && matchesMode && matchesMedium && matchesDivision;
-  });
+      return (
+        matchesClass &&
+        matchesMode &&
+        matchesMedium &&
+        matchesDivision &&
+        isActive // ✅ optional but recommended
+      );
+    });
+
+  // Approved Jobs
+  const approvedJobs = tuitionJobs.filter(
+    (job) => job.isApproved && normalize(job.status) === "active"
+  );
 
   // handleResetFilters
   const handleResetFilters = () => {
@@ -139,7 +155,7 @@ export default function TuitionJobClient({
             Find Your Perfect Tuition Job
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Browse through {tuitionJobs.length}+ available tuition opportunities
+            Browse through {approvedJobs.length}+ available tuition opportunities
             and apply directly with your proposal
           </p>
         </motion.div>
