@@ -117,7 +117,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
             <MapPin className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-xs text-gray-500 font-medium">Location</p>
-              <p className="text-sm text-gray-700 font-semibold">{job.area}</p>
+              <p className="text-sm text-gray-700 font-semibold capitalize">{job.division}</p>
             </div>
           </div>
 
