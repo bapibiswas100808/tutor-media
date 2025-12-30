@@ -3,8 +3,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Tutor } from "@/data/tutorsList";
-import { TuitionJob } from "@/data/tuitionJobsList";
+// import { TuitionJob } from "@/data/tuitionJobsList";
 import { Application } from "@/lib/applications";
+export interface TuitionJob {
+  id: number;
+  _id: string | number;
+  title: string;
+  subject: string;
+  location: string;
+  budget: string;
+  isApproved?: boolean;
+}
 
 export default function AdminDashboard({
   tutors: initialTutors,
@@ -121,100 +130,41 @@ export default function AdminDashboard({
 
   async function toggleField(
     type: "tutor" | "job",
-    id: number | string,
+    id: string | number,
     field: "isVerified" | "isApproved" | "isPremium",
     value: boolean
   ) {
-    const key = `${type}-${id}`;
-    setLoadingMap((s) => ({ ...s, [key]: true }));
+    // optimistic update
+    setJobs((prev) =>
+      prev.map((j) => (j._id === id ? { ...j, [field]: value } : j))
+    );
+
+    setLoadingMap((s) => ({ ...s, [`job-${id}`]: true }));
     setError(null);
-
-    // The backend endpoints only set flags to TRUE and add timestamps.
-    // Un-setting (value === false) isn't supported by those endpoints, so
-    // prevent unchecking from the UI.
-    if (!value) {
-      setError("Clearing this flag is not supported from the UI.");
-      setLoadingMap((s) => ({ ...s, [key]: false }));
-      return;
-    }
-
-    // optimistic update (only for enabling)
-    if (type === "tutor") {
-      setTutors((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, [field]: value } : t))
-      );
-    } else {
-      setJobs((prev) =>
-        prev.map((j) => (j.id === id ? { ...j, [field]: value } : j))
-      );
-    }
 
     try {
       const token = localStorage.getItem("token");
 
-      let url = "";
-      if (type === "tutor") {
-        if (field === "isVerified")
-          url = `${BACKEND_BASE}/allTutors/isVerified/${id}`;
-        else if (field === "isApproved")
-          url = `${BACKEND_BASE}/allTutors/isApproved/${id}`;
-        else if (field === "isPremium")
-          url = `${BACKEND_BASE}/allTutors/isPremium/${id}`;
-      } else {
-        if (field === "isApproved")
-          url = `${BACKEND_BASE}/allJobs/isApproved/${id}`;
-      }
-
-      if (!url) throw new Error("Unsupported operation");
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BACKEND_BASE}/allJobs/isApproved/${id}`, {
         method: "PATCH",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({ isApproved: value }),
       });
 
       if (!res.ok) {
-        // try parse error body
-        let errMessage = "Failed to update";
-        try {
-          const body = await res.json();
-          errMessage = body?.message || body?.error || errMessage;
-        } catch {
-          // ignore
-        }
-        throw new Error(errMessage);
+        throw new Error("Failed to update");
       }
-
-      // optionally, could refresh resource or use returned payload
-    } catch (err: unknown) {
-      // revert optimistic update
-      if (type === "tutor") {
-        setTutors((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, [field]: !value } : t))
-        );
-      } else {
-        setJobs((prev) =>
-          prev.map((j) => (j.id === id ? { ...j, [field]: !value } : j))
-        );
-      }
-
-      let message = "Update failed";
-      if (err instanceof Error) {
-        message = err.message;
-      } else if (typeof err === "string") {
-        message = err;
-      } else {
-        try {
-          message = JSON.stringify(err);
-        } catch {
-          // leave default
-        }
-      }
-
-      setError(message);
+    } catch (err) {
+      // revert on error
+      setJobs((prev) =>
+        prev.map((j) => (j._id === id ? { ...j, [field]: !value } : j))
+      );
+      setError(err instanceof Error ? err.message : "Update failed");
     } finally {
-      setLoadingMap((s) => ({ ...s, [key]: false }));
+      setLoadingMap((s) => ({ ...s, [`job-${id}`]: false }));
     }
   }
 
@@ -488,21 +438,14 @@ export default function AdminDashboard({
                             <input
                               type="checkbox"
                               checked={!!j.isApproved}
-                              disabled={
-                                !!loadingMap[`job-${j.id}`] || !!j.isApproved
-                              }
+                              disabled={!!loadingMap[`job-${j._id}`]} // শুধু loading time এ disable
                               onChange={(e) =>
                                 toggleField(
                                   "job",
-                                  j.id,
+                                  j._id,
                                   "isApproved",
                                   e.target.checked
                                 )
-                              }
-                              title={
-                                j.isApproved
-                                  ? "Already approved — unchecking not supported"
-                                  : "Approve job"
                               }
                             />
                           </td>
