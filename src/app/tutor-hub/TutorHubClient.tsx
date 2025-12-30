@@ -5,27 +5,34 @@ import { motion } from "framer-motion";
 import { Tutor } from "@/data/tutorsList";
 import TutorCard from "@/components/tutors/TutorCard";
 
-export default function TutorHubPage({tutorHubs}: { tutorHubs: Tutor[] }) {
+export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
   const [filter, setFilter] = useState<"all" | "premium" | "verified">("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter tutors
-  const filteredTutors = tutorHubs.filter((tutor) => {
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "premium" && tutor.isPremium) ||
-      (filter === "verified" && tutor.isVerified);
+  const filteredTutors = tutorHubs
+    // ✅ 1. Only approved tutors
+    .filter((tutor) => tutor.isApproved)
+    // ✅ 2. Apply UI filters
+    .filter((tutor) => {
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "premium" && tutor.isPremium) ||
+        (filter === "verified" && tutor.isVerified);
 
-    const matchesSearch =
-      searchTerm === "" ||
-      tutor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tutor.subjects.some((subject) =>
-        subject.toLowerCase().includes(searchTerm.toLowerCase())
-      ) ||
-      tutor.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        searchTerm === "" ||
+        tutor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tutor.subjects.some((subject) =>
+          subject.toLowerCase().includes(searchTerm.toLowerCase())
+        ) ||
+        tutor.location.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesFilter && matchesSearch;
-  });
+      return matchesFilter && matchesSearch;
+    });
+
+  // Approved Tutors
+  const approvedTutors = tutorHubs.filter((t) => t.isApproved);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
@@ -91,7 +98,7 @@ export default function TutorHubPage({tutorHubs}: { tutorHubs: Tutor[] }) {
                   : "bg-white text-gray-700 hover:bg-gray-100 shadow"
               }`}
             >
-              All Tutors ({tutorHubs.length})
+              All Tutors ({approvedTutors.length})
             </button>
             <button
               onClick={() => setFilter("premium")}
@@ -104,7 +111,7 @@ export default function TutorHubPage({tutorHubs}: { tutorHubs: Tutor[] }) {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              Premium ({tutorHubs.filter((t) => t.isPremium).length})
+              Premium ({approvedTutors.filter((t) => t.isPremium).length})
             </button>
             <button
               onClick={() => setFilter("verified")}
@@ -121,7 +128,7 @@ export default function TutorHubPage({tutorHubs}: { tutorHubs: Tutor[] }) {
                   clipRule="evenodd"
                 />
               </svg>
-              Verified ({tutorHubs.filter((t) => t.isVerified).length})
+              Verified ({approvedTutors.filter((t) => t.isVerified).length})
             </button>
           </div>
         </motion.div>

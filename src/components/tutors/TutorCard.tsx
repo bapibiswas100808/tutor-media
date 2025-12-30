@@ -14,7 +14,6 @@ import {
   Star,
 } from "lucide-react";
 
-
 interface EducationEntry {
   academy: string;
   year: string;
@@ -34,7 +33,7 @@ export interface Tutor {
   email: string;
   phone: string;
   gender?: "male" | "female" | "other";
-  city?: string;
+  division?: string;
   location?: string;
   qualification?: string;
   experience?: string;
@@ -47,9 +46,8 @@ export interface Tutor {
     days: string[];
     mode: string;
   };
-  basicInfo?: BasicInfo;  // 🔥 Add this
+  basicInfo?: BasicInfo;
   education?: EducationEntry[];
-  // ... any other fields you need
 }
 
 interface TutorCardProps {
@@ -57,10 +55,9 @@ interface TutorCardProps {
   index: number;
 }
 
-
 export default function TutorCard({ tutor, index }: TutorCardProps) {
   // console.log("tutor card data", tutor.basicInfo.image);
-  const imageUrl = tutor.basicInfo?.image
+  const imageUrl = tutor.basicInfo?.image;
 
   // const STRAPI_URL =
   //   process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -153,12 +150,14 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
               <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
                 {tutor.fullName}
               </h3>
-              {/* City */}
+              {/* Division */}
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-gray-700">
-                  City:
+                  Division:
                 </span>
-                <span className="text-sm text-gray-500">{tutor.city}</span>
+                <span className="text-sm text-gray-500 capitalize">
+                  {tutor.division}
+                </span>
               </div>
             </div>
 
