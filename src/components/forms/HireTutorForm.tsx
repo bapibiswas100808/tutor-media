@@ -206,21 +206,18 @@ export default function HireTutorForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        "https://pro-assignment-twelve-server.vercel.app/allJobs",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...data,
-            isVerified: false,
-            isApproved: false,
-            isPremium: false,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5000/allJobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          isVerified: false,
+          isApproved: false,
+          isPremium: false,
+        }),
+      });
 
       const result = await response.json();
 

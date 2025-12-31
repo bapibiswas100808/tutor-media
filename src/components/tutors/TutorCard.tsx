@@ -4,15 +4,18 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 // import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   BadgeCheck,
-  BaggageClaim,
+  // BaggageClaim,
   LocationEdit,
   NotebookText,
   Paperclip,
   ShieldCheck,
   Star,
+  AlertCircle,
 } from "lucide-react";
+import { calculateProfileCompletion } from "@/lib/profileCompletion";
 
 interface EducationEntry {
   academy: string;
@@ -58,15 +61,31 @@ interface TutorCardProps {
 export default function TutorCard({ tutor, index }: TutorCardProps) {
   // console.log("tutor card data", tutor.basicInfo.image);
   const imageUrl = tutor.basicInfo?.image;
+  const [currentUserId, setCurrentUserId] = useState<number | undefined>(
+    undefined
+  );
+  const [profileCompletion, setProfileCompletion] = useState<number>(0);
 
-  // const STRAPI_URL =
-  //   process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  useEffect(() => {
+    // Get current logged-in user
+    const userJson = localStorage.getItem("user");
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        setCurrentUserId(user.id);
+      } catch {
+        // ignore
+      }
+    }
 
-  // const imageUrl = tutor.image?.formats?.large?.url
-  //   ? `${STRAPI_URL}${tutor.image.formats.large.url}`
-  //   : tutor.image?.url
-  //   ? `${STRAPI_URL}${tutor.image.url}`
-  //   : null;
+    // Calculate profile completion
+    const completion = calculateProfileCompletion(tutor);
+    setProfileCompletion(completion);
+  }, [tutor]);
+
+  const isOwnProfile = currentUserId === tutor.id;
+  const isProfileComplete = profileCompletion >= 80;
+  const isPremiumProfile = profileCompletion === 100;
 
   return (
     <motion.div
@@ -78,9 +97,9 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
       <Link href={`/tutor-hub/${tutor.id}`}>
         <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 h-full">
           {/* Premium Badge */}
-          {tutor.isPremium && (
+          {isPremiumProfile && (
             <div className="absolute top-4 right-4 z-10">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+              <div className="bg-linear-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
                 <Star className="w-3 h-3" />
                 PREMIUM
               </div>
@@ -105,7 +124,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
           )}
 
           {/* Profile Image */}
-          <div className="relative h-48 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
+          <div className="relative h-48 bg-linear-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
             <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
               {imageUrl ? (
                 <Image
@@ -118,7 +137,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                   unoptimized
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                   {tutor.fullName?.slice(0, 1).toUpperCase()}
                 </div>
               )}
@@ -196,6 +215,39 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
               </div>
             </div> */}
 
+            {/* Profile Completion Bar */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-gray-700">
+                  Profile Complete
+                </span>
+                <span className="text-xs font-bold text-gray-900">
+                  {profileCompletion}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    profileCompletion >= 80
+                      ? "bg-green-500"
+                      : profileCompletion > 50
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                  }`}
+                  style={{ width: `${profileCompletion}%` }}
+                />
+              </div>
+
+              {!isProfileComplete && (
+                <div className="mt-2 flex items-center gap-2 p-2 bg-orange-50 rounded-lg border border-orange-200">
+                  <AlertCircle className="w-4 h-4 text-orange-600 shrink-0" />
+                  <p className="text-xs text-orange-700">
+                    Profile must be 80% complete to be visible to students
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* Teaching Modes */}
             {/* <div className="flex flex-wrap gap-2 mb-4">
               {tutor.teachingModes.map((mode, idx) => (
@@ -220,9 +272,17 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
             </div> */}
 
             {/* CTA Button */}
-            <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform group-hover:scale-105 shadow-md cursor-pointer">
-              View Full Profile
-            </button>
+            {isOwnProfile ? (
+              <Link href={`/complete-profile/${tutor.id}`}>
+                <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-purple-700 transition-all duration-300 transform group-hover:scale-105 shadow-md cursor-pointer">
+                  Complete Profile
+                </button>
+              </Link>
+            ) : (
+              <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform group-hover:scale-105 shadow-md cursor-pointer">
+                Hire Tutor
+              </button>
+            )}
           </div>
         </div>
       </Link>

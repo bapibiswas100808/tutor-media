@@ -14,12 +14,9 @@ export default async function TutorHubsPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allTutors",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch("http://localhost:5000/allTutors", {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();

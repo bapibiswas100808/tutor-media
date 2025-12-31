@@ -11,12 +11,9 @@ export default async function AdminDashboardPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allTutors",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch("http://localhost:5000/allTutors", {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();
@@ -32,12 +29,9 @@ export default async function AdminDashboardPage() {
   let tuituionJobs: TuitionJob[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allJobs",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch("http://localhost:5000/allJobs", {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();
@@ -50,12 +44,9 @@ export default async function AdminDashboardPage() {
 
   let applications: Application[] = [];
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/applications",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch("http://localhost:5000/applications", {
+      cache: "no-store",
+    });
     if (res.ok) {
       const data = await res.json();
       applications = Array.isArray(data) ? data : [];
