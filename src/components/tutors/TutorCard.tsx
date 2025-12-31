@@ -126,7 +126,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
 
           {/* Profile Image */}
           <div className="relative h-48 bg-linear-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
-            <div className="relative w-36 h-36 rounded-full overflow-hidden shadow-xl">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
               {imageUrl ? (
                 <div>
                   <Image
