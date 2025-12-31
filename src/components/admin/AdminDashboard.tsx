@@ -222,42 +222,46 @@ export default function AdminDashboard({
   }
 
   // Update handlers
-  const handleUpdate = async ( type: "job" | "tutor" | "application",
-  id: string | number) => {
-  const job = jobs.find(j => j.id === id || j._id === id);
-  if (!job) return;
+  const handleUpdate = async (
+    type: "job" | "tutor" | "application",
+    id: string | number
+  ) => {
+    const job = jobs.find((j) => j.id === id || j._id === id);
+    if (!job) return;
 
-  const newTitle = window.prompt("Enter new job title", job.title);
-  if (!newTitle || newTitle === job.title) return;
+    const newTitle = window.prompt("Enter new title", job.title);
+    if (!newTitle || newTitle === job.title) return;
 
-  try {
-    const res = await fetch(`${API_BASE}/allJobs/update/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: newTitle }),
-    });
+    try {
+      const res = await fetch(`${API_BASE}/tuitionJobs/update/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTitle }),
+      });
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      const data = await res.json();
+
+      // ✅ Update local state
+      setJobs((prev) =>
+        prev.map((j) =>
+          j.id === id || j._id === id ? { ...j, title: data.title } : j
+        )
+      );
+
+      alert("Updated successfully!");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert("Something went wrong");
+      }
     }
-
-    const data = await res.json();
-
-    // ✅ Update local state
-    setJobs(prev =>
-      prev.map(j =>
-        j.id === id || j._id === id ? { ...j, title: data.title } : j
-      )
-    );
-
-    alert("Job updated successfully!");
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message || "Something went wrong");
-  }
-};
-
+  };
 
   // Delete handlers
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -489,7 +493,7 @@ export default function AdminDashboard({
                                     throw new Error(text);
                                   }
 
-                                  const data = await res.json();
+                                  // const data = await res.json();
 
                                   // Update local state
                                   setTutors((prev) =>
@@ -505,9 +509,12 @@ export default function AdminDashboard({
                                       ? "Restored successfully"
                                       : "Deleted successfully"
                                   );
-                                } catch (err: any) {
-                                  console.error(err);
-                                  alert(err.message || "Something went wrong");
+                                } catch (err: unknown) {
+                                  if (err instanceof Error) {
+                                    alert(err.message);
+                                  } else {
+                                    alert("Something went wrong");
+                                  }
                                 }
                               }}
                               className={`px-2 py-1 text-xs rounded ${
@@ -677,11 +684,12 @@ export default function AdminDashboard({
                                         ? "Restored successfully"
                                         : "Deleted successfully"
                                     );
-                                  } catch (err: any) {
-                                    console.error(err);
-                                    alert(
-                                      err.message || "Something went wrong"
-                                    );
+                                  } catch (err: unknown) {
+                                    if (err instanceof Error) {
+                                      alert(err.message);
+                                    } else {
+                                      alert("Something went wrong");
+                                    }
                                   }
                                 }}
                                 className={`px-2 py-1 text-xs rounded ${
