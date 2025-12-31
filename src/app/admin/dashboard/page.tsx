@@ -1,4 +1,5 @@
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminProtected from "@/components/admin/AdminProtected";
 import { TuitionJob } from "@/data/tuitionJobsList";
 import { Tutor } from "@/data/tutorsList";
 import { Application } from "@/lib/applications";
@@ -66,14 +67,16 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="container mx-auto">
-        <AdminDashboard
-          tutors={tutorHubs}
-          jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
-          applications={applications}
-        />
-      </div>
-    </main>
+    <AdminProtected>
+      <main className="min-h-screen bg-gray-50 p-6">
+        <div className="container mx-auto">
+          <AdminDashboard
+            tutors={tutorHubs}
+            jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
+            applications={applications}
+          />
+        </div>
+      </main>
+    </AdminProtected>
   );
 }

@@ -94,24 +94,26 @@ const divisionsAndDistricts = {
   },
 };
 
-const becomeTutorSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  gender: z.enum(["male", "female", "other"], {
-    message: "Please select your gender",
-  }),
-  division: z.string().min(1, "Please select your division"),
-  location: z.string().min(1, "Please select your district"),
-  qualification: z.string().min(2, "Please enter your qualification"),
-  experience: z.string().min(1, "Please select your experience level"),
-  bio: z.string().min(20, "Bio must be at least 20 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().min(6, "Please confirm your password"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const becomeTutorSchema = z
+  .object({
+    fullName: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Please enter a valid email address"),
+    phone: z.string().min(10, "Phone number must be at least 10 digits"),
+    gender: z.enum(["male", "female", "other"], {
+      message: "Please select your gender",
+    }),
+    division: z.string().min(1, "Please select your division"),
+    location: z.string().min(1, "Please select your district"),
+    qualification: z.string().min(2, "Please enter your qualification"),
+    experience: z.string().min(1, "Please select your experience level"),
+    bio: z.string().min(20, "Bio must be at least 20 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type BecomeTutorFormData = z.infer<typeof becomeTutorSchema>;
 
@@ -150,7 +152,9 @@ export default function BecomeTutorForm() {
   const getDistricts = () => {
     if (!divisionValue) return [];
     const division =
-      divisionsAndDistricts[divisionValue as keyof typeof divisionsAndDistricts];
+      divisionsAndDistricts[
+        divisionValue as keyof typeof divisionsAndDistricts
+      ];
     return division?.districts || [];
   };
 
@@ -189,32 +193,35 @@ export default function BecomeTutorForm() {
   //     setIsSubmitting(false);
   //   }
   // };
-  
+
   const onSubmit = async (data: BecomeTutorFormData) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName: data.fullName,
-          email: data.email,
-          phone: data.phone,
-          gender: data.gender,
-          division: data.division,
-          location: data.location,
-          qualification: data.qualification,
-          experience: data.experience,
-          bio: data.bio,
-          password: data.password,
-          isVerified: false,
-          isApproved: false,
-          isPremium: false,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            phone: data.phone,
+            gender: data.gender,
+            division: data.division,
+            location: data.location,
+            qualification: data.qualification,
+            experience: data.experience,
+            bio: data.bio,
+            password: data.password,
+            isVerified: false,
+            isApproved: false,
+            isPremium: false,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -392,7 +399,9 @@ export default function BecomeTutorForm() {
               ))}
             </select>
             {errors.division && (
-              <p className="mt-1 text-sm text-red-600">{errors.division.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.division.message}
+              </p>
             )}
           </div>
 
@@ -409,7 +418,9 @@ export default function BecomeTutorForm() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value="">
-                {divisionValue ? "Select your district" : "Select division first"}
+                {divisionValue
+                  ? "Select your district"
+                  : "Select division first"}
               </option>
               {getDistricts().map((district) => (
                 <option key={district} value={district}>

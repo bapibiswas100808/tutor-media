@@ -130,41 +130,94 @@ export default function AdminDashboard({
 
   async function toggleField(
     type: "tutor" | "job",
-    id: string | number,
+    id: number | string,
+    mongoId: string | undefined,
     field: "isVerified" | "isApproved" | "isPremium",
     value: boolean
   ) {
-    // optimistic update
-    setJobs((prev) =>
-      prev.map((j) => (j._id === id ? { ...j, [field]: value } : j))
-    );
-
-    setLoadingMap((s) => ({ ...s, [`job-${id}`]: true }));
+    const key = `${type}-${id}`;
+    setLoadingMap((s) => ({ ...s, [key]: true }));
     setError(null);
+
+    // optimistic update
+    if (type === "tutor") {
+      setTutors((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, [field]: value } : t))
+      );
+    } else {
+      setJobs((prev) =>
+        prev.map((j) => (j.id === id ? { ...j, [field]: value } : j))
+      );
+    }
 
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`${BACKEND_BASE}/allJobs/isApproved/${id}`, {
+      let url = "";
+      if (type === "tutor") {
+        if (field === "isVerified")
+          url = `${BACKEND_BASE}/allTutors/isVerified/${mongoId}`;
+        else if (field === "isApproved")
+          url = `${BACKEND_BASE}/allTutors/isApproved/${mongoId}`;
+        else if (field === "isPremium")
+          url = `${BACKEND_BASE}/allTutors/isPremium/${mongoId}`;
+      } else {
+        if (field === "isApproved")
+          url = `${BACKEND_BASE}/allJobs/isApproved/${mongoId}`;
+      }
+
+      if (!url) throw new Error("Unsupported operation");
+
+      const res = await fetch(url, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ isApproved: value }),
+        body: JSON.stringify({ [field]: value }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to update");
+        // try parse error body
+        let errMessage = "Failed to update";
+        try {
+          const body = await res.json();
+          errMessage = body?.message || body?.error || errMessage;
+        } catch {
+          // ignore
+        }
+        throw new Error(errMessage);
       }
-    } catch (err) {
-      // revert on error
-      setJobs((prev) =>
-        prev.map((j) => (j._id === id ? { ...j, [field]: !value } : j))
-      );
-      setError(err instanceof Error ? err.message : "Update failed");
+
+      // optionally, could refresh resource or use returned payload
+    } catch (err: unknown) {
+      // revert optimistic update
+      if (type === "tutor") {
+        setTutors((prev) =>
+          prev.map((t) => (t.id === id ? { ...t, [field]: !value } : t))
+        );
+      } else {
+        setJobs((prev) =>
+          prev.map((j) => (j.id === id ? { ...j, [field]: !value } : j))
+        );
+      }
+
+      let message = "Update failed";
+      if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === "string") {
+        message = err;
+      } else {
+        try {
+          message = JSON.stringify(err);
+        } catch {
+          // leave default
+        }
+      }
+
+      setError(message);
     } finally {
-      setLoadingMap((s) => ({ ...s, [`job-${id}`]: false }));
+      setLoadingMap((s) => ({ ...s, [key]: false }));
     }
   }
 
@@ -277,66 +330,51 @@ export default function AdminDashboard({
                             <input
                               type="checkbox"
                               checked={!!t.isVerified}
-                              disabled={
-                                !!loadingMap[`tutor-${t.id}`] || !!t.isVerified
-                              }
+                              disabled={!!loadingMap[`tutor-${t.id}`]}
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
                                   t.id,
+                                  t._id,
                                   "isVerified",
                                   e.target.checked
                                 )
                               }
-                              title={
-                                t.isVerified
-                                  ? "Already verified — unchecking not supported"
-                                  : "Mark as verified"
-                              }
+                              title="Toggle verified status"
                             />
                           </td>
                           <td className="px-3 py-2">
                             <input
                               type="checkbox"
                               checked={!!t.isApproved}
-                              disabled={
-                                !!loadingMap[`tutor-${t.id}`] || !!t.isApproved
-                              }
+                              disabled={!!loadingMap[`tutor-${t.id}`]}
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
                                   t.id,
+                                  t._id,
                                   "isApproved",
                                   e.target.checked
                                 )
                               }
-                              title={
-                                t.isApproved
-                                  ? "Already approved — unchecking not supported"
-                                  : "Approve tutor"
-                              }
+                              title="Toggle approved status"
                             />
                           </td>
                           <td className="px-3 py-2">
                             <input
                               type="checkbox"
                               checked={!!t.isPremium}
-                              disabled={
-                                !!loadingMap[`tutor-${t.id}`] || !!t.isPremium
-                              }
+                              disabled={!!loadingMap[`tutor-${t.id}`]}
                               onChange={(e) =>
                                 toggleField(
                                   "tutor",
                                   t.id,
+                                  t._id,
                                   "isPremium",
                                   e.target.checked
                                 )
                               }
-                              title={
-                                t.isPremium
-                                  ? "Already premium — unchecking not supported"
-                                  : "Make premium"
-                              }
+                              title="Toggle premium status"
                             />
                           </td>
                         </tr>
@@ -438,11 +476,12 @@ export default function AdminDashboard({
                             <input
                               type="checkbox"
                               checked={!!j.isApproved}
-                              disabled={!!loadingMap[`job-${j._id}`]} // শুধু loading time এ disable
+                              disabled={!!loadingMap[`job-${j.id}`]}
                               onChange={(e) =>
                                 toggleField(
                                   "job",
-                                  j._id,
+                                  j.id,
+                                  String(j._id),
                                   "isApproved",
                                   e.target.checked
                                 )

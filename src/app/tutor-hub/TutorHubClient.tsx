@@ -35,7 +35,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
   const approvedTutors = tutorHubs.filter((t) => t.isApproved);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-20">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 via-white to-purple-50 py-20">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -43,7 +43,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Find Expert Tutors
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -94,7 +94,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
               onClick={() => setFilter("all")}
               className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
                 filter === "all"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                  ? "bg-linear-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                   : "bg-white text-gray-700 hover:bg-gray-100 shadow"
               }`}
             >
@@ -104,7 +104,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
               onClick={() => setFilter("premium")}
               className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
                 filter === "premium"
-                  ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg"
+                  ? "bg-linear-to-r from-yellow-400 to-orange-500 text-white shadow-lg"
                   : "bg-white text-gray-700 hover:bg-gray-100 shadow"
               }`}
             >
@@ -117,7 +117,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
               onClick={() => setFilter("verified")}
               className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
                 filter === "verified"
-                  ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
+                  ? "bg-linear-to-r from-green-500 to-emerald-500 text-white shadow-lg"
                   : "bg-white text-gray-700 hover:bg-gray-100 shadow"
               }`}
             >

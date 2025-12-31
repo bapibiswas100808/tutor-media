@@ -6,7 +6,7 @@ import {
   MapPin,
   DollarSign,
   Calendar,
-  Clock,
+  // Clock,
   BookOpen,
   Home,
   Video,
@@ -65,7 +65,7 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
       className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
     >
       {/* Header with Subject Badge */}
-      <div className="relative bg-gradient-to-r from-blue-50 to-purple-50 p-5 border-b border-gray-100">
+      <div className="relative bg-linear-to-r from-blue-50 to-purple-50 p-5 border-b border-gray-100">
         {/* Urgency Badge */}
         {/* {job.urgency === "urgent" && (
           <div className="absolute top-3 right-3 flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
@@ -114,16 +114,18 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
         <div className="grid grid-cols-2 gap-3">
           {/* Location */}
           <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <MapPin className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
             <div>
               <p className="text-xs text-gray-500 font-medium">Location</p>
-              <p className="text-sm text-gray-700 font-semibold capitalize">{job.division}</p>
+              <p className="text-sm text-gray-700 font-semibold capitalize">
+                {job.division}
+              </p>
             </div>
           </div>
 
           {/* Budget */}
           <div className="flex items-start gap-2">
-            <DollarSign className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+            <DollarSign className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
             <div>
               <p className="text-xs text-gray-500 font-medium">Budget</p>
               <p className="text-sm text-gray-700 font-semibold">
@@ -156,9 +158,9 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
         {/* Description */}
         <div className="border-t pt-3">
           <p className="text-sm text-gray-600 line-clamp-3">
-            <p className="text-xs text-gray-500 font-medium">
+            <span className="text-xs text-gray-500 font-medium">
               Schedule Description
-            </p>
+            </span>
             {job.description}
           </p>
         </div>

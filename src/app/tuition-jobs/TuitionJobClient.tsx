@@ -7,7 +7,6 @@ import {
   Filter,
   MapPin,
   BookOpen,
-  User,
   DoorOpen,
   School,
   RotateCcw,
@@ -24,7 +23,6 @@ interface TuitionJobClientProps {
 export default function TuitionJobClient({
   tuitionJobs,
 }: TuitionJobClientProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("all");
   const [selectedDivision, setSelectedDivision] = useState("all");
@@ -79,14 +77,7 @@ export default function TuitionJobClient({
         selectedDivision === "all" ||
         normalize(job.division) === normalize(selectedDivision);
 
-      const isActive =
-        normalize(job.status) === "active" ||
-        normalize(job.status) === "published" ||
-        normalize(job.status) === "open";
-
-      return (
-        matchesClass && matchesMode && matchesMedium && matchesDivision
-      );
+      return matchesClass && matchesMode && matchesMedium && matchesDivision;
     });
 
   // Approved Jobs
