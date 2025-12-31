@@ -7,7 +7,7 @@ import Image from "next/image";
 import { NotebookText, Paperclip } from "lucide-react";
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
-  const imageUrl = tutor?.basicInfo?.image || null;
+  const imageUrl = tutor?.image || null;
   if (!tutor) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

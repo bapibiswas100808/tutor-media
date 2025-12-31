@@ -70,32 +70,36 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
   };
 
   /* ---------- IMAGE UPLOAD ---------- */
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+ const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    setUploading(true);
+  // 🔥 instant preview
+  const previewUrl = URL.createObjectURL(file);
+  setData({ ...data, image: previewUrl });
 
-    const formData = new FormData();
-    formData.append("image", file);
+  setUploading(true);
 
-    try {
-      const res = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
-        { method: "POST", body: formData }
-      );
+  const formData = new FormData();
+  formData.append("image", file);
 
-      const result = await res.json();
+  try {
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+      { method: "POST", body: formData }
+    );
 
-      if (result.success) {
-        setData({ ...data, image: result.data.url });
-      }
-    } catch (err) {
-      console.error("Image upload failed", err);
-    } finally {
-      setUploading(false);
+    const result = await res.json();
+
+    if (result.success) {
+      setData({ ...data, image: result.data.url });
     }
-  };
+  } catch (err) {
+    console.error("Image upload failed", err);
+  } finally {
+    setUploading(false);
+  }
+};
 
   return (
     <div className="space-y-5 text-gray-700">
@@ -109,6 +113,7 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
                 alt="Profile"
                 fill
                 className="object-cover"
+                priority
               />
             </div>
           )}

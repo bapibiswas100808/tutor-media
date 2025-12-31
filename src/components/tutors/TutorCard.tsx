@@ -51,6 +51,7 @@ export interface Tutor {
   };
   basicInfo?: BasicInfo;
   education?: EducationEntry[];
+  image?: string;
 }
 
 interface TutorCardProps {
@@ -60,7 +61,7 @@ interface TutorCardProps {
 
 export default function TutorCard({ tutor, index }: TutorCardProps) {
   // console.log("tutor card data", tutor.basicInfo.image);
-  const imageUrl = tutor.basicInfo?.image;
+  const imageUrl = tutor?.image;
   const [currentUserId, setCurrentUserId] = useState<number | undefined>(
     undefined
   );
@@ -125,17 +126,18 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
 
           {/* Profile Image */}
           <div className="relative h-48 bg-linear-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
+            <div className="relative w-36 h-36 rounded-full overflow-hidden shadow-xl">
               {imageUrl ? (
-                <Image
-                  src={imageUrl}
-                  alt={tutor.fullName}
-                  fill
-                  className="object-cover"
-                  sizes="128px"
-                  // priority
-                  unoptimized
-                />
+                <div>
+                  <Image
+                    src={imageUrl}
+                    alt={tutor.fullName}
+                    fill
+                    className="object-cover"
+                    sizes="128px"
+                    priority
+                  />
+                </div>
               ) : (
                 <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                   {tutor.fullName?.slice(0, 1).toUpperCase()}
