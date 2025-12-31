@@ -34,6 +34,7 @@ export interface Tutor {
   };
   basicInfo?: BasicInfo;  // 🔥 Add this
   education?: EducationEntry[];
+  isDeleted:boolean;
   // image?: {
   //   url: string;
   //   formats?: {

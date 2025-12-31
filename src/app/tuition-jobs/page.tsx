@@ -13,7 +13,7 @@ export default async function TuitionJobsPage() {
   let tests: TuitionJob[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allJobs", {
+    const res = await fetch("http://localhost:5000/allJobs/deleted", {
       cache: "no-store",
     });
 
