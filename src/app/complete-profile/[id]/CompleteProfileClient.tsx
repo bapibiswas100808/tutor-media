@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import BasicInfo, { BasicInfoData } from "./tabs/basicInfo";
 import Education, { EducationEntry } from "./tabs/education";
 import Availability, { AvailabilityData } from "./tabs/availability";
@@ -14,7 +16,24 @@ interface Props {
 
 export default function CompleteProfileClient({ tutorId }: Props) {
   // =========================
-  // STATES
+  // AUTH & ROUTING
+  // =========================
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+
+  // Protect route - redirect if not authenticated or not the same tutor
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !user)) {
+      router.push("/login");
+    }
+    // Check if the user trying to access is the same as the tutor ID
+    if (!isLoading && isAuthenticated && user && String(user.id) !== tutorId) {
+      router.push(`/complete-profile/${user.id}`);
+    }
+  }, [isLoading, isAuthenticated, user, tutorId, router]);
+
+  // =========================
+  // STATES - MUST BE FIRST
   // =========================
   const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
     email: "",
@@ -63,6 +82,23 @@ export default function CompleteProfileClient({ tutorId }: Props) {
 
     fetchTutorEmail();
   }, [tutorId]);
+
+  // Show loading state while checking auth
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will be redirected by useEffect)
+  if (!isAuthenticated || !user || String(user.id) !== tutorId) {
+    return null;
+  }
 
   // =========================
   // VALIDATION

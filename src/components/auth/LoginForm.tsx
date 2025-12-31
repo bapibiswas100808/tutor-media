@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginForm() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,39 +23,17 @@ export default function LoginForm() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const user = await login(email, password);
 
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        // non-json response allowed
+      // Redirect based on role and completion status
+      if (user.role === "tutor") {
+        // For tutors, redirect to complete profile if needed
+        const redirectTo = `/complete-profile/${user?.id || ""}`;
+        router.push(redirectTo);
+      } else {
+        // For students/others, redirect to tutor hub
+        router.push("/tutor-hub");
       }
-
-      if (!res.ok) {
-        const msg =
-          data?.error || data?.message || `Login failed (${res.status})`;
-        setError(msg);
-        setLoading(false);
-        return;
-      }
-
-      // prefer backend 'tutor' field, otherwise 'user'
-      const user = data?.tutor ?? data?.user ?? null;
-      const role = data?.role ?? user?.role ?? null;
-
-      if (data?.token) localStorage.setItem("token", data.token);
-      if (user) {
-        const userToStore = role ? { ...user, role } : user;
-        localStorage.setItem("user", JSON.stringify(userToStore));
-      }
-
-      const redirectTo = `/tutor-hub/${user?.id || ""}`;
-      router.push(redirectTo);
     } catch (err: unknown) {
       let message = "Network error. Please try again.";
       if (err instanceof Error) message = err.message;
