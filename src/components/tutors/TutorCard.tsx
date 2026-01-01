@@ -16,6 +16,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
+import { useAuth } from "@/context/AuthContext";
 
 interface EducationEntry {
   academy: string;
@@ -61,30 +62,17 @@ interface TutorCardProps {
 
 export default function TutorCard({ tutor, index }: TutorCardProps) {
   // console.log("tutor card data", tutor.basicInfo.image);
-  const imageUrl = tutor?.image;
-  const [currentUserId, setCurrentUserId] = useState<number | undefined>(
-    undefined
-  );
+  const imageUrl = tutor.basicInfo?.image;
+  const { user, isAuthenticated } = useAuth();
   const [profileCompletion, setProfileCompletion] = useState<number>(0);
 
   useEffect(() => {
-    // Get current logged-in user
-    const userJson = localStorage.getItem("user");
-    if (userJson) {
-      try {
-        const user = JSON.parse(userJson);
-        setCurrentUserId(user.id);
-      } catch {
-        // ignore
-      }
-    }
-
     // Calculate profile completion
     const completion = calculateProfileCompletion(tutor);
     setProfileCompletion(completion);
   }, [tutor]);
 
-  const isOwnProfile = currentUserId === tutor.id;
+  const isOwnProfile = isAuthenticated && user && user.id === tutor.id;
   const isProfileComplete = profileCompletion >= 80;
   const isPremiumProfile = profileCompletion === 100;
 

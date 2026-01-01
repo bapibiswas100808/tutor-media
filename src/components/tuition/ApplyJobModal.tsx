@@ -1,12 +1,22 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, DollarSign, Calendar, AlertCircle, Info } from "lucide-react";
+import {
+  X,
+  Send,
+  DollarSign,
+  Calendar,
+  AlertCircle,
+  Info,
+  LogIn,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { TuitionJob } from "@/data/tuitionJobsList";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const proposalSchema = z.object({
   id: z.string().min(1, "Teacher ID is required"), // Tutor/Teacher ID is mandatory
@@ -35,6 +45,8 @@ export default function ApplyJobModal({
 }: ApplyJobModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -131,13 +143,16 @@ export default function ApplyJobModal({
 
       console.log("Submitting application payload:", applicationPayload);
 
-      const response = await fetch("http://localhost:5000/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(applicationPayload),
-      });
+      const response = await fetch(
+        "https://pro-assignment-twelve-server.vercel.app/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationPayload),
+        }
+      );
 
       const result = await response.json();
 
@@ -169,7 +184,79 @@ export default function ApplyJobModal({
     }
   };
 
+  const handleLoginRedirect = () => {
+    onClose();
+    router.push("/login");
+  };
+
   if (!job) return null;
+
+  // Show login prompt if not authenticated
+  if (!isAuthenticated || !user) {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleClose}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 relative">
+                <button
+                  onClick={handleClose}
+                  className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <h2 className="text-2xl font-bold">Login Required</h2>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-blue-100 rounded-full">
+                  <LogIn className="w-6 h-6 text-blue-600" />
+                </div>
+                <p className="text-gray-700 text-center">
+                  You need to be logged in to apply for tuition jobs. Sign in to
+                  your account or create a new one to get started.
+                </p>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-gray-50 px-6 py-4 flex gap-3">
+                <button
+                  onClick={handleClose}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleLoginRedirect}
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                >
+                  <LogIn size={18} />
+                  Login
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -192,7 +279,7 @@ export default function ApplyJobModal({
             className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden my-8"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 relative">
+            <div className="bg-linear-to-r from-blue-600 to-purple-600 text-white p-6 relative">
               <button
                 onClick={handleClose}
                 disabled={isSubmitting}
@@ -212,13 +299,13 @@ export default function ApplyJobModal({
                   {/* Error Message */}
                   {submitError && (
                     <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
                       <p className="text-red-700 text-sm">{submitError}</p>
                     </div>
                   )}
 
                   {/* Job Summary */}
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-100">
+                  <div className="bg-linear-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-100">
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
                         <p className="text-gray-600 font-medium">Subject</p>

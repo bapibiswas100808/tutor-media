@@ -1,4 +1,5 @@
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminProtected from "@/components/admin/AdminProtected";
 import { TuitionJob } from "@/data/tuitionJobsList";
 import { Tutor } from "@/data/tutorsList";
 import { Application } from "@/lib/applications";
@@ -11,9 +12,12 @@ export default async function AdminDashboardPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allTutors", {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/allTutors",
+      {
+        cache: "no-store",
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();
@@ -29,9 +33,12 @@ export default async function AdminDashboardPage() {
   let tuituionJobs: TuitionJob[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allJobs", {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/allJobs",
+      {
+        cache: "no-store",
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();
@@ -44,9 +51,12 @@ export default async function AdminDashboardPage() {
 
   let applications: Application[] = [];
   try {
-    const res = await fetch("http://localhost:5000/applications", {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/applications",
+      {
+        cache: "no-store",
+      }
+    );
     if (res.ok) {
       const data = await res.json();
       applications = Array.isArray(data) ? data : [];
@@ -57,14 +67,16 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="container mx-auto">
-        <AdminDashboard
-          tutors={tutorHubs}
-          jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
-          applications={applications}
-        />
-      </div>
-    </main>
+    <AdminProtected>
+      <main className="min-h-screen bg-gray-50 p-6">
+        <div className="container mx-auto">
+          <AdminDashboard
+            tutors={tutorHubs}
+            jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
+            applications={applications}
+          />
+        </div>
+      </main>
+    </AdminProtected>
   );
 }

@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { AuthProvider } from "@/context/AuthContext";
+import { AdminProvider } from "@/context/AdminContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,9 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <Header />
-        <div className="pt-16">{children}</div>
-        <Footer />
+        <AdminProvider>
+          <AuthProvider>
+            <Header />
+            <div className="pt-16">{children}</div>
+            <Footer />
+          </AuthProvider>
+        </AdminProvider>
       </body>
     </html>
   );

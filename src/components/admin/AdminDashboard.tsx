@@ -126,7 +126,8 @@ export default function AdminDashboard({
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
   const BACKEND_BASE =
-    process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_API_BASE ||
+    "https://pro-assignment-twelve-server.vercel.app";
 
   async function toggleField(
     type: "tutor" | "job",
