@@ -2,9 +2,54 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Tutor } from "@/data/tutorsList";
+// import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
 import { NotebookText, Paperclip } from "lucide-react";
+import Info from "@/components/info/info";
+export interface BasicInfo {
+  email: string;
+  password?: string;
+  image?: string;
+
+  expectedSalary?: string;
+  currentTuitionStatus?: string;
+  daysPerWeek?: string;
+  tutoringExperience?: string;
+  placeOfLearning?: string;
+  preferredMedium?: string;
+  preferredClass?: string;
+  preferredSubjects?: string;
+  preferredTime?: string;
+  preferredArea?: string;
+}
+
+export interface Tutor {
+  id: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender: string;
+  location: string;
+  qualification: string;
+  experience: string;
+  bio: string;
+  image?: string;
+
+  isVerified: boolean;
+  isPremium: boolean;
+
+  education?: {
+    academy: string;
+    year: string;
+  }[];
+
+  availability?: {
+    days: string[];
+    mode: string;
+  };
+
+  basicInfo?: BasicInfo;
+}
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const imageUrl = tutor?.image || null;
@@ -152,13 +197,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                         </div>
                       </div>
                     </div>
-
-                    {/* <div className="text-right">
-                      <div className="text-3xl font-bold text-gray-900 mb-1">
-                        {tutor.hourlyRate}
-                      </div>
-                      <div className="text-sm text-gray-600">per hour</div>
-                    </div> */}
                   </div>
 
                   {/* Quick Stats */}
@@ -224,83 +262,81 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 <p className="text-gray-700 leading-relaxed">{tutor.bio}</p>
               </motion.div>
 
-              {/* Subjects */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-white rounded-2xl shadow-lg p-8"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <svg
-                    className="w-6 h-6 mr-3 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                  Subjects I Teach
-                </h2>
-                <div className="flex flex-wrap gap-3">
-                  {tutor.subjects.map((subject, idx) => (
-                    <span
-                      key={idx}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 text-gray-800 rounded-lg font-medium border border-gray-200"
+              {/* Tuition Preferences */}
+              {tutor.basicInfo && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="bg-white rounded-2xl shadow-lg p-8"
+                >
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <svg
+                      className="w-6 h-6 mr-3 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      {subject}
-                    </span>
-                  ))}
-                </div>
-              </motion.div> */}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 1.343-3 3v1h6v-1c0-1.657-1.343-3-3-3z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 12h14v7H5z"
+                      />
+                    </svg>
+                    Tuition Preferences
+                  </h2>
 
-              {/* Achievements */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="bg-white rounded-2xl shadow-lg p-8"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <svg
-                    className="w-6 h-6 mr-3 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                  <div className="grid md:grid-cols-2 gap-6 text-gray-700">
+                    <Info
+                      label="Expected Salary"
+                      value={tutor.basicInfo.expectedSalary}
                     />
-                  </svg>
-                  Achievements & Highlights
-                </h2>
-                <ul className="space-y-3">
-                  {tutor.achievements.map((achievement, idx) => (
-                    <li key={idx} className="flex items-start">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{achievement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div> */}
+                    <Info
+                      label="Current Tuition Status"
+                      value={tutor.basicInfo.currentTuitionStatus}
+                    />
+                    <Info
+                      label="Days Per Week"
+                      value={tutor.basicInfo.daysPerWeek}
+                    />
+                    <Info
+                      label="Tutoring Experience"
+                      value={tutor.basicInfo.tutoringExperience}
+                    />
+                    <Info
+                      label="Place of Learning"
+                      value={tutor.basicInfo.placeOfLearning}
+                    />
+                    <Info
+                      label="Preferred Medium"
+                      value={tutor.basicInfo.preferredMedium}
+                    />
+                    <Info
+                      label="Preferred Class"
+                      value={tutor.basicInfo.preferredClass}
+                    />
+                    <Info
+                      label="Preferred Subject"
+                      value={tutor.basicInfo.preferredSubjects}
+                    />
+                    <Info
+                      label="Preferred Time"
+                      value={tutor.basicInfo.preferredTime}
+                    />
+                    <Info
+                      label="Preferred Area"
+                      value={tutor.basicInfo.preferredArea}
+                    />
+                  </div>
+                </motion.div>
+              )}
 
               {/* Education */}
               {tutor.education && (
@@ -308,9 +344,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white rounded-2xl shadow-lg p-8"
+                  className="bg-white rounded-2xl shadow-lg p-8 text-gray-700"
                 >
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center">
                     <svg
                       className="w-6 h-6 mr-3 text-blue-600"
                       fill="none"
@@ -339,18 +375,22 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     Education
                   </h2>
                   <ul className="space-y-3">
-                    {tutor.education.map((edu, idx) => (
+                    {(tutor.education
+                      ? [
+                          ...(tutor.education.ssc || []),
+                          ...(tutor.education.hsc || []),
+                          ...(tutor.education.grad || []),
+                        ]
+                      : []
+                    ).map((edu, idx) => (
                       <li key={idx} className="flex items-start">
-                        <svg
-                          className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
-                        </svg>
-                        <span className="text-gray-700">
-                          {edu.academy} - {edu.year}
-                        </span>
+                        <svg className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-medium">{edu.academy}</p>
+                          {edu.passingYear && (
+                            <p className="text-sm">{edu.passingYear}</p>
+                          )}
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -427,90 +467,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   </div>
                 </div>
               </motion.div>
-
-              {/* Teaching Modes */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="bg-white rounded-2xl shadow-lg p-6"
-              >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Teaching Modes
-                </h3>
-                <div className="space-y-3">
-                  {tutor.teachingModes.map((mode, idx) => (
-                    <div key={idx} className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-3"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{mode}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div> */}
-
-              {/* Languages */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="bg-white rounded-2xl shadow-lg p-6"
-              >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Languages
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {tutor.languages.map((lang, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium"
-                    >
-                      {lang}
-                    </span>
-                  ))}
-                </div>
-              </motion.div> */}
-
-              {/* Age Groups */}
-              {tutor.ageGroup && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="bg-white rounded-2xl shadow-lg p-6"
-                >
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    Suitable For
-                  </h3>
-                  <div className="space-y-2">
-                    {tutor.ageGroup.map((group, idx) => (
-                      <div key={idx} className="flex items-center">
-                        <svg
-                          className="w-4 h-4 text-purple-500 mr-2"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span className="text-gray-700">{group}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
             </div>
           </div>
         </div>

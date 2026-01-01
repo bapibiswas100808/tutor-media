@@ -37,7 +37,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                 href="/hire-tutor"
                 className="bg-[#0D24A0] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
-                Find a Mentor
+                Hire a Mentor
               </Link>
               <Link
                 href="/become-a-tutor"

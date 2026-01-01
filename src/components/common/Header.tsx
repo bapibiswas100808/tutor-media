@@ -57,7 +57,7 @@ export default function Header() {
               href="/become-a-tutor"
               className="bg-[#0D24A0] hover:bg-blue-700 text-white px-5 py-2 rounded-full font-medium transition-colors duration-200"
             >
-              Become a Tutor
+              Become a Mentor
             </Link>
           </div>
 
@@ -125,7 +125,7 @@ export default function Header() {
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                     onClick={() => setIsOpen(false)}
                   >
-                    Become a Tutor
+                    Become a Mentor
                   </Link>
                 </div>
               </div>
