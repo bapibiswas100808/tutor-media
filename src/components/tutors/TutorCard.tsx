@@ -85,7 +85,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
       className="group relative"
     >
       <Link href={`/tutor-hub/${tutor.id}`}>
-        <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 h-full">
+        <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col justify-between">
           {/* Premium Badge */}
           {isPremiumProfile && (
             <div className="absolute top-4 right-4 z-10">
@@ -157,13 +157,13 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                   </span>
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+              <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
                 {tutor.fullName}
               </h3>
               {/* Division */}
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-gray-700">
-                  Division:
+                  Location:
                 </span>
                 <span className="text-sm text-gray-500 capitalize">
                   {tutor.division}
@@ -173,15 +173,15 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
 
             {/* Info Grid */}
             <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-600">
+              {/* <div className="flex items-center text-sm text-gray-600">
                 <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
                 {tutor.experience}
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <LocationEdit className="w-4 h-4 mr-2 text-gray-400" />
                 {tutor.location}
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
+              </div> */}
+              <div className="flex items-center text-sm text-gray-600 line-clamp-2">
                 <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
                 {tutor.qualification}
               </div>
@@ -207,7 +207,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
             </div> */}
 
             {/* Profile Completion Bar */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-gray-700">
                   Profile Complete
@@ -228,7 +228,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                   style={{ width: `${profileCompletion}%` }}
                 />
               </div>
-
+              
               {!isProfileComplete && (
                 <div className="mt-2 flex items-center gap-2 p-2 bg-orange-50 rounded-lg border border-orange-200">
                   <AlertCircle className="w-4 h-4 text-orange-600 shrink-0" />
@@ -237,7 +237,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                   </p>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Teaching Modes */}
             {/* <div className="flex flex-wrap gap-2 mb-4">
@@ -271,7 +271,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
               </Link>
             ) : (
               <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform group-hover:scale-105 shadow-md cursor-pointer">
-                Hire Tutor
+                See Details
               </button>
             )}
           </div>

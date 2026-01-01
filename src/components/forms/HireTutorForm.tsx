@@ -130,7 +130,8 @@ export default function HireTutorForm() {
     // Get all locations from all thanas in this district
     const allLocations: string[] = [];
     Object.values(thanas).forEach((thana) => {
-      const locations = (thana as Record<string, unknown>)?.locations as string[];
+      const locations = (thana as Record<string, unknown>)
+        ?.locations as string[];
       if (Array.isArray(locations)) {
         allLocations.push(...locations);
       }
@@ -513,7 +514,9 @@ export default function HireTutorForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
             <option value="">
-              {districtValue ? "Select your preferred area" : "Select district first"}
+              {districtValue
+                ? "Select your preferred area"
+                : "Select district first"}
             </option>
             {getLocalities().map((location: string) => (
               <option key={location} value={location}>

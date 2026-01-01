@@ -13,6 +13,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
   const filteredTutors = tutorHubs
     // ✅ 1. Only approved tutors
     .filter((tutor) => tutor.isApproved)
+    .filter((tutor) => tutor.isDeleted !== true)
     // ✅ 2. Apply UI filters
     .filter((tutor) => {
       const matchesFilter =

@@ -41,7 +41,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 mt-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 mt-4">
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
@@ -87,7 +87,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                         priority
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                      <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                         {tutor.fullName?.charAt(0)}
                       </div>
                     )}
@@ -120,7 +120,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                         </h1>
 
                         {tutor?.isPremium && (
-                          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+                          <span className="bg-linear-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
                             <svg
                               className="w-4 h-4"
                               fill="currentColor"
@@ -171,15 +171,15 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </div>
                     {/* CTA Buttons */}
                     <div className="flex justify-center gap-3">
-                      <Link
+                      {/* <Link
                         href="/hire-tutor"
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
+                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
                       >
                         Hire Tutor
-                      </Link>
+                      </Link> */}
                       <Link
                         href={`/complete-profile/${tutor.id}`}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
+                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
                       >
                         Complete Profile
                       </Link>
@@ -341,7 +341,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       : []
                     ).map((edu, idx) => (
                       <li key={idx} className="flex items-start">
-                        <svg className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5" />
+                        <svg className="w-5 h-5 text-blue-500 mr-3 shrink-0 mt-0.5" />
                         <div>
                           <p className="font-medium">{edu.academy}</p>
                           {edu.passingYear && (

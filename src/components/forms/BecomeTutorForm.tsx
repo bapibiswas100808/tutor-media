@@ -25,7 +25,7 @@ const becomeTutorSchema = z
       .min(1, "Please select your preferred tuition area"),
     qualification: z.string().min(2, "Please enter your qualification"),
     experience: z.string().min(1, "Please select your experience level"),
-    bio: z.string().min(20, "Bio must be at least 20 characters"),
+    // bio: z.string().min(20, "Bio must be at least 20 characters"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Please confirm your password"),
   })
@@ -162,7 +162,7 @@ export default function BecomeTutorForm() {
             locality: data.locality,
             qualification: data.qualification,
             experience: data.experience,
-            bio: data.bio,
+            // bio: data.bio,
             password: data.password,
             isVerified: false,
             isApproved: false,
@@ -451,7 +451,7 @@ export default function BecomeTutorForm() {
       {/* Educational Background */}
       <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Educational Background
+          Educational Institution & Experience
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -460,13 +460,13 @@ export default function BecomeTutorForm() {
               htmlFor="qualification"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Highest Qualification *
+              Educational Institution*
             </label>
             <input
               {...register("qualification")}
               type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-              placeholder="e.g., BSc in Mathematics, MSc in Physics"
+              placeholder="e.g., University of XYZ, ABC College"
             />
             {errors.qualification && (
               <p className="mt-1 text-sm text-red-600">
@@ -503,7 +503,7 @@ export default function BecomeTutorForm() {
       </div>
 
       {/* About You */}
-      <div className="rounded-lg">
+      {/* <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">About You</h3>
 
         <div>
@@ -523,7 +523,7 @@ export default function BecomeTutorForm() {
             <p className="mt-1 text-sm text-red-600">{errors.bio.message}</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Security */}
       <div className="rounded-lg">
