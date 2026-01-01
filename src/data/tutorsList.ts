@@ -27,13 +27,14 @@ export interface Tutor {
   ageGroup?: string[];
   qualification?: string;
   city?: string;
-  imageUrl?: string;
+  image?: string;
   availability?: {
     days: string[];
     mode: string;
   };
   basicInfo?: BasicInfo;  // 🔥 Add this
   education?: EducationEntry[];
+  isDeleted:boolean;
   // image?: {
   //   url: string;
   //   formats?: {
