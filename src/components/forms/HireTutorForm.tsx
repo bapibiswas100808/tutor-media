@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
+import { divisionsAndDistricts } from "./location";
 // import { createPublic } from "@/lib/strapi";
 
 const hireTutorSchema = z.object({
@@ -19,9 +20,10 @@ const hireTutorSchema = z.object({
   gender: z.enum(["male", "female", "any"], {
     message: "Please select a gender",
   }),
-  area: z.string().min(2, "Please enter your area"),
   division: z.string().min(1, "Please select a division"),
-  location: z.string().min(1, "Please select a district"),
+  district: z.string().min(1, "Please select a district"),
+  location: z.string().min(1, "Please select a location"),
+  preferredArea: z.string().min(1, "Please select your preferred area"),
   budget: z.string().min(1, "Please enter your budget"),
   mode: z.string().min(1, "Please select a tutoring mode"),
   subject: z.string().optional(),
@@ -38,92 +40,6 @@ const media = [
   "English Version",
   "Madrasah Background",
 ];
-
-const divisionsAndDistricts = {
-  dhaka: {
-    name: "Dhaka",
-    districts: [
-      "Dhaka",
-      "Narayanganj",
-      "Gazipur",
-      "Tangail",
-      "Kishoreganj",
-      "Manikganj",
-      "Munshiganj",
-      "Shariatpur",
-      "Rajbari",
-      "Madaripur",
-    ],
-  },
-  rajshahi: {
-    name: "Rajshahi",
-    districts: [
-      "Rajshahi",
-      "Natore",
-      "Naogaon",
-      "Chapainawabganj",
-      "Bogura",
-      "Sirajganj",
-      "Pabna",
-    ],
-  },
-  khulna: {
-    name: "Khulna",
-    districts: [
-      "Khulna",
-      "Bagerhat",
-      "Satkhira",
-      "Jessore",
-      "Magura",
-      "Narail",
-    ],
-  },
-  rangpur: {
-    name: "Rangpur",
-    districts: [
-      "Rangpur",
-      "Gaibandha",
-      "Kurigram",
-      "Dinajpur",
-      "Thakurgaon",
-      "Panchagarh",
-      "Lalmonirhat",
-    ],
-  },
-  mymensingh: {
-    name: "Mymensingh",
-    districts: ["Mymensingh", "Jamalpur", "Sherpur", "Netrokona"],
-  },
-  chattogram: {
-    name: "Chattogram",
-    districts: [
-      "Chattogram",
-      "Cox's Bazar",
-      "Feni",
-      "Noakhali",
-      "Lakshmipur",
-      "Cumilla",
-      "Khagrachari",
-      "Rangamati",
-      "Bandarban",
-    ],
-  },
-  sylhet: {
-    name: "Sylhet",
-    districts: ["Sylhet", "Moulvibazar", "Sunamganj", "Habiganj"],
-  },
-  barishal: {
-    name: "Barishal",
-    districts: [
-      "Barishal",
-      "Pirojpur",
-      "Jhalokati",
-      "Patuakhali",
-      "Bhola",
-      "Borguna",
-    ],
-  },
-};
 
 const subjects = [
   "All",
@@ -187,6 +103,7 @@ export default function HireTutorForm() {
   });
 
   const divisionValue = watch("division");
+  const districtValue = watch("district");
 
   const getDistricts = () => {
     if (!divisionValue) return [];
@@ -194,13 +111,47 @@ export default function HireTutorForm() {
       divisionsAndDistricts[
         divisionValue as keyof typeof divisionsAndDistricts
       ];
-    return division?.districts || [];
+    return Object.entries(division?.districts || {}).map(([key, value]) => ({
+      key,
+      name: value.name,
+    }));
+  };
+
+  const getLocalities = (): string[] => {
+    if (!divisionValue || !districtValue) return [];
+    const division =
+      divisionsAndDistricts[
+        divisionValue as keyof typeof divisionsAndDistricts
+      ];
+    const districtObj =
+      division?.districts[districtValue as keyof typeof division.districts];
+    if (!districtObj || typeof districtObj !== "object") return [];
+    const thanas = (districtObj as Record<string, unknown>).thanas || {};
+    // Get all locations from all thanas in this district
+    const allLocations: string[] = [];
+    Object.values(thanas).forEach((thana) => {
+      const locations = (thana as Record<string, unknown>)
+        ?.locations as string[];
+      if (Array.isArray(locations)) {
+        allLocations.push(...locations);
+      }
+    });
+    // Remove duplicates and sort
+    return Array.from(new Set(allLocations)).sort();
   };
 
   useEffect(() => {
-    // Clear district when division changes
+    // Clear district and location when division changes
+    setValue("district", "");
     setValue("location", "");
+    setValue("preferredArea", "");
   }, [divisionValue, setValue]);
+
+  useEffect(() => {
+    // Clear location when district changes
+    setValue("location", "");
+    setValue("preferredArea", "");
+  }, [districtValue, setValue]);
 
   const onSubmit = async (data: HireTutorFormData) => {
     setIsSubmitting(true);
@@ -352,24 +303,6 @@ export default function HireTutorForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
-            htmlFor="area"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Area/Location *
-          </label>
-          <input
-            {...register("area")}
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-            placeholder="e.g., Dhanmondi, Dhaka"
-          />
-          {errors.area && (
-            <p className="mt-1 text-sm text-red-600">{errors.area.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
             htmlFor="subject"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
@@ -482,7 +415,7 @@ export default function HireTutorForm() {
         </div>
       </div>
 
-      {/* Division / Location */}
+      {/* Division / District / Location */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div>
           <label
@@ -511,13 +444,13 @@ export default function HireTutorForm() {
 
         <div>
           <label
-            htmlFor="location"
+            htmlFor="district"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             District *
           </label>
           <select
-            {...register("location")}
+            {...register("district")}
             disabled={!divisionValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
@@ -525,14 +458,75 @@ export default function HireTutorForm() {
               {divisionValue ? "Select your district" : "Select division first"}
             </option>
             {getDistricts().map((district) => (
-              <option key={district} value={district}>
-                {district}
+              <option key={district.key} value={district.key}>
+                {district.name}
+              </option>
+            ))}
+          </select>
+          {errors.district && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.district.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Location / Preferred Area */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div>
+          <label
+            htmlFor="location"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Location *
+          </label>
+          <select
+            {...register("location")}
+            disabled={!districtValue}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <option value="">
+              {districtValue ? "Select your location" : "Select district first"}
+            </option>
+            {getLocalities().map((location: string) => (
+              <option key={location} value={location}>
+                {location}
               </option>
             ))}
           </select>
           {errors.location && (
             <p className="mt-1 text-sm text-red-600">
               {errors.location.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="preferredArea"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Preferred Area *
+          </label>
+          <select
+            {...register("preferredArea")}
+            disabled={!districtValue}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <option value="">
+              {districtValue
+                ? "Select your preferred area"
+                : "Select district first"}
+            </option>
+            {getLocalities().map((location: string) => (
+              <option key={location} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
+          {errors.preferredArea && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.preferredArea.message}
             </p>
           )}
         </div>

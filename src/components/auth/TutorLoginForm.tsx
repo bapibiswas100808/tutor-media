@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function TutorLoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -62,9 +60,9 @@ export default function TutorLoginForm() {
         const userToStore = role ? { ...user, role } : user;
         localStorage.setItem("user", JSON.stringify(userToStore));
       }
-
       const redirectTo = `/tutor-hub/${user?.id || ""}`;
-      router.push(redirectTo);
+      // Use window.location.href for hard redirect to ensure page reloads with fresh context data
+      window.location.href = redirectTo;
     } catch (err: unknown) {
       let message = "Network error. Please try again.";
       if (err instanceof Error) message = err.message;

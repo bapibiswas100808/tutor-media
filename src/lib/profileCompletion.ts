@@ -1,4 +1,6 @@
-import { Tutor } from "@/components/tutors/TutorCard";
+// import { Tutor } from "@/components/tutors/TutorCard";
+
+import { Tutor } from "@/data/tutorsList";
 
 /**
  * Calculate tutor profile completion percentage
@@ -36,7 +38,7 @@ export function calculateProfileCompletion(tutor: Tutor): number {
   if (tutor.bio) completionScore++;
 
   // Check education
-  if (tutor.education && tutor.education.length > 0) completionScore++;
+  if (tutor.education) completionScore++;
 
   // Check availability
   if (

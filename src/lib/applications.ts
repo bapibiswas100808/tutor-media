@@ -9,6 +9,7 @@ export interface ApplicationData {
 }
 
 export interface Application extends ApplicationData {
+  _id: string;
   id: number;
   createdAt: string;
   updatedAt: string;

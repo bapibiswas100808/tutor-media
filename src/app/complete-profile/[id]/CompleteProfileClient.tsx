@@ -40,12 +40,44 @@ export default function CompleteProfileClient({ tutorId }: Props) {
     password: "",
     confirmPassword: "",
     image: "",
+    expectedSalary: "",
+    currentTuitionStatus: "",
+    daysPerWeek: "",
+    tutoringExperience: "",
+    placeOfLearning: "",
+    preferredMedium: "",
+    preferredClass: "",
+    preferredSubjects: "",
+    preferredTime: "",
+    preferredArea: "",
   });
 
-  const [education, setEducation] = useState<EducationEntry[]>([
-    { academy: "", year: "" },
+  // Education states
+  const createEmptyEntry = (): EducationEntry => ({
+    id: crypto.randomUUID(), // <-- unique id for stable React keys
+    academy: "",
+    curriculum: "",
+    group: "",
+    passingYear: "",
+    result: "",
+    instituteType: "",
+    studyType: "",
+    department: "",
+    cgpa: "",
+  });
+
+  // Example state initialization
+  const [sscData, setSscData] = useState<EducationEntry[]>([
+    createEmptyEntry(),
+  ]);
+  const [hscData, setHscData] = useState<EducationEntry[]>([
+    createEmptyEntry(),
+  ]);
+  const [gradData, setGradData] = useState<EducationEntry[]>([
+    createEmptyEntry(),
   ]);
 
+  // Availability state
   const [availability, setAvailability] = useState<AvailabilityData>({
     days: [],
     mode: "",
@@ -54,12 +86,12 @@ export default function CompleteProfileClient({ tutorId }: Props) {
   const [activeTab, setActiveTab] = useState(0);
 
   // =========================
-  // FETCH TUTOR EMAIL
+  // FETCH TUTOR DATA
   // =========================
   useEffect(() => {
     if (!tutorId) return;
 
-    async function fetchTutorEmail() {
+    async function fetchTutorData() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/allTutors/${tutorId}`,
@@ -70,17 +102,55 @@ export default function CompleteProfileClient({ tutorId }: Props) {
 
         const tutor = await res.json();
 
+        // Basic Info
         setBasicInfo((prev) => ({
           ...prev,
           email: tutor.basicInfo?.email ?? tutor.email ?? "",
           image: tutor.basicInfo?.image ?? "",
+          expectedSalary: tutor.basicInfo?.expectedSalary ?? "",
+          currentTuitionStatus: tutor.basicInfo?.currentTuitionStatus ?? "",
+          daysPerWeek: tutor.basicInfo?.daysPerWeek ?? "",
+          tutoringExperience: tutor.basicInfo?.tutoringExperience ?? "",
+          placeOfLearning: tutor.basicInfo?.placeOfLearning ?? "",
+          preferredMedium: tutor.basicInfo?.preferredMedium ?? "",
+          preferredClass: tutor.basicInfo?.preferredClass ?? "",
+          preferredSubjects: tutor.basicInfo?.preferredSubjects ?? "",
+          preferredTime: tutor.basicInfo?.preferredTime ?? "",
+          preferredArea: tutor.basicInfo?.preferredArea ?? "",
         }));
+
+        // Helper: ensure entries have stable IDs
+        const fixEducationEntries = (entries?: EducationEntry[]): EducationEntry[] => {
+  if (!entries || entries.length === 0) return [createEmptyEntry()];
+
+  return entries.map((e) => ({
+    id: e.id ?? crypto.randomUUID(),
+    academy: e.academy ?? "",
+    curriculum: e.curriculum ?? "",
+    group: e.group ?? "",
+    passingYear: e.passingYear ?? "",
+    result: e.result ?? "",
+    instituteType: e.instituteType ?? "",
+    studyType: e.studyType ?? "",
+    department: e.department ?? "",
+    cgpa: e.cgpa ?? "",
+  }));
+};
+
+
+        // Inside fetchTutorData():
+        setSscData(fixEducationEntries(tutor.education?.ssc));
+        setHscData(fixEducationEntries(tutor.education?.hsc));
+        setGradData(fixEducationEntries(tutor.education?.grad));
+
+        // Availability
+        setAvailability(tutor.availability ?? { days: [], mode: "" });
       } catch (error) {
         console.error(error);
       }
     }
 
-    fetchTutorEmail();
+    fetchTutorData();
   }, [tutorId]);
 
   // Show loading state while checking auth
@@ -104,17 +174,30 @@ export default function CompleteProfileClient({ tutorId }: Props) {
   // VALIDATION
   // =========================
   const validateBasicInfo = () => {
-    if (!basicInfo.email?.trim()) return false;
-    if (!basicInfo.password?.trim()) return false;
-    if (basicInfo.password.length < 6) return false;
-    if (!basicInfo.confirmPassword?.trim()) return false;
-    if (basicInfo.password !== basicInfo.confirmPassword) return false;
-    return true;
+    const b = basicInfo;
+    return (
+      (b.email ?? "").trim() !== "" &&
+      (b.password ?? "").trim() !== "" &&
+      (b.password ?? "").length >= 6 &&
+      (b.confirmPassword ?? "").trim() !== "" &&
+      b.password === b.confirmPassword &&
+      b.expectedSalary !== "" &&
+      b.currentTuitionStatus !== "" &&
+      b.daysPerWeek !== "" &&
+      b.tutoringExperience !== "" &&
+      b.placeOfLearning !== "" &&
+      b.preferredMedium !== "" &&
+      b.preferredClass !== "" &&
+      b.preferredSubjects !== "" &&
+      b.preferredTime !== "" &&
+      b.preferredArea !== ""
+    );
   };
 
   const validateEducation = () =>
-    education.length > 0 &&
-    education.every((e) => e.academy.trim() !== "" && e.year.trim() !== "");
+    sscData.every((e) => e.academy.trim() !== "") &&
+    hscData.every((e) => e.academy.trim() !== "") &&
+    gradData.every((e) => e.academy.trim() !== "");
 
   const validateAvailability = () =>
     availability.days.length > 0 && availability.mode !== "";
@@ -123,25 +206,22 @@ export default function CompleteProfileClient({ tutorId }: Props) {
     validateBasicInfo() && validateEducation() && validateAvailability();
 
   // =========================
-  // SAVE HANDLER (PUT)
+  // SAVE HANDLER
   // =========================
   const handleSave = async () => {
+    if (!isFormValid) {
+      if (!validateBasicInfo()) setActiveTab(0);
+      else if (!validateEducation()) setActiveTab(1);
+      else setActiveTab(2);
+      alert("Please fill all required fields correctly");
+      return;
+    }
+
     try {
-      if (!isFormValid) {
-        if (!validateBasicInfo()) setActiveTab(0);
-        else if (!validateEducation()) setActiveTab(1);
-        else setActiveTab(2);
-
-        alert("Please fill all required fields correctly");
-        return;
-      }
-
-      // Build the profile update data
       const updateData = {
-        password: basicInfo.password,
-        image: basicInfo.image,
-        education: education,
-        availability: availability,
+        basicInfo,
+        education: { ssc: sscData, hsc: hscData, grad: gradData },
+        availability,
       };
 
       const res = await fetch(
@@ -153,7 +233,6 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         }
       );
 
-      // Check response content type
       const contentType = res.headers.get("content-type");
       if (!contentType?.includes("application/json")) {
         const text = await res.text();
@@ -162,12 +241,8 @@ export default function CompleteProfileClient({ tutorId }: Props) {
       }
 
       const responseData = await res.json();
+      if (!res.ok) throw new Error(responseData.message || "Update failed");
 
-      if (!res.ok) {
-        throw new Error(responseData.message || "Update failed");
-      }
-
-      console.log("Updated tutor:", responseData);
       alert("Profile updated successfully! ✅");
     } catch (error) {
       console.error("Update failed:", error);
@@ -214,7 +289,14 @@ export default function CompleteProfileClient({ tutorId }: Props) {
             <BasicInfo data={basicInfo} setData={setBasicInfo} />
           )}
           {activeTab === 1 && (
-            <Education data={education} setData={setEducation} />
+            <Education
+              sscData={sscData}
+              hscData={hscData}
+              gradData={gradData}
+              setSscData={setSscData}
+              setHscData={setHscData}
+              setGradData={setGradData}
+            />
           )}
           {activeTab === 2 && (
             <Availability data={availability} setData={setAvailability} />
