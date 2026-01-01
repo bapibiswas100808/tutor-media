@@ -120,22 +120,23 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         }));
 
         // Helper: ensure entries have stable IDs
-        const fixEducationEntries = (entries?: any[]): EducationEntry[] => {
-          if (!entries || !Array.isArray(entries) || entries.length === 0)
-            return [createEmptyEntry()];
-          return entries.map((e) => ({
-            id: e.id ?? crypto.randomUUID(),
-            academy: e.academy ?? "",
-            curriculum: e.curriculum ?? "",
-            group: e.group ?? "",
-            passingYear: e.passingYear ?? "",
-            result: e.result ?? "",
-            instituteType: e.instituteType ?? "",
-            studyType: e.studyType ?? "",
-            department: e.department ?? "",
-            cgpa: e.cgpa ?? "",
-          }));
-        };
+        const fixEducationEntries = (entries?: EducationEntry[]): EducationEntry[] => {
+  if (!entries || entries.length === 0) return [createEmptyEntry()];
+
+  return entries.map((e) => ({
+    id: e.id ?? crypto.randomUUID(),
+    academy: e.academy ?? "",
+    curriculum: e.curriculum ?? "",
+    group: e.group ?? "",
+    passingYear: e.passingYear ?? "",
+    result: e.result ?? "",
+    instituteType: e.instituteType ?? "",
+    studyType: e.studyType ?? "",
+    department: e.department ?? "",
+    cgpa: e.cgpa ?? "",
+  }));
+};
+
 
         // Inside fetchTutorData():
         setSscData(fixEducationEntries(tutor.education?.ssc));

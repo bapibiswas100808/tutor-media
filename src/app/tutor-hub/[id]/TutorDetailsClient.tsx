@@ -6,50 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { NotebookText, Paperclip } from "lucide-react";
 import Info from "@/components/info/info";
-export interface BasicInfo {
-  email: string;
-  password?: string;
-  image?: string;
-
-  expectedSalary?: string;
-  currentTuitionStatus?: string;
-  daysPerWeek?: string;
-  tutoringExperience?: string;
-  placeOfLearning?: string;
-  preferredMedium?: string;
-  preferredClass?: string;
-  preferredSubjects?: string;
-  preferredTime?: string;
-  preferredArea?: string;
-}
-
-export interface Tutor {
-  id: number;
-  fullName: string;
-  email: string;
-  phone: string;
-  gender: string;
-  location: string;
-  qualification: string;
-  experience: string;
-  bio: string;
-  image?: string;
-
-  isVerified: boolean;
-  isPremium: boolean;
-
-  education?: {
-    academy: string;
-    year: string;
-  }[];
-
-  availability?: {
-    days: string[];
-    mode: string;
-  };
-
-  basicInfo?: BasicInfo;
-}
+import { Tutor } from "@/data/tutorsList";
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const imageUrl = tutor?.image || null;
@@ -162,7 +119,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                           {tutor.fullName}
                         </h1>
 
-                        {tutor.isPremium && (
+                        {tutor?.isPremium && (
                           <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
                             <svg
                               className="w-4 h-4"
