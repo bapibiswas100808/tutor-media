@@ -17,43 +17,44 @@ import {
 } from "lucide-react";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import { useAuth } from "@/context/AuthContext";
+import { Tutor } from "@/data/tutorsList";
 
-interface EducationEntry {
-  academy: string;
-  year: string;
-}
+// interface EducationEntry {
+//   academy: string;
+//   year: string;
+// }
 
-export interface BasicInfo {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  image?: string;
-}
+// export interface BasicInfo {
+//   email: string;
+//   password: string;
+//   confirmPassword: string;
+//   image?: string;
+// }
 
-export interface Tutor {
-  _id: string;
-  id: number;
-  fullName: string;
-  email: string;
-  phone: string;
-  gender?: "male" | "female" | "other";
-  division?: string;
-  location?: string;
-  qualification?: string;
-  experience?: string;
-  bio?: string;
-  isVerified?: boolean;
-  isApproved?: boolean;
-  isPremium?: boolean;
-  createdAt?: string;
-  availability?: {
-    days: string[];
-    mode: string;
-  };
-  basicInfo?: BasicInfo;
-  education?: EducationEntry[];
-  image?: string;
-}
+// export interface Tutor {
+//   _id: string;
+//   id: number;
+//   fullName: string;
+//   email: string;
+//   phone: string;
+//   gender?: "male" | "female" | "other";
+//   division?: string;
+//   location?: string;
+//   qualification?: string;
+//   experience?: string;
+//   bio?: string;
+//   isVerified?: boolean;
+//   isApproved?: boolean;
+//   isPremium?: boolean;
+//   createdAt?: string;
+//   availability?: {
+//     days: string[];
+//     mode: string;
+//   };
+//   basicInfo?: BasicInfo;
+//   education?: EducationEntry[];
+//   image?: string;
+// }
 
 interface TutorCardProps {
   tutor: Tutor;

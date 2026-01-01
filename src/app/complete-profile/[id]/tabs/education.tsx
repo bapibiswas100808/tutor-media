@@ -1,143 +1,309 @@
+"use client";
+
+import React from "react";
 import { X } from "lucide-react";
-import { useState } from "react";
 
 export interface EducationEntry {
+  id: string;
   academy: string;
-  year: string;
+  curriculum: string;
+  group: string;
+  passingYear: string;
+  result: string;
+  instituteType: string;
+  studyType: string;
+  department: string;
+  cgpa: string;
 }
 
 interface Props {
-  data: EducationEntry[];
-  setData: (data: EducationEntry[]) => void;
+  sscData: EducationEntry[];
+  hscData: EducationEntry[];
+  gradData: EducationEntry[];
+  setSscData: React.Dispatch<React.SetStateAction<EducationEntry[]>>;
+  setHscData: React.Dispatch<React.SetStateAction<EducationEntry[]>>;
+  setGradData: React.Dispatch<React.SetStateAction<EducationEntry[]>>;
 }
 
-export default function Education({ data, setData }: Props) {
-  const [errors, setErrors] = useState<{ academy?: string; year?: string }[]>(
-    []
+const years = Array.from(
+  { length: new Date().getFullYear() - 1950 + 1 },
+  (_, i) => `${new Date().getFullYear() - i}`
+);
+
+/* ===========================
+   SAFE CHANGE HANDLER
+=========================== */
+const handleChange = (
+  index: number,
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  setData: React.Dispatch<React.SetStateAction<EducationEntry[]>>
+) => {
+  const { name, value } = e.target;
+
+  setData(prev =>
+    prev.map((item, i) =>
+      i === index ? { ...item, [name]: value } : item
+    )
   );
+};
 
-  const handleChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+/* ===========================
+   SECTION
+=========================== */
+const EducationSection = ({
+  title,
+  data,
+  setData,
+  showCurriculum,
+  showGroup,
+  showPassingYear,
+  showResult,
+  showInstituteType,
+  showStudyType,
+  showDepartment,
+  showCGPA,
+}: {
+  title: string;
+  data: EducationEntry[];
+  setData: React.Dispatch<React.SetStateAction<EducationEntry[]>>;
+  showCurriculum?: boolean;
+  showGroup?: boolean;
+  showPassingYear?: boolean;
+  showResult?: boolean;
+  showInstituteType?: boolean;
+  showStudyType?: boolean;
+  showDepartment?: boolean;
+  showCGPA?: boolean;
+}) => (
+  <div className="p-6 bg-white rounded-lg shadow space-y-4">
+    <h3 className="font-bold">{title}</h3>
 
-    const updated = [...data];
-    updated[index] = { ...updated[index], [name]: value };
-    setData(updated);
-
-    // clear error on typing
-    const errCopy = [...errors];
-    if (errCopy[index]) {
-      errCopy[index] = { ...errCopy[index], [name]: undefined };
-      setErrors(errCopy);
-    }
-  };
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: currentYear - 1950 + 1 },
-    (_, i) => currentYear - i
-  );
-
-  // ✅ Add Another with validation
-  const addField = () => {
-    const lastIndex = data.length - 1;
-    const lastEntry = data[lastIndex];
-
-    const newErrors = [...errors];
-    let hasError = false;
-
-    if (!lastEntry.academy.trim()) {
-      newErrors[lastIndex] = {
-        ...newErrors[lastIndex],
-        academy: "Academy name is required",
-      };
-      hasError = true;
-    }
-
-    if (!lastEntry.year) {
-      newErrors[lastIndex] = {
-        ...newErrors[lastIndex],
-        year: "Passing year is required",
-      };
-      hasError = true;
-    }
-
-    setErrors(newErrors);
-    if (hasError) return;
-
-    setData([...data, { academy: "", year: "" }]);
-    setErrors([...newErrors, {}]);
-  };
-
-  const removeField = (index: number) => {
-    setData(data.filter((_, i) => i !== index));
-    setErrors(errors.filter((_, i) => i !== index));
-  };
-
-  return (
-    <div className="space-y-4 text-gray-700">
-      {data.map((entry, index) => (
-        <div key={index} className="md:flex gap-4 items-start">
-          <div className="md:flex-1 mb-4 md:mb-0">
-            <label className="block font-medium">Institution</label>
+    {Array.isArray(data) &&
+      data.map((entry, index) => (
+        <div
+          key={entry.id}
+          className="grid md:grid-cols-2 gap-4 items-end"
+        >
+          {/* Institute */}
+          <div>
+            <label>Institute</label>
             <input
-              type="text"
               name="academy"
               value={entry.academy}
-              onChange={(e) => handleChange(index, e)}
-              placeholder="Academy Name"
-              className={`w-full border rounded-lg px-3 py-2 ${
-                errors[index]?.academy ? "border-red-500" : ""
-              }`}
+              onChange={(e) =>
+                handleChange(index, e, setData)
+              }
+              className="border rounded-lg px-3 py-2 w-full"
             />
-            {errors[index]?.academy && (
-              <p className="text-red-500 text-sm">{errors[index].academy}</p>
-            )}
           </div>
 
-          <div className="md:flex-1">
-            <label className="block font-medium">Passing Year</label>
-            <select
-              name="year"
-              value={entry.year}
-              onChange={(e) => handleChange(index, e)}
-              className={`w-full border rounded-lg px-3 py-2.5 ${
-                errors[index]?.year ? "border-red-500" : ""
-              }`}
-            >
-              <option value="">Select Year</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            {errors[index]?.year && (
-              <p className="text-red-500 text-sm">{errors[index].year}</p>
-            )}
-          </div>
+          {/* Curriculum */}
+          {showCurriculum && (
+            <div>
+              <label>Curriculum</label>
+              <select
+                name="curriculum"
+                value={entry.curriculum}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              >
+                <option value="">Select</option>
+                <option value="Bangla">Bangla</option>
+                <option value="English">English</option>
+              </select>
+            </div>
+          )}
 
+          {/* Group */}
+          {showGroup && (
+            <div>
+              <label>Group</label>
+              <select
+                name="group"
+                value={entry.group}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              >
+                <option value="">Select</option>
+                <option value="Science">Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Arts">Arts</option>
+              </select>
+            </div>
+          )}
+
+          {/* Passing Year */}
+          {showPassingYear && (
+            <div>
+              <label>Passing Year</label>
+              <select
+                name="passingYear"
+                value={entry.passingYear}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              >
+                <option value="">Select</option>
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Result */}
+          {showResult && (
+            <div>
+              <label>Result</label>
+              <input
+                name="result"
+                value={entry.result}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              />
+            </div>
+          )}
+
+          {/* Institute Type */}
+          {showInstituteType && (
+            <div>
+              <label>Institute Type</label>
+              <select
+                name="instituteType"
+                value={entry.instituteType}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              >
+                <option value="">Select</option>
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
+              </select>
+            </div>
+          )}
+
+          {/* Study Type */}
+          {showStudyType && (
+            <div>
+              <label>Study Type</label>
+              <select
+                name="studyType"
+                value={entry.studyType}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              >
+                <option value="">Select</option>
+                <option value="Honours">Honours</option>
+                <option value="Pass">Pass</option>
+              </select>
+            </div>
+          )}
+
+          {/* Department */}
+          {showDepartment && (
+            <div>
+              <label>Department</label>
+              <input
+                name="department"
+                value={entry.department}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              />
+            </div>
+          )}
+
+          {/* CGPA */}
+          {showCGPA && (
+            <div>
+              <label>CGPA</label>
+              <input
+                name="cgpa"
+                value={entry.cgpa}
+                onChange={(e) =>
+                  handleChange(index, e, setData)
+                }
+                className="border rounded-lg px-3 py-2 w-full"
+              />
+            </div>
+          )}
+
+          {/* Remove */}
           {data.length > 1 && (
             <button
               type="button"
-              onClick={() => removeField(index)}
-              className="w-fit text-red-500 font-semibold mt-6 cursor-pointer border-2 p-1 rounded-full hover:bg-red-800"
+              onClick={() =>
+                setData(prev =>
+                  prev.filter((_, i) => i !== index)
+                )
+              }
+              className="text-red-500 mt-6"
             >
               <X />
             </button>
           )}
         </div>
       ))}
+  </div>
+);
 
-      <button
-        type="button"
-        onClick={addField}
-        className=" px-4 py-2 rounded-lg font-semibold bg-[#0D24A0] hover:bg-blue-700 text-white transition-all duration-200 transform hover:scale-95 shadow-lg inline-block"
-      >
-        Add Another
-      </button>
+/* ===========================
+   MAIN
+=========================== */
+export default function Education({
+  sscData,
+  hscData,
+  gradData,
+  setSscData,
+  setHscData,
+  setGradData,
+}: Props) {
+  return (
+    <div className="space-y-8 text-gray-700">
+      <EducationSection
+        title="SSC"
+        data={sscData}
+        setData={setSscData}
+        showCurriculum
+        showGroup
+        showPassingYear
+        showResult
+      />
+
+      <EducationSection
+        title="HSC"
+        data={hscData}
+        setData={setHscData}
+        showCurriculum
+        showGroup
+        showPassingYear
+        showResult
+      />
+
+      <EducationSection
+        title="Graduation"
+        data={gradData}
+        setData={setGradData}
+        showInstituteType
+        showStudyType
+        showDepartment
+        showCurriculum
+        showPassingYear
+        showCGPA
+      />
     </div>
   );
 }

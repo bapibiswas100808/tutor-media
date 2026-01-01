@@ -416,9 +416,9 @@ export default function AdminDashboard({
                         <tr key={t.id} className="border-t">
                           <td className="px-3 py-2">{t.fullName}</td>
                           <td className="px-3 py-2">{t.email}</td>
-                          <td className="px-3 py-2">
+                          {/* <td className="px-3 py-2">
                             {t.subjects?.join(", ")}
-                          </td>
+                          </td> */}
                           <td className="px-3 py-2">{t.location}</td>
                           <td className="px-3 py-2">
                             <input

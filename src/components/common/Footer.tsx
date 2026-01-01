@@ -14,14 +14,14 @@ const footerLinks = {
   "For Tutors": [
     { name: "Become a Tutor", href: "/become-a-tutor" },
     { name: "Available Jobs", href: "/tuition-jobs" },
-    { name: "Tutor Guidelines", href: "#" },
-    { name: "Success Stories", href: "#" },
+    { name: "Tutor Guidelines", href: "/blog" },
+    { name: "Success Stories", href: "/blog" },
   ],
   Resources: [
     { name: "Blog", href: "/blog" },
-    { name: "Study Materials", href: "/shop" },
-    { name: "Learning Tips", href: "#" },
-    { name: "Parent Guide", href: "#" },
+    { name: "Study Materials", href: "/blog" },
+    { name: "Learning Tips", href: "/blog" },
+    { name: "Parent Guide", href: "/blog" },
   ],
   //   Company: [
   //     { name: "About Us", href: "#" },
@@ -155,7 +155,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-semibold mb-2">Contact Us</h4>
-              <p className="text-gray-300">📧 tutor.media9301@gmail.com</p>
+              {/* <p className="text-gray-300">📧 tutor.media9301@gmail.com</p> */}
+              <p className="text-gray-300">📧 contact@tutormediabd.com</p>
               <p className="text-gray-300">📞 +880 1990-539200</p>
             </div>
             <div>
