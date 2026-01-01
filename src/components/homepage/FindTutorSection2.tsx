@@ -19,7 +19,7 @@ export default function FindTutorSection2() {
           >
             <div className="text-3xl md:text-5xl font-bold text-blue-900">
               <h2>Find Your</h2>
-              <h2 className="text-[#1447E6] mt-1">Perfect Tutor Today</h2>
+              <h2 className="text-[#1447E6] mt-1">Perfect Mentor Today</h2>
             </div>
 
             <p className="text-lg text-gray-600">
@@ -31,7 +31,7 @@ export default function FindTutorSection2() {
                 href="/tutor-hub"
                 className="inline-block bg-[#1447E6] hover:bg-[#093ede] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
               >
-                Find a Tutor 🔎
+                Find a Mentor 🔎
               </Link>
             </div>
           </motion.div>
