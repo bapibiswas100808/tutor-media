@@ -6,93 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
+import { divisionsAndDistricts } from "./location";
 // import { createPublic } from "@/lib/strapi";
-
-const divisionsAndDistricts = {
-  dhaka: {
-    name: "Dhaka",
-    districts: [
-      "Dhaka",
-      "Narayanganj",
-      "Gazipur",
-      "Tangail",
-      "Kishoreganj",
-      "Manikganj",
-      "Munshiganj",
-      "Shariatpur",
-      "Rajbari",
-      "Madaripur",
-    ],
-  },
-  rajshahi: {
-    name: "Rajshahi",
-    districts: [
-      "Rajshahi",
-      "Natore",
-      "Naogaon",
-      "Chapainawabganj",
-      "Bogura",
-      "Sirajganj",
-      "Pabna",
-    ],
-  },
-  khulna: {
-    name: "Khulna",
-    districts: [
-      "Khulna",
-      "Bagerhat",
-      "Satkhira",
-      "Jessore",
-      "Magura",
-      "Narail",
-    ],
-  },
-  rangpur: {
-    name: "Rangpur",
-    districts: [
-      "Rangpur",
-      "Gaibandha",
-      "Kurigram",
-      "Dinajpur",
-      "Thakurgaon",
-      "Panchagarh",
-      "Lalmonirhat",
-    ],
-  },
-  mymensingh: {
-    name: "Mymensingh",
-    districts: ["Mymensingh", "Jamalpur", "Sherpur", "Netrokona"],
-  },
-  chattogram: {
-    name: "Chattogram",
-    districts: [
-      "Chattogram",
-      "Cox's Bazar",
-      "Feni",
-      "Noakhali",
-      "Lakshmipur",
-      "Cumilla",
-      "Khagrachari",
-      "Rangamati",
-      "Bandarban",
-    ],
-  },
-  sylhet: {
-    name: "Sylhet",
-    districts: ["Sylhet", "Moulvibazar", "Sunamganj", "Habiganj"],
-  },
-  barishal: {
-    name: "Barishal",
-    districts: [
-      "Barishal",
-      "Pirojpur",
-      "Jhalokati",
-      "Patuakhali",
-      "Bhola",
-      "Borguna",
-    ],
-  },
-};
 
 const becomeTutorSchema = z
   .object({
@@ -104,6 +19,10 @@ const becomeTutorSchema = z
     }),
     division: z.string().min(1, "Please select your division"),
     location: z.string().min(1, "Please select your district"),
+    locality: z.string().min(1, "Please select your location"),
+    preferredTutionArea: z
+      .string()
+      .min(1, "Please select your preferred tuition area"),
     qualification: z.string().min(2, "Please enter your qualification"),
     experience: z.string().min(1, "Please select your experience level"),
     bio: z.string().min(20, "Bio must be at least 20 characters"),
@@ -148,6 +67,7 @@ export default function BecomeTutorForm() {
   });
 
   const divisionValue = watch("division");
+  const locationValue = watch("location");
 
   const getDistricts = () => {
     if (!divisionValue) return [];
@@ -155,7 +75,33 @@ export default function BecomeTutorForm() {
       divisionsAndDistricts[
         divisionValue as keyof typeof divisionsAndDistricts
       ];
-    return division?.districts || [];
+    return Object.entries(division?.districts || {}).map(([key, value]) => ({
+      key,
+      name: value.name,
+    }));
+  };
+
+  const getLocalities = (): string[] => {
+    if (!divisionValue || !locationValue) return [];
+    const division =
+      divisionsAndDistricts[
+        divisionValue as keyof typeof divisionsAndDistricts
+      ];
+    const districtObj =
+      division?.districts[locationValue as keyof typeof division.districts];
+    if (!districtObj || typeof districtObj !== "object") return [];
+    const thanas = (districtObj as Record<string, unknown>).thanas || {};
+    // Get all locations from all thanas in this district
+    const allLocations: string[] = [];
+    Object.values(thanas).forEach((thana) => {
+      const locations = (thana as Record<string, unknown>)
+        ?.locations as string[];
+      if (Array.isArray(locations)) {
+        allLocations.push(...locations);
+      }
+    });
+    // Remove duplicates and sort
+    return Array.from(new Set(allLocations)).sort();
   };
 
   // const onSubmit = async (data: BecomeTutorFormData) => {
@@ -212,6 +158,8 @@ export default function BecomeTutorForm() {
             gender: data.gender,
             division: data.division,
             location: data.location,
+            // thana: data.thana,
+            locality: data.locality,
             qualification: data.qualification,
             experience: data.experience,
             bio: data.bio,
@@ -378,7 +326,7 @@ export default function BecomeTutorForm() {
           </div>
         </div>
 
-        {/* Division / Location */}
+        {/* Division / District */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label
@@ -423,14 +371,77 @@ export default function BecomeTutorForm() {
                   : "Select division first"}
               </option>
               {getDistricts().map((district) => (
-                <option key={district} value={district}>
-                  {district}
+                <option key={district.key} value={district.key}>
+                  {district.name}
                 </option>
               ))}
             </select>
             {errors.location && (
               <p className="mt-1 text-sm text-red-600">
                 {errors.location.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Locality / Preferred Tuition Area */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <label
+              htmlFor="locality"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Location/City *
+            </label>
+            <select
+              {...register("locality")}
+              disabled={!locationValue}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            >
+              <option value="">
+                {locationValue
+                  ? "Select your location"
+                  : "Select district first"}
+              </option>
+              {getLocalities().map((location: string) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+            {errors.locality && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.locality.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="preferredTutionArea"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Preferred Tuition Area *
+            </label>
+            <select
+              {...register("preferredTutionArea")}
+              disabled={!locationValue}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            >
+              <option value="">
+                {locationValue
+                  ? "Select your preferred tuition area"
+                  : "Select district first"}
+              </option>
+              {getLocalities().map((location: string) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+            {errors.preferredTutionArea && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.preferredTutionArea.message}
               </p>
             )}
           </div>
