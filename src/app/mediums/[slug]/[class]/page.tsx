@@ -43,7 +43,7 @@ export default function ClassDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 mt-4">
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -173,7 +173,7 @@ export default function ClassDetailPage() {
                   href="/hire-tutor"
                   className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-2xl transition-all duration-300 text-center transform hover:scale-105"
                 >
-                  Get a Tutor Now
+                  Get a Mentor Now
                 </Link>
                 <Link
                   href={`/mediums/${medium.slug}`}
@@ -204,7 +204,7 @@ export default function ClassDetailPage() {
                       </div> */}
                       <div className="">
                         <Image
-                          src={classItem.image}
+                          src={classItem.innerImg || classItem.image}
                           alt={classItem.name}
                           fill
                           className="mx-auto mb-6 rounded-lg shadow-lg"
@@ -363,7 +363,7 @@ export default function ClassDetailPage() {
             href="/hire-tutor"
             className="inline-block px-10 py-5 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-gray-100 transition-colors shadow-2xl transform hover:scale-105"
           >
-            Find Your Perfect Tutor
+            Find Your Perfect Mentor
           </Link>
         </div>
       </section>
