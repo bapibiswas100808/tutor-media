@@ -4,11 +4,66 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 // import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
-import { NotebookText, Paperclip } from "lucide-react";
+import { NotebookText, Paperclip, AlertCircle } from "lucide-react";
 import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+
+// Calculate profile completion percentage
+const calculateCompletionPercentage = (tutor: Tutor | null): number => {
+  if (!tutor) return 0;
+
+  // Premium tutors are automatically 100%
+  if (tutor.isPremium) {
+    return 100;
+  }
+
+  // Non-premium tutors can reach max 90%
+  let completedFields = 0;
+  const totalFields = 14; // Total fields to check
+
+  // Basic Info fields (8 fields)
+  if (tutor.basicInfo?.expectedSalary) completedFields++;
+  if (tutor.basicInfo?.currentTuitionStatus) completedFields++;
+  if (tutor.basicInfo?.daysPerWeek) completedFields++;
+  if (tutor.basicInfo?.tutoringExperience) completedFields++;
+  if (tutor.basicInfo?.placeOfLearning) completedFields++;
+  if (tutor.basicInfo?.preferredMedium) completedFields++;
+  if (tutor.basicInfo?.preferredClass) completedFields++;
+  if (tutor.basicInfo?.preferredSubjects) completedFields++;
+
+  // Education fields (3 fields - at least one entry for each)
+  if (tutor.education?.ssc && tutor.education.ssc.length > 0) completedFields++;
+  if (tutor.education?.hsc && tutor.education.hsc.length > 0) completedFields++;
+  if (tutor.education?.grad && tutor.education.grad.length > 0)
+    completedFields++;
+
+  // Availability fields (2 fields)
+  if (tutor.availability?.days && tutor.availability.days.length > 0)
+    completedFields++;
+  if (tutor.availability?.mode) completedFields++;
+
+  // Profile image (1 field)
+  if (tutor.image) completedFields++;
+
+  // Cap at 90% for non-premium tutors
+  const percentage = Math.round((completedFields / totalFields) * 100);
+  return Math.min(percentage, 90);
+};
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
+  const { user, isLoading } = useAuth();
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && user && tutor && String(user.id) === String(tutor.id)) {
+      setIsOwnProfile(true);
+    }
+  }, [user, tutor, isLoading]);
+
+  const completionPercentage = calculateCompletionPercentage(tutor);
+  const isProfileIncomplete = completionPercentage < 80;
   const imageUrl = tutor?.image || null;
   if (!tutor) {
     return (
@@ -177,18 +232,92 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       >
                         Hire Tutor
                       </Link> */}
-                      <Link
+                      {/* <Link
                         href={`/complete-profile/${tutor.id}`}
                         className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
                       >
                         Complete Profile
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
+
+          {/* Profile Completion Section - Only visible to the tutor viewing their own profile */}
+          {isOwnProfile && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className={`rounded-3xl shadow-lg p-6 mb-8 ${
+                isProfileIncomplete
+                  ? "bg-red-50 border-2 border-red-200"
+                  : "bg-green-50 border-2 border-green-200"
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                {isProfileIncomplete && (
+                  <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
+                )}
+                {!isProfileIncomplete && (
+                  <div className="w-6 h-6 text-green-600 shrink-0 mt-1">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex-1">
+                  <h3
+                    className={`text-lg font-bold mb-2 ${
+                      isProfileIncomplete ? "text-red-800" : "text-green-800"
+                    }`}
+                  >
+                    Profile Completion: {completionPercentage}%
+                  </h3>
+
+                  {/* Progress Bar */}
+                  <div className="w-full bg-gray-300 rounded-full h-3 mb-4 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-500 ${
+                        isProfileIncomplete ? "bg-red-500" : "bg-green-500"
+                      }`}
+                      style={{ width: `${completionPercentage}%` }}
+                    ></div>
+                  </div>
+
+                  {isProfileIncomplete ? (
+                    <div>
+                      <p className="text-red-700 font-semibold mb-2">
+                        ⚠️ Your profile is not fully completed
+                      </p>
+                      <p className="text-red-600 text-sm mb-3">
+                        Your profile will NOT be shown to students until it
+                        reaches 80% completion. Currently at{" "}
+                        {completionPercentage}% - you need to complete{" "}
+                        {80 - completionPercentage}% more.
+                      </p>
+                      <Link
+                        href={`/complete-profile/${tutor.id}`}
+                        className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                      >
+                        Complete Your Profile
+                      </Link>
+                    </div>
+                  ) : (
+                    <p className="text-green-700 text-sm font-semibold">
+                      ✓ Your profile is complete and visible to all students!
+                    </p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content */}

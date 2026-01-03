@@ -7,7 +7,6 @@ import {
   DollarSign,
   Calendar,
   AlertCircle,
-  Info,
   LogIn,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -19,7 +18,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 const proposalSchema = z.object({
-  id: z.string().min(1, "Teacher ID is required"), // Tutor/Teacher ID is mandatory
   rate: z.string().min(1, "Please specify your expected rate"),
   schedule: z.string().min(10, "Please provide your availability details"),
   proposal: z
@@ -41,8 +39,8 @@ export default function ApplyJobModal({
   isOpen,
   onClose,
   job,
-  tutorId,
-}: ApplyJobModalProps) {
+}: // tutorId,
+ApplyJobModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { user, isAuthenticated } = useAuth();
@@ -117,42 +115,39 @@ export default function ApplyJobModal({
     try {
       setSubmitError(null);
 
-      const tutorIdFromForm =
-        data.id && data.id.trim() ? parseInt(data.id, 10) : null;
+      // Use logged-in tutor's ID from auth context
+      const finalTutorId = user?.id ? parseInt(String(user.id), 10) : null;
 
-      const finalTutorId =
-        tutorId != null ? parseInt(String(tutorId), 10) : tutorIdFromForm;
+      if (!finalTutorId || finalTutorId <= 0) {
+        throw new Error(
+          "Unable to identify your tutor ID. Please log in again."
+        );
+      }
 
       interface ApplicationPayload {
         rate: number;
         schedule: string;
         proposal: string;
-        tuitionJobId?: string | number;
-        tutorId?: number | null;
+        tutorId: string; // MongoDB ObjectId as string
+        tuitionJobId: string; // MongoDB ObjectId as string
       }
       const applicationPayload: ApplicationPayload = {
         rate: parseInt(data.rate, 10),
         schedule: data.schedule,
         proposal: data.proposal,
-        tuitionJobId: job?._id,
+        tutorId: String(finalTutorId), // Convert to string for MongoDB
+        tuitionJobId: String(job?._id), // Use _id from job object
       };
-
-      if (finalTutorId && finalTutorId > 0) {
-        applicationPayload.tutorId = finalTutorId;
-      }
 
       console.log("Submitting application payload:", applicationPayload);
 
-      const response = await fetch(
-        "https://pro-assignment-twelve-server.vercel.app/applications",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(applicationPayload),
-        }
-      );
+      const response = await fetch("http://localhost:5000/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(applicationPayload),
+      });
 
       const result = await response.json();
 
@@ -214,7 +209,7 @@ export default function ApplyJobModal({
               className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 relative">
+              <div className="bg-linear-to-r from-blue-600 to-purple-600 text-white p-6 relative">
                 <button
                   onClick={handleClose}
                   className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-colors"
@@ -334,24 +329,6 @@ export default function ApplyJobModal({
                     </div>
                   </div>
 
-                  {/* Teacher ID */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      <Info className="w-4 h-4 inline mr-2" />
-                      Teacher ID*
-                    </label>
-                    <input
-                      {...register("id")}
-                      type="text"
-                      placeholder="e.g., 1 (Strapi auto-generated ID)"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                    />
-                    {errors.id && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.id.message}
-                      </p>
-                    )}
-                  </div>
                   {/* Expected Rate */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">

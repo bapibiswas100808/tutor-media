@@ -128,8 +128,7 @@ export default function AdminDashboard({
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
   const BACKEND_BASE =
-    process.env.NEXT_PUBLIC_API_BASE ||
-    "https://pro-assignment-twelve-server.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000";
 
   async function toggleField(
     type: "tutor" | "job",
@@ -267,54 +266,61 @@ export default function AdminDashboard({
   };
 
   // Delete handlers
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://pro-assignment-twelve-server.vercel.app";
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  const handleDelete = async (
-    type: "tutor" | "job" | "application",
-    id: number | string
+  // Toggle Application Status (Soft Delete)
+  const toggleApplicationStatus = async (
+    applicationId: string,
+    shouldDelete: boolean
   ) => {
-    const confirmed = window.confirm("Are you sure you want to delete?");
-    if (!confirmed) return;
+    const key = `application-${applicationId}`;
+    setLoadingMap((s) => ({ ...s, [key]: true }));
+    setError(null);
 
-    let endpoint = "";
+    // Optimistic update
+    setApplications((prev) =>
+      prev.map((a) =>
+        a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a
+      )
+    );
 
-    if (type === "tutor") {
-      endpoint = `${API_BASE}/allTutors/delete/${id}`;
-    } else if (type === "job") {
-      endpoint = `${API_BASE}/tuitionJobs/delete/${id}`;
-    } else {
-      endpoint = `${API_BASE}/applications/delete/${id}`;
-    }
+    try {
+      const res = await fetch(`${API_BASE}/applications/${applicationId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isDeleted: shouldDelete }),
+      });
 
-    const res = await fetch(endpoint, { method: "PATCH" });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text);
-    }
-
-    // ✅ REMOVE FROM UI
-    if (type === "tutor") {
-      setTutors((prev) =>
-        prev.filter((t) => String(t.id ?? t._id) !== String(id))
+      alert(
+        shouldDelete
+          ? "Application soft deleted successfully"
+          : "Application restored successfully"
       );
-    }
-
-    if (type === "job") {
-      setJobs((prev) =>
-        prev.filter((j) => String(j.id ?? j._id) !== String(id))
-      );
-    }
-
-    if (type === "application") {
+    } catch (err: unknown) {
+      // Revert optimistic update on error
       setApplications((prev) =>
-        prev.filter((a) => String(a.id ?? a._id) !== String(id))
+        prev.map((a) =>
+          a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a
+        )
       );
-    }
 
-    alert("Deleted successfully");
+      let message = "Update failed";
+      if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === "string") {
+        message = err;
+      }
+
+      setError(message);
+      alert(message);
+    } finally {
+      setLoadingMap((s) => ({ ...s, [key]: false }));
+    }
   };
 
   return (
@@ -788,60 +794,100 @@ export default function AdminDashboard({
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
                   <thead>
-                    <tr className="text-left">
+                    <tr className="text-left bg-gray-50">
                       <th className="px-3 py-2">ID</th>
-                      <th className="px-3 py-2">Job</th>
-                      <th className="px-3 py-2">Tutor IDs</th>
+                      <th className="px-3 py-2">Job Title</th>
+                      <th className="px-3 py-2">Subject</th>
+                      <th className="px-3 py-2">Tutor Name</th>
+                      <th className="px-3 py-2">Email</th>
                       <th className="px-3 py-2">Rate</th>
                       <th className="px-3 py-2">Schedule</th>
-                      <th className="px-3 py-2">Proposal</th>
                       <th className="px-3 py-2">Created</th>
+                      <th className="px-3 py-2">Status</th>
                       <th className="px-3 py-2">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {currentApplicationItems.length === 0 ? (
                       <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={7}>
+                        <td className="px-3 py-2" colSpan={10}>
                           No applications found
                         </td>
                       </tr>
                     ) : (
                       currentApplicationItems.map((a) => {
-                        const job = jobs.find((j) => j.id === a.tuition_job);
+                        // Use aggregated job from response
+                        const jobTitle =
+                          a.job?.title || `Job (${a.tuitionJobId})`;
+                        const jobSubject = a.job?.subject || "-";
+                        const tutorName =
+                          a.tutor?.fullName || `Tutor (${a.tutorId})`;
+                        const tutorEmail = a.tutor?.email || "-";
+                        const isDeleted = a.isDeleted || false;
+
+                        // Debug log
+                        console.log("Application data:", {
+                          _id: a._id,
+                          tutorId: a.tutorId,
+                          tutor: a.tutor,
+                          tutorName,
+                          job: a.job,
+                        });
+
                         return (
-                          <tr key={a.id} className="border-t">
-                            <td className="px-3 py-2">{a.id}</td>
-                            <td className="px-3 py-2">
-                              {job?.title ?? a.tuition_job}
+                          <tr
+                            key={a._id}
+                            className={`border-t ${
+                              isDeleted ? "bg-red-50" : ""
+                            }`}
+                          >
+                            <td className="px-3 py-2 text-xs font-mono">
+                              {String(a._id).slice(-8)}
+                            </td>
+                            <td className="px-3 py-2 font-medium">
+                              {jobTitle}
+                            </td>
+                            <td className="px-3 py-2">{jobSubject}</td>
+                            <td className="px-3 py-2 font-medium">
+                              {tutorName}
+                            </td>
+                            <td className="px-3 py-2 text-xs">{tutorEmail}</td>
+                            <td className="px-3 py-2 font-semibold">
+                              {a.rate} Tk
+                            </td>
+                            <td className="px-3 py-2 text-xs truncate">
+                              {a.schedule}
+                            </td>
+                            <td className="px-3 py-2 text-xs">
+                              {new Date(a.createdAt).toLocaleDateString()}
                             </td>
                             <td className="px-3 py-2">
-                              {a.tutor_hubs?.join(", ") ?? "-"}
-                            </td>
-                            <td className="px-3 py-2">{a.rate}</td>
-                            <td className="px-3 py-2">{a.schedule}</td>
-                            <td className="px-3 py-2">{a.proposal}</td>
-                            <td className="px-3 py-2">
-                              {new Date(a.createdAt).toLocaleString()}
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-semibold ${
+                                  isDeleted
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-green-100 text-green-800"
+                                }`}
+                              >
+                                {isDeleted ? "Deleted" : "Active"}
+                              </span>
                             </td>
                             <td className="px-3 py-2">
                               <div className="flex gap-2">
                                 <button
                                   onClick={() =>
-                                    handleUpdate("application", a.id)
+                                    toggleApplicationStatus(a._id, !isDeleted)
                                   }
-                                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                  View
-                                </button>
-
-                                <button
-                                  onClick={() =>
-                                    handleDelete("application", a.id)
+                                  disabled={
+                                    !!loadingMap[`application-${a._id}`]
                                   }
-                                  className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                                  className={`px-2 py-1 text-xs rounded text-white transition-colors ${
+                                    isDeleted
+                                      ? "bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                      : "bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+                                  }`}
                                 >
-                                  Delete
+                                  {isDeleted ? "Restore" : "Soft Delete"}
                                 </button>
                               </div>
                             </td>
@@ -1062,18 +1108,22 @@ export default function AdminDashboard({
                     try {
                       const token = localStorage.getItem("token");
 
-                      // Filter out immutable fields
-                      const {
-                        _id,
-                        id,
-                        createdAt,
-                        updatedAt,
-                        verifiedAt,
-                        approvedAt,
-                        premiumAt,
-                        role,
-                        ...updateData
-                      } = editFormData;
+                      // Create updateData without immutable fields
+                      const updateData = Object.fromEntries(
+                        Object.entries(editFormData).filter(
+                          ([key]) =>
+                            ![
+                              "_id",
+                              "id",
+                              "createdAt",
+                              "updatedAt",
+                              "verifiedAt",
+                              "approvedAt",
+                              "premiumAt",
+                              "role",
+                            ].includes(key)
+                        )
+                      );
 
                       const res = await fetch(
                         `${API_BASE}/allTutors/update/${editingTutor.id}`,
@@ -1094,7 +1144,7 @@ export default function AdminDashboard({
                         );
                       }
 
-                      const updatedData = await res.json();
+                      await res.json(); // Consume response
 
                       // Update local state
                       setTutors((prev) =>

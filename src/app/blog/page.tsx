@@ -20,12 +20,9 @@ export default async function BlogPage() {
   let blogs: BlogPost[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allBlogs",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch("http://localhost:5000/allBlogs", {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();
