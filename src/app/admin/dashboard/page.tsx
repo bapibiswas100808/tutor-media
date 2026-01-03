@@ -27,7 +27,7 @@ export default async function AdminDashboardPage() {
     tutorHubs = [];
   }
 
-  let tuituionJobs: TuitionJob[] = [];
+  let tutionJobs: TuitionJob[] = [];
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allJobs`, {
@@ -36,11 +36,11 @@ export default async function AdminDashboardPage() {
 
     if (res.ok) {
       const data = await res.json();
-      tuituionJobs = Array.isArray(data) ? data : [];
+      tutionJobs = Array.isArray(data) ? data : [];
     }
   } catch (error) {
     console.error("Backend not available:", error);
-    tuituionJobs = []; // fallback
+    tutionJobs = []; // fallback
   }
 
   let applications: Application[] = [];
@@ -71,7 +71,7 @@ export default async function AdminDashboardPage() {
         <div className="container mx-auto">
           <AdminDashboard
             tutors={tutorHubs}
-            jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
+            jobs={tutionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
             applications={applications}
           />
         </div>

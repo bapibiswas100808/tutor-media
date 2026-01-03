@@ -66,7 +66,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const completionPercentage = calculateCompletionPercentage(tutor);
   const isProfileIncomplete = completionPercentage < 80;
   const imageUrl = tutor?.image || null;
-  const router = useRouter();
 
   if (!tutor) {
     return (
