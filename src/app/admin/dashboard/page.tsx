@@ -12,7 +12,7 @@ export default async function AdminDashboardPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allTutors", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
       cache: "no-store",
     });
 
@@ -30,7 +30,7 @@ export default async function AdminDashboardPage() {
   let tuituionJobs: TuitionJob[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allJobs", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allJobs`, {
       cache: "no-store",
     });
 
@@ -45,7 +45,7 @@ export default async function AdminDashboardPage() {
 
   let applications: Application[] = [];
   try {
-    const res = await fetch("http://localhost:5000/applications", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
       cache: "no-store",
     });
     if (res.ok) {

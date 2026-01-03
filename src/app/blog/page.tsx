@@ -20,7 +20,7 @@ export default async function BlogPage() {
   let blogs: BlogPost[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allBlogs", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allBlogs`, {
       cache: "no-store",
     });
 

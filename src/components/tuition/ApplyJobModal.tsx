@@ -141,7 +141,7 @@ ApplyJobModalProps) {
 
       console.log("Submitting application payload:", applicationPayload);
 
-      const response = await fetch("http://localhost:5000/applications", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

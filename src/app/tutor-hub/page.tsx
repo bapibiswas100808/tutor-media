@@ -14,7 +14,7 @@ export default async function TutorHubsPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch("http://localhost:5000/allTutors", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
       cache: "no-store",
     });
 

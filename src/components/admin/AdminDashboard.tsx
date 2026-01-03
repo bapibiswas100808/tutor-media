@@ -129,7 +129,7 @@ export default function AdminDashboard({
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
   const BACKEND_BASE =
-    process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   async function toggleField(
     type: "tutor" | "job",
@@ -236,7 +236,7 @@ export default function AdminDashboard({
     if (!newTitle || newTitle === job.title) return;
 
     try {
-      const res = await fetch(`${API_BASE}/tuitionJobs/update/${id}`, {
+      const res = await fetch(`${BACKEND_BASE}/tuitionJobs/update/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: newTitle }),
@@ -259,21 +259,18 @@ export default function AdminDashboard({
       Swal.fire({
         icon: "success",
         title: "Success!",
-        text: "Profile updated successfully! ✅",
+        text: "Profile updated successfully!",
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
         Swal.fire({
           icon: "error",
           title: "Update Failed",
-          text: error instanceof Error ? error.message : "Something went wrong",
+          text: error instanceof Error ? error.message : "Something went wrong!",
         });
       }
     }
   };
-
-  // Delete handlers
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
@@ -281,10 +278,26 @@ export default function AdminDashboard({
     shouldDelete: boolean
   ) => {
     const key = `application-${applicationId}`;
+
+    // 🔔 Confirm first
+    const result = await Swal.fire({
+      title: shouldDelete ? "Delete application?" : "Restore application?",
+      text: shouldDelete
+        ? "This application will be soft deleted."
+        : "This application will be restored.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
+    });
+
+    if (!result.isConfirmed) return;
+
     setLoadingMap((s) => ({ ...s, [key]: true }));
     setError(null);
 
-    // Optimistic update
+    // ✅ Optimistic update
     setApplications((prev) =>
       prev.map((a) =>
         a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a
@@ -292,7 +305,7 @@ export default function AdminDashboard({
     );
 
     try {
-      const res = await fetch(`${API_BASE}/applications/${applicationId}`, {
+      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isDeleted: shouldDelete }),
@@ -300,34 +313,55 @@ export default function AdminDashboard({
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text);
+        throw new Error(text || "Update failed");
       }
 
-      alert(
-        shouldDelete
-          ? "Application soft deleted successfully"
-          : "Application restored successfully"
-      );
-    } catch (err: unknown) {
-      // Revert optimistic update on error
+      // ✅ Success toast
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: shouldDelete ? "Application deleted" : "Application restored",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
+    } catch (err) {
+      // 🔄 Revert optimistic update
       setApplications((prev) =>
         prev.map((a) =>
           a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a
         )
       );
 
-      let message = "Update failed";
-      if (err instanceof Error) {
-        message = err.message;
-      } else if (typeof err === "string") {
-        message = err;
-      }
+      const message = err instanceof Error ? err.message : "Update failed";
 
       setError(message);
-      alert(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Action failed",
+        text: message,
+      });
     } finally {
       setLoadingMap((s) => ({ ...s, [key]: false }));
     }
+  };
+
+  // onfirm Action function
+  const confirmAction = async (isDeleted: boolean) => {
+    return Swal.fire({
+      title: isDeleted ? "Restore tutor?" : "Delete tutor?",
+      text: isDeleted
+        ? "This tutor will be restored."
+        : "This tutor will be soft deleted.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: isDeleted ? "Yes, Restore" : "Yes, Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: isDeleted ? "#16a34a" : "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
   };
 
   return (
@@ -491,7 +525,23 @@ export default function AdminDashboard({
                           <td className="px-3 py-2">
                             <div className="flex gap-2">
                               <button
-                                onClick={() => {
+                                onClick={async () => {
+                                  const result = await Swal.fire({
+                                    title: "Edit Tutor?",
+                                    text: "You are about to edit this tutor's information.",
+                                    icon: "question",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Yes, Edit",
+                                    cancelButtonText: "Cancel",
+                                    confirmButtonColor: "#2563eb", // blue-600
+                                    cancelButtonColor: "#6b7280", // gray-500
+                                    background: "#111827", // gray-900 (optional)
+                                    color: "#F9FAFB",
+                                  });
+
+                                  if (!result.isConfirmed) return;
+
+                                  // ✅ Proceed to edit
                                   setEditingTutor(t);
                                   setEditFormData(t);
                                 }}
@@ -499,31 +549,28 @@ export default function AdminDashboard({
                               >
                                 Edit
                               </button>
+
                               <button
                                 onClick={async () => {
                                   try {
-                                    const confirmed = window.confirm(
-                                      `Are you sure you want to ${
-                                        t.isDeleted ? "restore" : "delete"
-                                      } this tutor?`
+                                    const result = await confirmAction(
+                                      t.isDeleted
                                     );
-                                    if (!confirmed) return;
+                                    if (!result.isConfirmed) return;
 
                                     const endpoint = t.isDeleted
-                                      ? `${API_BASE}/allTutors/restore/${t.id}`
-                                      : `${API_BASE}/allTutors/delete/${t.id}`;
+                                      ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
+                                      : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
 
                                     const res = await fetch(endpoint, {
                                       method: "PATCH",
                                     });
                                     if (!res.ok) {
                                       const text = await res.text();
-                                      throw new Error(text);
+                                      throw new Error(text || "Action failed");
                                     }
 
-                                    // const data = await res.json();
-
-                                    // Update local state
+                                    // ✅ Update local state
                                     setTutors((prev) =>
                                       prev.map((u) =>
                                         u.id === t.id || u._id === t._id
@@ -532,18 +579,19 @@ export default function AdminDashboard({
                                       )
                                     );
 
+                                    // ✅ Success toast
                                     Swal.fire({
+                                      toast: true,
+                                      position: "top-end",
                                       icon: "success",
                                       title: t.isDeleted
-                                        ? "Restored!"
-                                        : "Deleted!",
-                                      text: t.isDeleted
-                                        ? "Item restored successfully"
-                                        : "Item deleted successfully",
-                                      background: "#111827", // Tailwind gray-900
-                                      color: "#F9FAFB",
-                                      timer: 1800,
+                                        ? "Tutor restored"
+                                        : "Tutor deleted",
                                       showConfirmButton: false,
+                                      timer: 2000,
+                                      timerProgressBar: true,
+                                      background: "#111827",
+                                      color: "#F9FAFB",
                                     });
                                   } catch (error: unknown) {
                                     Swal.fire({
@@ -726,8 +774,8 @@ export default function AdminDashboard({
                                     if (!result.isConfirmed) return;
 
                                     const endpoint = j.isDeleted
-                                      ? `${API_BASE}/allJobs/restore/${j.id}`
-                                      : `${API_BASE}/allJobs/delete/${j.id}`;
+                                      ? `${BACKEND_BASE}/allJobs/restore/${j.id}`
+                                      : `${BACKEND_BASE}/allJobs/delete/${j.id}`;
 
                                     const res = await fetch(endpoint, {
                                       method: "PATCH",
@@ -1194,7 +1242,7 @@ export default function AdminDashboard({
                       );
 
                       const res = await fetch(
-                        `${API_BASE}/allTutors/update/${editingTutor.id}`,
+                        `${BACKEND_BASE}/allTutors/update/${editingTutor.id}`,
                         {
                           method: "PATCH",
                           headers: {

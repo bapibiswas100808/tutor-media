@@ -9,6 +9,7 @@ import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Calculate profile completion percentage
 const calculateCompletionPercentage = (tutor: Tutor | null): number => {

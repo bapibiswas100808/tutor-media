@@ -154,11 +154,13 @@ export default function HireTutorForm() {
     setValue("preferredArea", "");
   }, [districtValue, setValue]);
 
-  const onSubmit = async (data: HireTutorFormData) => {
-    setIsSubmitting(true);
+const onSubmit = async (data: HireTutorFormData) => {
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch("http://localhost:5000/allJobs", {
+  try {
+    const response = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/allJobs",
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,12 +171,6 @@ export default function HireTutorForm() {
           isApproved: false,
           isPremium: false,
         }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Failed to submit application");
       }
     );
 
