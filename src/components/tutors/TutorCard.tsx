@@ -5,11 +5,13 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   BadgeCheck,
+  // BaggageClaim,
+  // LocationEdit,
+  // NotebookText,
+  Paperclip,
   ShieldCheck,
   Star,
-  University,
-  MapPinned,
-  BookA,
+  // AlertCircle,
 } from "lucide-react";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import { useAuth } from "@/context/AuthContext";
@@ -31,7 +33,8 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
     setProfileCompletion(calculateProfileCompletion(tutor));
   }, [tutor]);
 
-  const isOwnProfile = isAuthenticated && user?.id === tutor.id;
+  const isOwnProfile = isAuthenticated && user && user.id === tutor.id;
+  // const isProfileComplete = profileCompletion >= 80; // Used in commented code
   const isPremiumProfile = profileCompletion === 100;
 
   return (

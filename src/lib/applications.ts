@@ -1,19 +1,25 @@
 import { createPublic, find } from "@/lib/strapi";
+import { Tutor } from "@/data/tutorsList";
+import { TuitionJob } from "@/data/tuitionJobsList";
 
 export interface ApplicationData {
   rate: number;
   schedule: string;
   proposal: string;
-  tuition_job: number; // Job ID
-  tutor_hubs?: number[]; // Optional: tutor profile IDs if available
+  tutorId: string; // MongoDB ObjectId
+  tuitionJobId: string; // MongoDB ObjectId
 }
 
 export interface Application extends ApplicationData {
   _id: string;
-  id: number;
+  id?: number;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   publishedAt?: string;
+  isDeleted?: boolean;
+  // Fields populated from aggregation pipeline
+  job?: Partial<TuitionJob>; // Job object from lookup
+  tutor?: Partial<Tutor>; // Tutor object from lookup
 }
 
 /**
@@ -39,7 +45,8 @@ export async function submitApplication(data: ApplicationData) {
     console.error("Error submitting application:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to submit application",
+      error:
+        error instanceof Error ? error.message : "Failed to submit application",
     };
   }
 }
@@ -74,7 +81,8 @@ export async function getJobApplications(jobId: number) {
     console.error("Error fetching job applications:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to fetch applications",
+      error:
+        error instanceof Error ? error.message : "Failed to fetch applications",
       data: [],
     };
   }
@@ -110,7 +118,8 @@ export async function getTutorApplications(tutorId: number) {
     console.error("Error fetching tutor applications:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to fetch applications",
+      error:
+        error instanceof Error ? error.message : "Failed to fetch applications",
       data: [],
     };
   }
@@ -121,10 +130,7 @@ export async function getTutorApplications(tutorId: number) {
  */
 export async function getApplicationById(applicationId: number) {
   try {
-    const response = await find(
-      `applications/${applicationId}`,
-      {}
-    );
+    const response = await find(`applications/${applicationId}`, {});
 
     if (response.error) {
       throw new Error(response.error.message || "Failed to fetch application");
@@ -138,7 +144,8 @@ export async function getApplicationById(applicationId: number) {
     console.error("Error fetching application:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to fetch application",
+      error:
+        error instanceof Error ? error.message : "Failed to fetch application",
     };
   }
 }
@@ -168,7 +175,7 @@ export async function getApplicationCount(jobId: number) {
     // Specify the type for response.data if possible, otherwise use unknown[]
     return {
       success: true,
-      count: (Array.isArray(response.data) ? response.data.length : 0),
+      count: Array.isArray(response.data) ? response.data.length : 0,
     };
   } catch (error) {
     console.error("Error counting applications:", error);
