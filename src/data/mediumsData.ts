@@ -6,6 +6,7 @@ export interface ClassItem {
   subtitle: string;
   description: string;
   image: string;
+  innerImg?: string;
   subjects?: string[];
   duration?: string;
 }
@@ -36,6 +37,7 @@ export const mediumsData: MediumData[] = [
         description:
           "প্লে-গ্রুপ হলো শিশুর ঘর থেকে স্কুলের পরিবেশে মানিয়ে নেওয়ার প্রথম ধাপ। আমাদের বিশেষায়িত শিক্ষকরা খেলার ছলে শিশুদের সামাজিকীকরণ, কথা বলা এবং নিয়ম মেনে চলার অভ্যাস গড়ে তোলেন। আমরা নিশ্চিত করি যেন পড়ালেখা তাদের কাছে ভয়ের কারণ না হয়ে আনন্দের উৎস হয়।",
         image: "/images/banglaMedium/play.png",
+        innerImg: "/images/banglaMedium/play-inner.png",
         subjects: [
           "মৌখিক ছড়া আবৃত্তি ও গান (Rhymes)",
           "রঙ, ফল, ও পশু-পাখি পরিচিতি",

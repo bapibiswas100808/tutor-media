@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import BasicInfo, { BasicInfoData } from "./tabs/basicInfo";
 import Education, { EducationEntry } from "./tabs/education";
 import Availability, { AvailabilityData } from "./tabs/availability";
+import Swal from "sweetalert2";
 
 const tabs = ["Basic Info", "Education", "Availability"];
 
@@ -31,6 +32,10 @@ export default function CompleteProfileClient({ tutorId }: Props) {
       router.push(`/complete-profile/${user.id}`);
     }
   }, [isLoading, isAuthenticated, user, tutorId, router]);
+
+  // Security flag: only render if user owns this profile
+  const isOwnProfile =
+    !isLoading && isAuthenticated && user && String(user.id) === tutorId;
 
   // =========================
   // STATES - MUST BE FIRST
@@ -120,23 +125,24 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         }));
 
         // Helper: ensure entries have stable IDs
-        const fixEducationEntries = (entries?: EducationEntry[]): EducationEntry[] => {
-  if (!entries || entries.length === 0) return [createEmptyEntry()];
+        const fixEducationEntries = (
+          entries?: EducationEntry[]
+        ): EducationEntry[] => {
+          if (!entries || entries.length === 0) return [createEmptyEntry()];
 
-  return entries.map((e) => ({
-    id: e.id ?? crypto.randomUUID(),
-    academy: e.academy ?? "",
-    curriculum: e.curriculum ?? "",
-    group: e.group ?? "",
-    passingYear: e.passingYear ?? "",
-    result: e.result ?? "",
-    instituteType: e.instituteType ?? "",
-    studyType: e.studyType ?? "",
-    department: e.department ?? "",
-    cgpa: e.cgpa ?? "",
-  }));
-};
-
+          return entries.map((e) => ({
+            id: e.id ?? crypto.randomUUID(),
+            academy: e.academy ?? "",
+            curriculum: e.curriculum ?? "",
+            group: e.group ?? "",
+            passingYear: e.passingYear ?? "",
+            result: e.result ?? "",
+            instituteType: e.instituteType ?? "",
+            studyType: e.studyType ?? "",
+            department: e.department ?? "",
+            cgpa: e.cgpa ?? "",
+          }));
+        };
 
         // Inside fetchTutorData():
         setSscData(fixEducationEntries(tutor.education?.ssc));
@@ -165,8 +171,8 @@ export default function CompleteProfileClient({ tutorId }: Props) {
     );
   }
 
-  // Don't render if not authenticated (will be redirected by useEffect)
-  if (!isAuthenticated || !user || String(user.id) !== tutorId) {
+  // Don't render if not authenticated or not the same tutor (security check)
+  if (!isLoading && !isOwnProfile) {
     return null;
   }
 
@@ -213,7 +219,11 @@ export default function CompleteProfileClient({ tutorId }: Props) {
       if (!validateBasicInfo()) setActiveTab(0);
       else if (!validateEducation()) setActiveTab(1);
       else setActiveTab(2);
-      alert("Please fill all required fields correctly");
+      Swal.fire({
+        icon: "warning",
+        title: "Invalid Form",
+        text: "Please fill all required fields correctly",
+      });
       return;
     }
 
@@ -242,11 +252,18 @@ export default function CompleteProfileClient({ tutorId }: Props) {
 
       const responseData = await res.json();
       if (!res.ok) throw new Error(responseData.message || "Update failed");
-
-      alert("Profile updated successfully! ✅");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Profile updated successfully! ✅",
+      });
     } catch (error) {
       console.error("Update failed:", error);
-      alert(`Update failed. ❌ ${error instanceof Error ? error.message : ""}`);
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error instanceof Error ? error.message : "Something went wrong",
+      });
     }
   };
 
@@ -304,18 +321,53 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         </motion.div>
 
         {/* Save Button */}
-        <div className="flex justify-center">
-          <button
-            onClick={handleSave}
-            disabled={!isFormValid}
-            className={`bg-[#0D24A0] w-full text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all ${
-              !isFormValid
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-blue-700 hover:scale-105"
-            }`}
-          >
-            Save Profile
-          </button>
+        <div className="flex justify-between gap-4">
+          {/* Previous Button - Hidden on first tab */}
+          {activeTab > 0 && (
+            <button
+              onClick={() => setActiveTab(activeTab - 1)}
+              className="bg-gray-500 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all hover:bg-gray-600 hover:scale-105"
+            >
+              Previous
+            </button>
+          )}
+
+          <div className="flex-1"></div>
+
+          {/* Next Button - Show on first two tabs */}
+          {activeTab < tabs.length - 1 && (
+            <button
+              onClick={() => {
+                if (activeTab === 0 && !validateBasicInfo()) {
+                  alert("Please fill all required fields in Basic Info");
+                  return;
+                }
+                if (activeTab === 1 && !validateEducation()) {
+                  alert("Please fill all required fields in Education");
+                  return;
+                }
+                setActiveTab(activeTab + 1);
+              }}
+              className="bg-[#0D24A0] text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all hover:bg-blue-700 hover:scale-105"
+            >
+              Next
+            </button>
+          )}
+
+          {/* Save Button - Show only on last tab */}
+          {activeTab === tabs.length - 1 && (
+            <button
+              onClick={handleSave}
+              disabled={!isFormValid}
+              className={`bg-[#0D24A0] text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all ${
+                !isFormValid
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-blue-700 hover:scale-105"
+              }`}
+            >
+              Save Profile
+            </button>
+          )}
         </div>
       </div>
     </div>

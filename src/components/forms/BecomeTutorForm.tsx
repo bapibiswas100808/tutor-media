@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { divisionsAndDistricts } from "./location";
+import Swal from "sweetalert2";
+import { Eye, EyeOff } from "lucide-react";
 // import { createPublic } from "@/lib/strapi";
 
 const becomeTutorSchema = z
@@ -47,8 +49,8 @@ const experienceLevels = [
 export default function BecomeTutorForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  // const [selectedDivision, setSelectedDivision] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -148,9 +150,7 @@ export default function BecomeTutorForm() {
         `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             fullName: data.fullName,
             email: data.email,
@@ -158,11 +158,9 @@ export default function BecomeTutorForm() {
             gender: data.gender,
             division: data.division,
             location: data.location,
-            // thana: data.thana,
             locality: data.locality,
             qualification: data.qualification,
             experience: data.experience,
-            // bio: data.bio,
             password: data.password,
             isVerified: false,
             isApproved: false,
@@ -171,58 +169,73 @@ export default function BecomeTutorForm() {
         }
       );
 
+      const result = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit application");
+        throw new Error(result.message || "Failed to submit application");
       }
 
-      const result = await response.json();
       console.log("Tutor application submitted:", result);
 
-      // Redirect to complete profile with the tutor ID
+      // If ID exists → redirect
       if (result.id || result._id) {
-        const tutorId = result.id || result._id;
-        router.push(`/complete-profile/${tutorId}`);
-      } else {
-        setIsSubmitted(true);
+        await Swal.fire({
+          icon: "success",
+          title: "Application Submitted Successfully!",
+          text: "Please complete your profile to continue.",
+          confirmButtonText: "Continue",
+        });
+
+        router.push(`/complete-profile/${result.id || result._id}`);
+      }
+      // If no ID → just success message
+      else {
+        await Swal.fire({
+          icon: "success",
+          title: "Application Submitted Successfully!",
+          text: "We'll review your application and get back to you within 2–3 business days.",
+          confirmButtonText: "Submit Another Application",
+        });
+
         reset();
       }
     } catch (error) {
       console.error("Submission error:", error);
-      alert(
-        `Error submitting application: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
+
+      Swal.fire({
+        icon: "error",
+        title: "Error submitting application",
+        text: error instanceof Error ? error.message : "Something went wrong",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isSubmitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-md mx-auto text-center bg-green-50 border border-green-200 rounded-lg p-8"
-      >
-        <div className="text-6xl mb-4">🎓</div>
-        <h3 className="text-2xl font-bold text-green-800 mb-4">
-          Application Submitted Successfully!
-        </h3>
-        <p className="text-green-700 mb-6">
-          Thank you for applying to become a tutor. We&rsquo;ll review your
-          application and get back to you within 2-3 business days.
-        </p>
-        <button
-          onClick={() => setIsSubmitted(false)}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
-        >
-          Submit Another Application
-        </button>
-      </motion.div>
-    );
-  }
+  // if (isSubmitted) {
+  //   return (
+  //     <motion.div
+  //       initial={{ opacity: 0, scale: 0.9 }}
+  //       animate={{ opacity: 1, scale: 1 }}
+  //       className="max-w-md mx-auto text-center bg-green-50 border border-green-200 rounded-lg p-8"
+  //     >
+  //       <div className="text-6xl mb-4">🎓</div>
+  //       <h3 className="text-2xl font-bold text-green-800 mb-4">
+  //         Application Submitted Successfully!
+  //       </h3>
+  //       <p className="text-green-700 mb-6">
+  //         Thank you for applying to become a tutor. We&rsquo;ll review your
+  //         application and get back to you within 2-3 business days.
+  //       </p>
+  //       <button
+  //         onClick={() => setIsSubmitted(false)}
+  //         className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
+  //       >
+  //         Submit Another Application
+  //       </button>
+  //     </motion.div>
+  //   )
+  // }
 
   return (
     <motion.form
@@ -526,23 +539,34 @@ export default function BecomeTutorForm() {
       </div> */}
 
       {/* Security */}
+      {/* Security */}
       <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Security</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Password *
             </label>
-            <input
-              {...register("password")}
-              type="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-              placeholder="Enter a secure password (minimum 6 characters)"
-            />
+
+            <div className="relative">
+              <input
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
+                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-700"
+                placeholder="Enter password (minimum 6 characters)"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">
                 {errors.password.message}
@@ -550,19 +574,29 @@ export default function BecomeTutorForm() {
             )}
           </div>
 
+          {/* Confirm Password */}
           <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Confirm Password *
             </label>
-            <input
-              {...register("confirmPassword")}
-              type="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-              placeholder="Confirm your password"
-            />
+
+            <div className="relative">
+              <input
+                {...register("confirmPassword")}
+                type={showConfirmPassword ? "text" : "password"}
+                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-700"
+                placeholder="Confirm your password"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
             {errors.confirmPassword && (
               <p className="mt-1 text-sm text-red-600">
                 {errors.confirmPassword.message}

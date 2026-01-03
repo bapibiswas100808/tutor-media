@@ -59,7 +59,15 @@ export default async function AdminDashboardPage() {
     );
     if (res.ok) {
       const data = await res.json();
-      applications = Array.isArray(data) ? data : [];
+      console.log("Raw applications data:", data);
+      console.log("First application:", data[0]);
+      applications = Array.isArray(data) ? data : data?.data ? data.data : [];
+    } else {
+      console.error(
+        "Failed to fetch applications - Status:",
+        res.status,
+        res.statusText
+      );
     }
   } catch (error) {
     console.error("Failed to fetch applications:", error);
