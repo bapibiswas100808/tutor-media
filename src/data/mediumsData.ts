@@ -1214,7 +1214,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏗️",
         title: "Engineering University Admission",
         subtitle: "Prepare for Engineering Entrance Exams",
-        image: "/images/engineering-ua.jpg",
+        image: "/images/admissionTest/engineeringUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/engineeringUniversityAdmission.png",
         description:
           "Comprehensive guidance for engineering university admission including exam strategies, subject preparation, and practical problem-solving skills.",
         subjects: [
@@ -1233,7 +1235,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏛️",
         title: "Public University Admission",
         subtitle: "Prepare for Public University Entrance Tests",
-        image: "/images/public-university-ua.jpg",
+        image: "/images/admissionTest/publicUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/publicUniversityAdmission.png",
         description:
           "Guidance for all public university entrance exams, focusing on key subjects, exam strategies, and mock tests for top performance.",
         subjects: [
@@ -1252,7 +1256,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏥",
         title: "Medical College Admission (Private)",
         subtitle: "Medical Entrance Preparation",
-        image: "/images/medical-college-private.jpg",
+        image: "/images/admissionTest/medicalCollegeAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/medicalCollegeAdmission.png",
         description:
           "Preparation for private medical college admissions. Includes biology, chemistry, physics, English, and past exam pattern practice.",
         subjects: [
@@ -1271,7 +1277,9 @@ export const mediumsData: MediumData[] = [
         icon: "🎓",
         title: "National University Admission",
         subtitle: "NU Undergraduate Preparation",
-        image: "/images/nu-admission.jpg",
+        image: "/images/admissionTest/nationalUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/nationalUniversityAdmission.png",
         description:
           "Guidance for National University undergraduate admission tests. Covers core subjects, study strategies, and past question practice.",
         subjects: [
@@ -1290,7 +1298,9 @@ export const mediumsData: MediumData[] = [
         icon: "🎖️",
         title: "Cadet College Admission",
         subtitle: "Prepare for Cadet College Entrance",
-        image: "/images/cadet-admission.jpg",
+        image: "/images/admissionTest/cadetCollegeAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/cadetCollegeAdmission.png",
         description:
           "Comprehensive preparation for cadet college entrance exams including academic subjects, physical fitness, IQ tests, and interview preparation.",
         subjects: [
@@ -1310,7 +1320,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏫",
         title: "School Admission",
         subtitle: "Prepare for School Entrance Tests",
-        image: "/images/school-admission.jpg",
+        image: "/images/admissionTest/schoolAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/schoolAdmission.png",
         description:
           "Preparation for school admission exams for primary and secondary levels. Covers basic subjects, logical reasoning, and general knowledge.",
         subjects: [
@@ -1425,7 +1437,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Master the Art of Drawing",
         description:
           "Our drawing program teaches fundamental techniques from basic sketching to advanced realistic drawing. Students learn perspective, shading, proportion, and various drawing styles. Whether you're a beginner or want to refine your skills, our experienced art instructors provide personalized guidance to develop your artistic abilities.",
-        image: "/images/drawing.jpg",
+        image: "/images/artsAndCreativity/drawing.png",
+        innerImg: "/images/artsAndCreativity/innerImg/drawing.png",
         subjects: [
           "Basic Sketching",
           "Shading Techniques",
@@ -1444,7 +1457,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Express Yourself Through Colors",
         description:
           "Learn various painting techniques including watercolor, acrylic, and oil painting. Our classes cover color theory, composition, different painting styles, and creative expression. Students explore various subjects from landscapes to abstract art, developing their unique artistic voice under guidance of professional artists.",
-        image: "/images/painting.jpg",
+        image: "/images/artsAndCreativity/painting.png",
+        innerImg: "/images/artsAndCreativity/innerImg/painting.png",
         subjects: [
           "Watercolor Techniques",
           "Acrylic Painting",
@@ -1463,7 +1477,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Create Three-Dimensional Masterpieces",
         description:
           "Sculpture classes teach the art of creating three-dimensional forms using various materials including clay, plaster, and mixed media. Students learn fundamental techniques, understand form and space, and develop skills in both traditional and contemporary sculpture methods. Perfect for those interested in exploring 3D artistic expression.",
-        image: "/images/sculpture.jpg",
+        image: "/images/artsAndCreativity/sculpture.png",
+        innerImg: "/images/artsAndCreativity/innerImg/sculpture.png",
         subjects: [
           "Clay Modeling",
           "Carving Techniques",
@@ -1482,7 +1497,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Capture the World Through Your Lens",
         description:
           "Photography course covers both technical and artistic aspects of creating compelling images. Learn camera operation, composition rules, lighting techniques, and post-processing. Students explore various genres including portrait, landscape, street, and commercial photography while developing their unique photographic style.",
-        image: "/images/photography.jpg",
+        image: "/images/artsAndCreativity/photography.png",
+        innerImg: "/images/artsAndCreativity/innerImg/photography.png",
         subjects: [
           "Camera Basics",
           "Composition Rules",
@@ -1501,7 +1517,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Discover Your Musical Potential",
         description:
           "Music classes offer comprehensive training in vocal or instrumental music. Learn music theory, rhythm, melody, and performance techniques. Whether you want to learn classical music, contemporary styles, or traditional instruments, our qualified music teachers provide structured lessons tailored to your goals and skill level.",
-        image: "/images/music.jpg",
+        image: "/images/artsAndCreativity/music.png",
+        innerImg: "/images/artsAndCreativity/innerImg/music.png",
         subjects: [
           "Music Theory",
           "Instrument Training",
