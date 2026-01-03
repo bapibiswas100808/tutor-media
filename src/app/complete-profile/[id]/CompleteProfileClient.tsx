@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import BasicInfo, { BasicInfoData } from "./tabs/basicInfo";
 import Education, { EducationEntry } from "./tabs/education";
 import Availability, { AvailabilityData } from "./tabs/availability";
+import Swal from "sweetalert2";
 
 const tabs = ["Basic Info", "Education", "Availability"];
 
@@ -120,23 +121,24 @@ export default function CompleteProfileClient({ tutorId }: Props) {
         }));
 
         // Helper: ensure entries have stable IDs
-        const fixEducationEntries = (entries?: EducationEntry[]): EducationEntry[] => {
-  if (!entries || entries.length === 0) return [createEmptyEntry()];
+        const fixEducationEntries = (
+          entries?: EducationEntry[]
+        ): EducationEntry[] => {
+          if (!entries || entries.length === 0) return [createEmptyEntry()];
 
-  return entries.map((e) => ({
-    id: e.id ?? crypto.randomUUID(),
-    academy: e.academy ?? "",
-    curriculum: e.curriculum ?? "",
-    group: e.group ?? "",
-    passingYear: e.passingYear ?? "",
-    result: e.result ?? "",
-    instituteType: e.instituteType ?? "",
-    studyType: e.studyType ?? "",
-    department: e.department ?? "",
-    cgpa: e.cgpa ?? "",
-  }));
-};
-
+          return entries.map((e) => ({
+            id: e.id ?? crypto.randomUUID(),
+            academy: e.academy ?? "",
+            curriculum: e.curriculum ?? "",
+            group: e.group ?? "",
+            passingYear: e.passingYear ?? "",
+            result: e.result ?? "",
+            instituteType: e.instituteType ?? "",
+            studyType: e.studyType ?? "",
+            department: e.department ?? "",
+            cgpa: e.cgpa ?? "",
+          }));
+        };
 
         // Inside fetchTutorData():
         setSscData(fixEducationEntries(tutor.education?.ssc));
@@ -213,7 +215,11 @@ export default function CompleteProfileClient({ tutorId }: Props) {
       if (!validateBasicInfo()) setActiveTab(0);
       else if (!validateEducation()) setActiveTab(1);
       else setActiveTab(2);
-      alert("Please fill all required fields correctly");
+      Swal.fire({
+        icon: "warning",
+        title: "Invalid Form",
+        text: "Please fill all required fields correctly",
+      });
       return;
     }
 
@@ -242,11 +248,18 @@ export default function CompleteProfileClient({ tutorId }: Props) {
 
       const responseData = await res.json();
       if (!res.ok) throw new Error(responseData.message || "Update failed");
-
-      alert("Profile updated successfully! ✅");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Profile updated successfully! ✅",
+      });
     } catch (error) {
       console.error("Update failed:", error);
-      alert(`Update failed. ❌ ${error instanceof Error ? error.message : ""}`);
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error instanceof Error ? error.message : "Something went wrong",
+      });
     }
   };
 

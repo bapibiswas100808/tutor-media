@@ -24,6 +24,7 @@
     "react-hook-form": "^7.65.0",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.26.17",
     "zod": "^4.1.12"
   },
   "devDependencies": {

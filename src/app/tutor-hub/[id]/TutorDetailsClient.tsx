@@ -7,9 +7,12 @@ import Image from "next/image";
 import { NotebookText, Paperclip } from "lucide-react";
 import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
+import { useRouter } from "next/navigation";
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const imageUrl = tutor?.image || null;
+  const router = useRouter();
+
   if (!tutor) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -177,12 +180,15 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       >
                         Hire Tutor
                       </Link> */}
-                      <Link
-                        href={`/complete-profile/${tutor.id}`}
-                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/complete-profile/${tutor.id}`);
+                        }}
+                        className="w-full bg-purple-600 text-white p-3 font-semibold rounded-lg hover:bg-purple-700 cursor-pointer"
                       >
                         Complete Profile
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>
