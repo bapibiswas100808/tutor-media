@@ -8,10 +8,12 @@ import {
   // BaggageClaim,
   // LocationEdit,
   // NotebookText,
-  Paperclip,
+  // AlertCircle,
   ShieldCheck,
   Star,
-  // AlertCircle,
+  University,
+  BookA,
+  MapPinned,
 } from "lucide-react";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import { useAuth } from "@/context/AuthContext";

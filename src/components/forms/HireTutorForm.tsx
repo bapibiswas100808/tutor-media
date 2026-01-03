@@ -85,7 +85,6 @@ const modes = ["Online Tutoring", "Home Tutoring", "Group Classes", "All"];
 
 export default function HireTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const {
     register,
@@ -176,39 +175,31 @@ export default function HireTutorForm() {
       if (!response.ok) {
         throw new Error(result?.message || "Failed to submit application");
       }
-    );
 
-    const result = await response.json();
+      console.log("Tutor application submitted:", result);
 
-    if (!response.ok) {
-      throw new Error(result?.message || "Failed to submit application");
+      await Swal.fire({
+        icon: "success",
+        title: "Job Posted Successfully!",
+        text: "Your tutor requirement has been submitted.",
+        confirmButtonText: "Post Another Job",
+        confirmButtonColor: "#16A34A",
+      });
+
+      reset();
+      // setIsSubmitted(true); ❌ not needed unless used elsewhere
+    } catch (error) {
+      console.error("Submission error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: error instanceof Error ? error.message : "Something went wrong",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    console.log("Tutor application submitted:", result);
-
-    await Swal.fire({
-      icon: "success",
-      title: "Job Posted Successfully!",
-      text: "Your tutor requirement has been submitted.",
-      confirmButtonText: "Post Another Job",
-      confirmButtonColor: "#16A34A",
-    });
-
-    reset();
-    // setIsSubmitted(true); ❌ not needed unless used elsewhere
-  } catch (error) {
-    console.error("Submission error:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Submission Failed",
-      text: error instanceof Error ? error.message : "Something went wrong",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
 
   // if (isSubmitted) {
   //   return (
