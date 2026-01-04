@@ -26,16 +26,16 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-6 text-center lg:text-left flex flex-col items-center lg:items-start"
+            className="space-y-2 text-center lg:text-left flex flex-col items-center lg:items-start"
           >
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
               {bannerData.heading}
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-600 max-w-xl">
+            <p className="text-xl md:text-2xl font-medium text-gray-600 max-w-xl">
               {bannerData.subHeading}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start mt-8">
               <Link
                 href="/hire-tutor"
                 className="bg-[#0D24A0] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
@@ -64,73 +64,39 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative w-full h-full lg:flex flex-wrap justify-center items-center gap-6 lg:justify-end hidden"
           >
-            {/* Top Left */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: -10, x: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl rounded-br-none overflow-hidden shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
-              style={{ zIndex: 4 }}
-            >
-              <div className="absolute inset-0 bg-white/10 rounded-3xl rounded-br-none z-10" />
-              <Image
-                src="/images/banner/4.png"
-                alt="Creative Learning"
-                fill
-                className="object-cover rounded-3xl rounded-br-none"
-              />
-            </motion.div>
+            {/* Function to generate same animation for all cards */}
+            {[
+  { src: "/images/banner/4.png", rounded: "rounded-br-none", z: 4, phase: 0 },
+  { src: "/images/banner/2.png", rounded: "rounded-bl-none", z: 3, phase: 1 },
+  { src: "/images/banner/3.png", rounded: "rounded-tr-none", z: 2, phase: 2 },
+  { src: "/images/banner/1.png", rounded: "rounded-tl-none", z: 1, phase: 3 },
+].map((img, index) => (
+  <motion.div
+    key={img.src}
+    initial={{ opacity: 0, scale: 0.8 }}
+   animate={{
+      opacity: 1,
+      x: [0, 12, 0, -12, 0],
+      y: [0, -12, 0, 12, 0],
+    }}
+    transition={{
+      duration: 8,
+      delay: img.phase * 0.6,
+      repeat: Infinity,
+      ease: "linear",
+    }}
 
-            {/* Top Right */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: -5, x: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl rounded-bl-none overflow-hidden shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
-              style={{ zIndex: 3 }}
-            >
-              <div className="absolute inset-0 bg-white/20 rounded-3xl rounded-bl-none z-10" />
-              <Image
-                src="/images/banner/2.png"
-                alt="Creative Learning"
-                fill
-                className="object-cover rounded-3xl rounded-bl-none"
-              />
-            </motion.div>
 
-            {/* Bottom Left */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 10, x: -5 }}
-              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl rounded-tr-none overflow-hidden shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
-              style={{ zIndex: 2 }}
-            >
-              <div className="absolute inset-0 bg-white/20 rounded-3xl rounded-tr-none z-10" />
-              <Image
-                src="/images/banner/3.png"
-                alt="Creative Learning"
-                fill
-                className="object-cover rounded-3xl rounded-tr-none"
-              />
-            </motion.div>
 
-            {/* Bottom Right */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 5, x: 5 }}
-              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl rounded-tl-none overflow-hidden shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
-              style={{ zIndex: 1 }}
-            >
-              <div className="absolute inset-0 bg-white/20 rounded-3xl rounded-tl-none z-10" />
-              <Image
-                src="/images/banner/1.png"
-                alt="Creative Learning"
-                fill
-                className="object-cover rounded-3xl rounded-tl-none"
-              />
-            </motion.div>
+    whileHover={{ scale: 1.1, zIndex: 10 }}
+    className={`relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl ${img.rounded} overflow-hidden shadow-2xl transition-all`}
+    style={{ zIndex: img.z }}
+  >
+    <div className="absolute inset-0 bg-white/20 backdrop-blur-md z-10" />
+    <Image src={img.src} alt="Banner" fill className="object-cover relative z-20" />
+  </motion.div>
+))}
+
           </motion.div>
         </div>
       </div>
