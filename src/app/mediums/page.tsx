@@ -8,7 +8,7 @@ import { mediumsData } from "@/data/mediumsData";
 export default function MediumsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-10 md:py-20">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto px-4 ">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -35,38 +35,43 @@ export default function MediumsPage() {
             >
               <Link href={`/mediums/${medium.slug}`}>
                 <motion.div
-  whileHover={{ y: -6 }}
-  transition={{ duration: 0.25, ease: "easeOut" }}
-  className="group relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col"
->
-  {/* Image Section */}
-  <div className="relative w-full h-44 bg-gray-50 rounded-t-2xl overflow-hidden">
-    <Image
-      src={medium.image || "/placeholder.png"}
-      alt={medium.name}
-      fill
-      className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
-      sizes="(max-width: 768px) 100vw, 33vw"
-    />
-  </div>
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="group relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col"
+                >
+                  {/* Image Section */}
+                  {/* Image Section */}
+<div className="relative w-full h-48 rounded-t-2xl overflow-hidden">
+  <Image
+    src={medium.image || "/placeholder.png"}
+    alt={medium.name}
+    fill
+    className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+    sizes="(max-width: 768px) 100vw, 33vw"
+    priority
+  />
 
-  {/* Content */}
-  <div className="flex flex-col flex-1 px-5 py-4 text-center">
-    <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-      {medium.name}
-    </h3>
+  {/* Gradient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+</div>
 
-    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-      {medium.description}
-    </p>
 
-    {/* CTA */}
-    <button className="mt-auto pt-4 text-sm font-semibold text-blue-800 group-hover:text-blue-600 transition">
-      View Details →
-    </button>
-  </div>
-</motion.div>
+                  {/* Content */}
+                  <div className="flex flex-col flex-1 px-5 py-4 text-center">
+                    <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+                      {medium.name}
+                    </h3>
 
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                      {medium.description}
+                    </p>
+
+                    {/* CTA */}
+                    <button className="mt-auto pt-4 text-sm font-semibold text-blue-800 group-hover:text-blue-600 transition cursor-pointer">
+                      View Details →
+                    </button>
+                  </div>
+                </motion.div>
               </Link>
             </motion.div>
           ))}
