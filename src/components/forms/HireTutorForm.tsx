@@ -7,7 +7,6 @@ import { z } from "zod";
 import { motion } from "framer-motion";
 import { divisionsAndDistricts } from "./location";
 import Swal from "sweetalert2";
-// import { createPublic } from "@/lib/strapi";
 
 const hireTutorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -153,81 +152,51 @@ export default function HireTutorForm() {
     setValue("preferredArea", "");
   }, [districtValue, setValue]);
 
-  const onSubmit = async (data: HireTutorFormData) => {
-    setIsSubmitting(true);
+const onSubmit = async (data: HireTutorFormData) => {
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch(
-        "https://pro-assignment-twelve-server.vercel.app/allJobs",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...data,
-            isVerified: false,
-            isApproved: false,
-            isPremium: false,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Failed to submit application");
+  try {
+    const response = await fetch(
+      "https://pro-assignment-twelve-server.vercel.app/allJobs",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          isVerified: false,
+          isApproved: false,
+          isPremium: false,
+        }),
       }
+    ); // <-- Closing parenthesis here
 
-      console.log("Tutor application submitted:", result);
+    const result = await response.json(); // parse the response
+    console.log("Tutor application submitted:", result);
 
-      await Swal.fire({
-        icon: "success",
-        title: "Job Posted Successfully!",
-        text: "Your tutor requirement has been submitted.",
-        confirmButtonText: "Post Another Job",
-        confirmButtonColor: "#16A34A",
-      });
+    await Swal.fire({
+      icon: "success",
+      title: "Job Posted Successfully!",
+      text: "Your tutor requirement has been submitted.",
+      confirmButtonText: "Post Another Job",
+      confirmButtonColor: "#16A34A",
+    });
 
-      reset();
-      // setIsSubmitted(true); ❌ not needed unless used elsewhere
-    } catch (error) {
-      console.error("Submission error:", error);
+    reset();
+  } catch (error) {
+    console.error("Submission error:", error);
 
-      Swal.fire({
-        icon: "error",
-        title: "Submission Failed",
-        text: error instanceof Error ? error.message : "Something went wrong",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    Swal.fire({
+      icon: "error",
+      title: "Submission Failed",
+      text: error instanceof Error ? error.message : "Something went wrong",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-  // if (isSubmitted) {
-  //   return (
-  //     <motion.div
-  //       initial={{ opacity: 0, scale: 0.9 }}
-  //       animate={{ opacity: 1, scale: 1 }}
-  //       className="max-w-md mx-auto text-center bg-green-50 border border-green-200 rounded-lg p-8"
-  //     >
-  //       <div className="text-6xl mb-4">✅</div>
-  //       <h3 className="text-2xl font-bold text-green-800 mb-4">
-  //         Request Submitted Successfully!
-  //       </h3>
-  //       <p className="text-green-700 mb-6">
-  //         We&rsquo;ve received your tuition request. Our tutors will start
-  //         applying within 24 hours.
-  //       </p>
-  //       <button
-  //         onClick={() => setIsSubmitted(false)}
-  //         className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
-  //       >
-  //         Submit Another Request
-  //       </button>
-  //     </motion.div>
-  //   );
-  // }
 
   return (
     <motion.form

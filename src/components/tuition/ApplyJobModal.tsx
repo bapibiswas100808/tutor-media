@@ -141,16 +141,13 @@ ApplyJobModalProps) {
 
       console.log("Submitting application payload:", applicationPayload);
 
-      const response = await fetch(
-        "https://pro-assignment-twelve-server.vercel.app/applications",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(applicationPayload),
-        }
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(applicationPayload),
+      });
 
       const result = await response.json();
 

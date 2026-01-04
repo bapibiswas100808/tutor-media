@@ -12,12 +12,9 @@ export default async function AdminDashboardPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allTutors",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();
@@ -30,33 +27,27 @@ export default async function AdminDashboardPage() {
     tutorHubs = [];
   }
 
-  let tuituionJobs: TuitionJob[] = [];
+  let tutionJobs: TuitionJob[] = [];
 
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/allJobs",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allJobs`, {
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = await res.json();
-      tuituionJobs = Array.isArray(data) ? data : [];
+      tutionJobs = Array.isArray(data) ? data : [];
     }
   } catch (error) {
     console.error("Backend not available:", error);
-    tuituionJobs = []; // fallback
+    tutionJobs = []; // fallback
   }
 
   let applications: Application[] = [];
   try {
-    const res = await fetch(
-      "https://pro-assignment-twelve-server.vercel.app/applications",
-      {
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+      cache: "no-store",
+    });
     if (res.ok) {
       const data = await res.json();
       console.log("Raw applications data:", data);
@@ -80,7 +71,7 @@ export default async function AdminDashboardPage() {
         <div className="container mx-auto">
           <AdminDashboard
             tutors={tutorHubs}
-            jobs={tuituionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
+            jobs={tutionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
             applications={applications}
           />
         </div>

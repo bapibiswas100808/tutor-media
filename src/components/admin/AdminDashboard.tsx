@@ -46,6 +46,10 @@ export default function AdminDashboard({
   const [error, setError] = useState<string | null>(null);
   const [editingTutor, setEditingTutor] = useState<Tutor | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<Tutor>>({});
+  const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
+  const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
+    {}
+  );
 
   //   useEffect(() => {
   //     const userJson = localStorage.getItem("user");
@@ -129,8 +133,7 @@ export default function AdminDashboard({
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
   const BACKEND_BASE =
-    process.env.NEXT_PUBLIC_API_BASE ||
-    "https://pro-assignment-twelve-server.vercel.app";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   async function toggleField(
     type: "tutor" | "job",
@@ -226,57 +229,53 @@ export default function AdminDashboard({
   }
 
   // Update handlers
-  const handleUpdate = async (
-    type: "job" | "tutor" | "application",
-    id: string | number
-  ) => {
-    const job = jobs.find((j) => j.id === id || j._id === id);
-    if (!job) return;
+  // const handleUpdate = async (
+  //   type: "job" | "tutor" | "application",
+  //   id: string | number
+  // ) => {
+  //   const job = jobs.find((j) => j.id === id || j._id === id);
+  //   if (!job) return;
 
-    const newTitle = window.prompt("Enter new title", job.title);
-    if (!newTitle || newTitle === job.title) return;
+  //   const newTitle = window.prompt("Enter new title", job.title);
+  //   if (!newTitle || newTitle === job.title) return;
 
-    try {
-      const res = await fetch(`${API_BASE}/tuitionJobs/update/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: newTitle }),
-      });
+  //   try {
+  //     const res = await fetch(`${BACKEND_BASE}/tuitionJobs/update/${id}`, {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ title: newTitle }),
+  //     });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text);
-      }
+  //     if (!res.ok) {
+  //       const text = await res.text();
+  //       throw new Error(text);
+  //     }
 
-      const data = await res.json();
+  //     const data = await res.json();
 
-      // ✅ Update local state
-      setJobs((prev) =>
-        prev.map((j) =>
-          j.id === id || j._id === id ? { ...j, title: data.title } : j
-        )
-      );
+  //     // ✅ Update local state
+  //     setJobs((prev) =>
+  //       prev.map((j) =>
+  //         j.id === id || j._id === id ? { ...j, title: data.title } : j
+  //       )
+  //     );
 
-      Swal.fire({
-        icon: "success",
-        title: "Success!",
-        text: "Profile updated successfully! ✅",
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: error instanceof Error ? error.message : "Something went wrong",
-        });
-      }
-    }
-  };
-
-  // Delete handlers
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://pro-assignment-twelve-server.vercel.app";
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Success!",
+  //       text: "Profile updated successfully!",
+  //     });
+  //   } catch (error: unknown) {
+  //     if (error instanceof Error) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Update Failed",
+  //         text:
+  //           error instanceof Error ? error.message : "Something went wrong!",
+  //       });
+  //     }
+  //   }
+  // };
 
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
@@ -284,10 +283,26 @@ export default function AdminDashboard({
     shouldDelete: boolean
   ) => {
     const key = `application-${applicationId}`;
+
+    // 🔔 Confirm first
+    const result = await Swal.fire({
+      title: shouldDelete ? "Delete application?" : "Restore application?",
+      text: shouldDelete
+        ? "This application will be soft deleted."
+        : "This application will be restored.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
+    });
+
+    if (!result.isConfirmed) return;
+
     setLoadingMap((s) => ({ ...s, [key]: true }));
     setError(null);
 
-    // Optimistic update
+    // ✅ Optimistic update
     setApplications((prev) =>
       prev.map((a) =>
         a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a
@@ -295,7 +310,7 @@ export default function AdminDashboard({
     );
 
     try {
-      const res = await fetch(`${API_BASE}/applications/${applicationId}`, {
+      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isDeleted: shouldDelete }),
@@ -303,34 +318,55 @@ export default function AdminDashboard({
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text);
+        throw new Error(text || "Update failed");
       }
 
-      alert(
-        shouldDelete
-          ? "Application soft deleted successfully"
-          : "Application restored successfully"
-      );
-    } catch (err: unknown) {
-      // Revert optimistic update on error
+      // ✅ Success toast
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: shouldDelete ? "Application deleted" : "Application restored",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
+    } catch (err) {
+      // 🔄 Revert optimistic update
       setApplications((prev) =>
         prev.map((a) =>
           a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a
         )
       );
 
-      let message = "Update failed";
-      if (err instanceof Error) {
-        message = err.message;
-      } else if (typeof err === "string") {
-        message = err;
-      }
+      const message = err instanceof Error ? err.message : "Update failed";
 
       setError(message);
-      alert(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Action failed",
+        text: message,
+      });
     } finally {
       setLoadingMap((s) => ({ ...s, [key]: false }));
     }
+  };
+
+  // onfirm Action function
+  const confirmAction = async (isDeleted: boolean) => {
+    return Swal.fire({
+      title: isDeleted ? "Restore tutor?" : "Delete tutor?",
+      text: isDeleted
+        ? "This tutor will be restored."
+        : "This tutor will be soft deleted.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: isDeleted ? "Yes, Restore" : "Yes, Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: isDeleted ? "#16a34a" : "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
   };
 
   return (
@@ -494,7 +530,23 @@ export default function AdminDashboard({
                           <td className="px-3 py-2">
                             <div className="flex gap-2">
                               <button
-                                onClick={() => {
+                                onClick={async () => {
+                                  const result = await Swal.fire({
+                                    title: "Edit Tutor?",
+                                    text: "You are about to edit this tutor's information.",
+                                    icon: "question",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Yes, Edit",
+                                    cancelButtonText: "Cancel",
+                                    confirmButtonColor: "#2563eb", // blue-600
+                                    cancelButtonColor: "#6b7280", // gray-500
+                                    background: "#111827", // gray-900 (optional)
+                                    color: "#F9FAFB",
+                                  });
+
+                                  if (!result.isConfirmed) return;
+
+                                  // ✅ Proceed to edit
                                   setEditingTutor(t);
                                   setEditFormData(t);
                                 }}
@@ -502,31 +554,28 @@ export default function AdminDashboard({
                               >
                                 Edit
                               </button>
+
                               <button
                                 onClick={async () => {
                                   try {
-                                    const confirmed = window.confirm(
-                                      `Are you sure you want to ${
-                                        t.isDeleted ? "restore" : "delete"
-                                      } this tutor?`
+                                    const result = await confirmAction(
+                                      t.isDeleted
                                     );
-                                    if (!confirmed) return;
+                                    if (!result.isConfirmed) return;
 
                                     const endpoint = t.isDeleted
-                                      ? `${API_BASE}/allTutors/restore/${t.id}`
-                                      : `${API_BASE}/allTutors/delete/${t.id}`;
+                                      ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
+                                      : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
 
                                     const res = await fetch(endpoint, {
                                       method: "PATCH",
                                     });
                                     if (!res.ok) {
                                       const text = await res.text();
-                                      throw new Error(text);
+                                      throw new Error(text || "Action failed");
                                     }
 
-                                    // const data = await res.json();
-
-                                    // Update local state
+                                    // ✅ Update local state
                                     setTutors((prev) =>
                                       prev.map((u) =>
                                         u.id === t.id || u._id === t._id
@@ -535,18 +584,19 @@ export default function AdminDashboard({
                                       )
                                     );
 
+                                    // ✅ Success toast
                                     Swal.fire({
+                                      toast: true,
+                                      position: "top-end",
                                       icon: "success",
                                       title: t.isDeleted
-                                        ? "Restored!"
-                                        : "Deleted!",
-                                      text: t.isDeleted
-                                        ? "Item restored successfully"
-                                        : "Item deleted successfully",
-                                      background: "#111827", // Tailwind gray-900
-                                      color: "#F9FAFB",
-                                      timer: 1800,
+                                        ? "Tutor restored"
+                                        : "Tutor deleted",
                                       showConfirmButton: false,
+                                      timer: 2000,
+                                      timerProgressBar: true,
+                                      background: "#111827",
+                                      color: "#F9FAFB",
                                     });
                                   } catch (error: unknown) {
                                     Swal.fire({
@@ -687,18 +737,20 @@ export default function AdminDashboard({
                               <button
                                 onClick={async () => {
                                   const result = await Swal.fire({
-                                    title: "Update Job?",
-                                    text: "You are about to update this job.",
+                                    title: "Edit Job?",
+                                    text: "You are about to edit this job's details.",
                                     icon: "question",
                                     showCancelButton: true,
-                                    confirmButtonColor: "#2563eb", // blue-600
+                                    confirmButtonText: "Yes, Edit",
+                                    cancelButtonText: "Cancel",
+                                    confirmButtonColor: "#2563eb",
                                     cancelButtonColor: "#6b7280",
-                                    confirmButtonText: "Yes, Update",
                                   });
 
                                   if (!result.isConfirmed) return;
 
-                                  handleUpdate("job", j.id);
+                                  setEditingJob(j);
+                                  setEditJobFormData(j);
                                 }}
                                 className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
                               >
@@ -729,8 +781,8 @@ export default function AdminDashboard({
                                     if (!result.isConfirmed) return;
 
                                     const endpoint = j.isDeleted
-                                      ? `${API_BASE}/allJobs/restore/${j.id}`
-                                      : `${API_BASE}/allJobs/delete/${j.id}`;
+                                      ? `${BACKEND_BASE}/allJobs/restore/${j.id}`
+                                      : `${BACKEND_BASE}/allJobs/delete/${j.id}`;
 
                                     const res = await fetch(endpoint, {
                                       method: "PATCH",
@@ -1197,7 +1249,7 @@ export default function AdminDashboard({
                       );
 
                       const res = await fetch(
-                        `${API_BASE}/allTutors/update/${editingTutor.id}`,
+                        `${BACKEND_BASE}/allTutors/update/${editingTutor.id}`,
                         {
                           method: "PATCH",
                           headers: {
@@ -1261,6 +1313,172 @@ export default function AdminDashboard({
                   Cancel
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Job Modal */}
+      {editingJob && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
+            <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Title</label>
+                <input
+                  type="text"
+                  value={editJobFormData.title || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  value={editJobFormData.subject || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      subject: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={editJobFormData.location || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      location: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Budget</label>
+                <input
+                  type="text"
+                  value={editJobFormData.budget || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      budget: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={async () => {
+                  try {
+                    // 🔔 Step 1: Show confirmation
+                    const result = await Swal.fire({
+                      title: "Save changes?",
+                      text: "Are you sure you want to update this job?",
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonColor: "#16a34a", // green
+                      cancelButtonColor: "#6b7280", // gray
+                      confirmButtonText: "Yes, Save",
+                      cancelButtonText: "Cancel",
+                    });
+
+                    if (!result.isConfirmed) return; // ❌ Stop if cancelled
+
+                    // 🔔 Step 2: Proceed with update
+                    const token = localStorage.getItem("token");
+
+                    // Only include defined fields
+                    const updateData = Object.fromEntries(
+                      Object.entries(editJobFormData).filter(
+                        ([v]) => v !== undefined
+                      )
+                    );
+
+                    const res = await fetch(
+                      `${BACKEND_BASE}/allJobs/update/${editingJob.id}`,
+                      {
+                        method: "PATCH",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(updateData),
+                      }
+                    );
+
+                    if (!res.ok) {
+                      const errData = await res.json().catch(() => null);
+                      throw new Error(
+                        errData?.message || "Failed to update job"
+                      );
+                    }
+
+                    // const data = await res.json();
+
+                    // ✅ Update local state
+                    setJobs((prev) =>
+                      prev.map((j) =>
+                        j.id === editingJob.id || j._id === editingJob._id
+                          ? { ...j, ...editJobFormData }
+                          : j
+                      )
+                    );
+
+                    setEditingJob(null);
+
+                    // ✅ Success toast
+                    Swal.fire({
+                      toast: true,
+                      position: "top-end",
+                      icon: "success",
+                      title: "Job updated successfully",
+                      showConfirmButton: false,
+                      timer: 2500,
+                      timerProgressBar: true,
+                    });
+                  } catch (err) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Update failed",
+                      text:
+                        err instanceof Error
+                          ? err.message
+                          : "Something went wrong",
+                    });
+                  }
+                }}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Save Changes
+              </button>
+
+              <button
+                onClick={() => setEditingJob(null)}
+                className="flex-1 px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

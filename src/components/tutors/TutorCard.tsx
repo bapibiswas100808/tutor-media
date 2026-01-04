@@ -5,15 +5,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   BadgeCheck,
-  // BaggageClaim,
-  // LocationEdit,
-  // NotebookText,
-  // AlertCircle,
+  BookA,
+  MapPinned,
   ShieldCheck,
   Star,
   University,
-  BookA,
-  MapPinned,
 } from "lucide-react";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import { useAuth } from "@/context/AuthContext";
