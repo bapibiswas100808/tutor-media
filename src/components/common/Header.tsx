@@ -93,7 +93,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="shrink-0 flex items-center ">
+          <Link href="/" className="shrink-0 flex items-center hover:scale-105 transition-transform">
             <Image
               src="/images/logo.png"
               alt="Tutor Media Logo"
@@ -110,7 +110,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-blue-600 font-semibold text-xl transition-colors duration-200"
+                className="text-gray-700 hover:text-blue-600 font-semibold text-xl duration-200  hover:scale-105 transition-transform"
               >
                 {item.name}
               </Link>
@@ -156,7 +156,7 @@ export default function Header() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999]"
+                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] "
                     >
                       <div className="px-4 py-3 border-b border-gray-200">
                         <p className="font-semibold text-gray-800">

@@ -37,7 +37,7 @@ export const mediumsData: MediumData[] = [
         description:
           "প্লে-গ্রুপ হলো শিশুর ঘর থেকে স্কুলের পরিবেশে মানিয়ে নেওয়ার প্রথম ধাপ। আমাদের বিশেষায়িত শিক্ষকরা খেলার ছলে শিশুদের সামাজিকীকরণ, কথা বলা এবং নিয়ম মেনে চলার অভ্যাস গড়ে তোলেন। আমরা নিশ্চিত করি যেন পড়ালেখা তাদের কাছে ভয়ের কারণ না হয়ে আনন্দের উৎস হয়।",
         image: "/images/banglaMedium/play.png",
-        innerImg: "/images/banglaMedium/play-inner.png",
+        innerImg: "/images/banglaMedium/innerImg/play.png",
         subjects: [
           "মৌখিক ছড়া আবৃত্তি ও গান (Rhymes)",
           "রঙ, ফল, ও পশু-পাখি পরিচিতি",
@@ -55,6 +55,7 @@ export const mediumsData: MediumData[] = [
         description:
           "নার্সারি ক্লাসে আমরা শিশুদের অক্ষরের সাথে পরিচয় করিয়ে দিই। পেন্সিল ধরা থেকে শুরু করে সুন্দর হাতের লেখার ভিত্তি এখান থেকেই তৈরি হয়। আমাদের টিউটররা প্রতিটি শিশুকে আলাদা যত্ন নেন যাতে তারা আত্মবিশ্বাসের সাথে বর্ণমালা ও সংখ্যা শিখতে পারে।",
         image: "/images/banglaMedium/nursery.png",
+        innerImg: "/images/banglaMedium/innerImg/nursery.png",
         subjects: [
           "বাংলা ও ইংরেজি বর্ণমালা লিখন ও পঠন",
           "১-৫০ পর্যন্ত সংখ্যা গণনা ও ধারণা",
@@ -72,6 +73,7 @@ export const mediumsData: MediumData[] = [
         description:
           "কেজি ক্লাসটি প্লে-স্কুল এবং ফরমাল স্কুলের সেতুবন্ধন। এই ধাপে আমরা বাংলা ও ইংরেজি রিডিং পড়ার ওপর জোর দিই। গণিতের প্রাথমিক যোগ-বিয়োগ এবং সাধারণ জ্ঞানের মাধ্যমে শিশুদের প্রাইমারি লেভেলের চ্যালেঞ্জ মোকাবিলার জন্য প্রস্তুত করা হয়।",
         image: "/images/banglaMedium/kg.png",
+        innerImg: "/images/banglaMedium/innerImg/kg.png",
         subjects: [
           "যুক্তবর্ণ ছাড়া শব্দ ও বাক্য গঠন",
           "বেসিক যোগ, বিয়োগ ও নামতা (১-১০)",
@@ -89,6 +91,7 @@ export const mediumsData: MediumData[] = [
         description:
           "প্রথম শ্রেণিতে বইয়ের সংখ্যা বাড়ে এবং পড়ালেখার কাঠামো নির্দিষ্ট হয়। আমাদের অভিজ্ঞ টিউটররা এনসিটিবি (NCTB) পাঠ্যবই অনুসরণ করে বাংলা ও ইংরেজি রিডিং এবং গণিতের ভীতি দূর করতে সাহায্য করেন।",
         image: "/images/banglaMedium/class-1.png",
+        innerImg: "/images/banglaMedium/innerImg/class-1.png",
         subjects: [
           "সাবলীলভাবে বাংলা ও ইংরেজি রিডিং পড়া",
           "গণিতের কথায় লেখা ও স্থানীয় মান নির্ণয়",
@@ -106,6 +109,7 @@ export const mediumsData: MediumData[] = [
         description:
           "দ্বিতীয় শ্রেণিতে আমরা শিক্ষার্থীদের বানান এবং ব্যাকরণের প্রাথমিক বিষয়গুলোতে সচেতন করি। গণিতের গুণ-ভাগ এবং জ্যামিতিক আকৃতির সাথে পরিচয় করিয়ে দেওয়া হয়, যা পরবর্তী ক্লাসের জন্য অপরিহার্য।",
         image: "/images/banglaMedium/class-2.png",
+        innerImg: "/images/banglaMedium/innerImg/class-2.png",
         subjects: [
           "ইংরেজি গ্রামারের বেসিক (Noun, Pronoun)",
           "হাতের লেখা সুন্দর ও দ্রুত করার টেকনিক",
@@ -123,6 +127,7 @@ export const mediumsData: MediumData[] = [
         description:
           "তৃতীয় শ্রেণিতে 'বাংলাদেশ ও বিশ্বপরিচয়', 'প্রাথমিক বিজ্ঞান' এবং 'ধর্ম' বিষয়গুলো যুক্ত হয়। সিলেবাসের এই বিস্তৃতিতে শিক্ষার্থীরা যেন খেই হারিয়ে না ফেলে, সেজন্য আমাদের মেন্টররা প্রতিটি বিষয় বুঝিয়ে পড়ান।",
         image: "/images/banglaMedium/class-3.png",
+        innerImg: "/images/banglaMedium/innerImg/class-3.png",
         subjects: [
           "বিজ্ঞান ও সমাজ বইয়ের রিডিং ও প্রশ্ন উত্তর",
           "Tense ও Sentence Structure-এর ব্যবহার",
@@ -140,6 +145,7 @@ export const mediumsData: MediumData[] = [
         description:
           "চতুর্থ শ্রেণি থেকেই মূলত সৃজনশীল বা কাঠামোবদ্ধ প্রশ্ন পদ্ধতির চর্চা শুরু হয়। মুখস্থ না করে কীভাবে উদ্দীপক (Stem) পড়ে উত্তর লিখতে হয়, আমাদের টিউটররা সেই কৌশল শেখান। জ্যামিতি এবং ইংরেজি গ্রামারে বিশেষ জোর দেওয়া হয়।",
         image: "/images/banglaMedium/class-4.png",
+        innerImg: "/images/banglaMedium/innerImg/class-4.png",
         subjects: [
           "সৃজনশীল প্রশ্নের উত্তর লেখার নিয়ম",
           "জ্যামিতি: রেখা, কোণ ও ত্রিভুজ অঙ্কন",
@@ -157,6 +163,7 @@ export const mediumsData: MediumData[] = [
         description:
           "প্রাইমারি জীবনের শেষ ধাপ এটি। বৃত্তি পরীক্ষা বা সমাপনী পরীক্ষার প্রস্তুতির জন্য আমরা স্পেশাল কেয়ার দিই। প্রতিটি বিষয়ের অধ্যায়ভিত্তিক অনুশীলন এবং মডেল টেস্টের মাধ্যমে আমরা জিপিএ-৫ নিশ্চিত করার লক্ষ্য নিয়ে কাজ করি।",
         image: "/images/banglaMedium/class-5.png",
+        innerImg: "/images/banglaMedium/innerImg/class-5.png",
         subjects: [
           "NCTB প্রশ্নের কাঠামো অনুযায়ী পূর্ণাঙ্গ প্রস্তুতি",
           "গণিতের সৃজনশীল সমস্যা সমাধান (শতকরা, গড়)",
@@ -174,6 +181,7 @@ export const mediumsData: MediumData[] = [
         description:
           "হাইস্কুলে ওঠার পর 'পাটিগণিত'-এর সাথে 'বীজগণিত' (Algebra) যুক্ত হয়, যা শিক্ষার্থীদের কাছে সম্পূর্ণ নতুন। এছাড়াও বিজ্ঞান ও আইসিটি বিষয়গুলো বিস্তারিত হয়। এই ট্রানজিশন পিরিয়ডে আমরা শিক্ষার্থীদের কনসেপ্ট ক্লিয়ার করতে সাহায্য করি।",
         image: "/images/banglaMedium/class-6.png",
+        innerImg: "/images/banglaMedium/innerImg/class-6.png",
         subjects: [
           "বীজগণিতের সূত্র ও চলকের ধারণা (Algebra Basics)",
           "তথ্য ও যোগাযোগ প্রযুক্তি (ICT) পরিচিতি",
@@ -191,6 +199,7 @@ export const mediumsData: MediumData[] = [
         description:
           "সপ্তম শ্রেণিতে পড়াশোনার গভীরতা বাড়ে। গণিতে জ্যামিতি ও তথ্য উপাত্ত এবং ইংরেজিতে ভয়েস চেঞ্জ ও ন্যারেশনের মতো জটিল বিষয়গুলো সহজভাবে বুঝিয়ে দেওয়া হয়। আমরা শিক্ষার্থীদের মুখস্থের বদলে বুঝে পড়ার প্রতি উৎসাহিত করি।",
         image: "/images/banglaMedium/class-7.png",
+        innerImg: "/images/banglaMedium/innerImg/class-7.png",
         subjects: [
           "বীজগণিতীয় রাশির গুণ-ভাগ ও উৎপাদক",
           "ইংরেজি গ্রামারের অ্যাডভান্সড টপিকস",
@@ -208,6 +217,7 @@ export const mediumsData: MediumData[] = [
         description:
           "অষ্টম শ্রেণি হলো নবম শ্রেণিতে গ্রুপ (সায়েন্স/আর্টস/কমার্স) নির্বাচনের ভিত্তি। জেএসসি বা বার্ষিক পরীক্ষার সিলেবাস কাভার করার পাশাপাশি আমরা গণিত ও বিজ্ঞানে বিশেষ জোর দিই, যাতে ভবিষ্যতে সায়েন্স নিতে ইচ্ছুক শিক্ষার্থীদের ভিত্তি মজবুত হয়।",
         image: "/images/banglaMedium/class-8.png",
+        innerImg: "/images/banglaMedium/innerImg/class-8.png",
         subjects: [
           "পাটিগণিত, বীজগণিত ও জ্যামিতির সম্পূর্ণ সিলেবাস",
           "বিজ্ঞানের রাসায়নিক বিক্রিয়া ও বর্তনী",
@@ -225,6 +235,7 @@ export const mediumsData: MediumData[] = [
         description:
           "জীবনের সবচেয়ে গুরুত্বপূর্ণ মোড়। সায়েন্স (পদার্থ, রসায়ন, উচ্চতর গণিত), কমার্স (হিসাববিজ্ঞান, ফিন্যান্স) কিংবা আর্টস—বিভাগ যাই হোক, আমাদের এক্সপার্ট টিউটররা প্রতিটি বিষয়ের গভীরে গিয়ে পড়ান। বেসিক কনসেপ্ট ক্লিয়ার করাই এই বছরের মূল লক্ষ্য।",
         image: "/images/banglaMedium/class-9.png",
+        innerImg: "/images/banglaMedium/innerImg/class-9.png",
         subjects: [
           "বিভাগভিত্তিক (Group Subjects) গভীর আলোচনা",
           "উচ্চতর গণিত ও বিজ্ঞানের ব্যবহারিক থিওরি",
@@ -242,6 +253,7 @@ export const mediumsData: MediumData[] = [
         description:
           "দশম শ্রেণি মানেই রিভিশন এবং পরীক্ষার কৌশল আয়ত্ত করা। টেস্ট পেপার সলভ, টাইম ম্যানেজমেন্ট এবং বোর্ড স্ট্যান্ডার্ড পরীক্ষার মাধ্যমে আমরা শিক্ষার্থীদের এসএসসির চূড়ান্ত লড়াইয়ের জন্য প্রস্তুত করি। আমাদের লক্ষ্য—সেরা ফলাফল।",
         image: "/images/banglaMedium/class-10.png",
+        innerImg: "/images/banglaMedium/innerImg/class-10.png",
         subjects: [
           "টেস্ট পেপার সলভ ও বোর্ড প্রশ্ন বিশ্লেষণ",
           "MCQ-তে ভালো করার শর্টকাট টেকনিক",
@@ -259,6 +271,7 @@ export const mediumsData: MediumData[] = [
         description:
           "এসএসসির তুলনায় এইচএসসির সিলেবাস অনেক বিশাল, কিন্তু সময় কম। কলেজ জীবনের শুরুতেই সঠিক গাইডলাইন না পেলে শিক্ষার্থীরা পিছিয়ে পড়ে। আমরা ক্যালকুলাস, অর্গানিক কেমিস্ট্রি বা ইকোনমিক্সের মতো কঠিন বিষয়গুলোকে শুরু থেকেই সহজ করে তুলি।",
         image: "/images/banglaMedium/class-11.png",
+        innerImg: "/images/banglaMedium/innerImg/class-11.png",
         subjects: [
           "১ম ও ২য় পত্রের বেসিক কনসেপ্ট ক্লিয়ারেন্স",
           "Engineering/Medical এডমিশনের প্রাক-প্রস্তুতি",
@@ -276,6 +289,7 @@ export const mediumsData: MediumData[] = [
         description:
           "এইচএসসি পরীক্ষার ভালো ফলাফলের ওপর নির্ভর করে ভালো বিশ্ববিদ্যালয়ে ভর্তির সুযোগ। আমাদের টিউটররা বোর্ড পরীক্ষার রিভিশনের পাশাপাশি এডমিশন টেস্টের জন্য প্রয়োজনীয় টিপস দেন। শেষ মুহূর্তের প্রস্তুতিতে আমরা কোনো ছাড় দিই না।",
         image: "/images/banglaMedium/class-12.png",
+        innerImg: "/images/banglaMedium/innerImg/class-12.png",
         subjects: [
           "সাজেশন ভিত্তিক চূড়ান্ত রিভিশন প্রোগ্রাম",
           "বুয়েট/মেডিকেল/ভার্সিটি স্ট্যান্ডার্ড প্রশ্ন সলভ",
@@ -302,6 +316,7 @@ export const mediumsData: MediumData[] = [
         title: "Early Childhood Learning",
         subtitle: "A Nurturing Start to Discovery",
         image: "/images/englishMedium/pre-schooling.png",
+        innerImg: "/images/englishMedium/innerImg/pre-schooling.png",
         description:
           "The very first step away from home should be filled with warmth. Our pre-schooling program focuses on emotional comfort and separation anxiety management, helping toddlers interact with the world through sensory play and care.",
         subjects: [
@@ -320,6 +335,7 @@ export const mediumsData: MediumData[] = [
         title: "Play Group Classes",
         subtitle: "Learning Through Joyful Exploration",
         image: "/images/englishMedium/play-group.png",
+        innerImg: "/images/englishMedium/innerImg/play-group.png",
         description:
           "Curiosity peaks at this age. We channel that energy into structured play. Our tutors use interactive methods to introduce the basics of language and logic without any academic pressure, ensuring your child loves the concept of learning.",
         subjects: [
@@ -338,6 +354,7 @@ export const mediumsData: MediumData[] = [
         title: "Kindergarten Program",
         subtitle: "Bridging Play and Formal Schooling",
         image: "/images/englishMedium/kg.png",
+        innerImg: "/images/englishMedium/innerImg/kg.png",
         description:
           "KG is the preparatory ground for Big School. We focus on transitioning from oral learning to writing. Our mentors ensure your child develops the patience to sit, write, and read, setting a strong foundation for Standard 1.",
         subjects: [
@@ -357,6 +374,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Building Strong Academic Roots",
         image: "/images/englishMedium/standard-1.png",
+        innerImg: "/images/englishMedium/innerImg/standard-1.png",
         description:
           "As formal exams begin, many students face a confidence dip. We provide gentle, personalized support to help them navigate their first textbooks, ensuring they grasp the core concepts of Math and English rather than just memorizing.",
         subjects: [
@@ -374,6 +392,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Growing Confidence in Core Subjects",
         image: "/images/englishMedium/standard-2.png",
+        innerImg: "/images/englishMedium/innerImg/standard-2.png",
         description:
           "We encourage independent thinking. At this stage, our tutors focus on reading comprehension and mental math. We ensure that the student isn't just copying from the board but understanding the 'why' behind every answer.",
         subjects: [
@@ -391,6 +410,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Exploring New Subjects with Ease",
         image: "/images/englishMedium/standard-3.png",
+        innerImg: "/images/englishMedium/innerImg/standard-3.png",
         description:
           "The curriculum expands here. As Science and Geography become more detailed, we help students connect textbook theories with real-world examples. This prevents rote learning and builds a genuine interest in the subjects.",
         subjects: [
@@ -408,6 +428,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Mastering Logic and Analysis",
         image: "/images/englishMedium/standard-4.png",
+        innerImg: "/images/englishMedium/innerImg/standard-4.png",
         description:
           "The academic workload increases significantly in Standard 4. Our tutors focus on time management and structured answering techniques. We strengthen the foundation in Grammar and Math to prepare them for upper primary challenges.",
         subjects: [
@@ -425,6 +446,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Preparation for Middle School",
         image: "/images/englishMedium/standard-5.png",
+        innerImg: "/images/englishMedium/innerImg/standard-5.png",
         description:
           "This is a transition year. We prepare students for the rigors of middle school by introducing more complex analytical skills. Our focus is on ensuring they are self-disciplined and ready for subject-specialized learning.",
         subjects: [
@@ -442,6 +464,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "The Shift to Critical Thinking",
         image: "/images/englishMedium/standard-6.png",
+        innerImg: "/images/englishMedium/innerImg/standard-6.png",
         description:
           "In Standard 6, students move from 'learning facts' to 'analyzing facts'. Our subject-specialist tutors guide them through Algebra, Literature analysis, and the Scientific Method, ensuring they don't struggle with the jump in syllabus difficulty.",
         subjects: [
@@ -459,6 +482,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Strengthening the Academic Core",
         image: "/images/englishMedium/standard-7.png",
+        innerImg: "/images/englishMedium/innerImg/standard-7.png",
         description:
           "A crucial year for building the stamina required for O Levels. We focus on weakness identification—fixing any gaps in Math or English basics—so that the student enters Standard 8 with zero academic backlog.",
         subjects: [
@@ -476,6 +500,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "The Pre-O Level Launchpad",
         image: "/images/englishMedium/standard-8.png",
+        innerImg: "/images/englishMedium/innerImg/standard-8.png",
         description:
           "Standard 8 is where the O Level journey effectively begins. We help students and parents decide on subject combinations (Science/Commerce) and start introducing O Level style questions to build familiarity and confidence.",
         subjects: [
@@ -493,6 +518,7 @@ export const mediumsData: MediumData[] = [
         title: "Primary to Junior Secondary",
         subtitle: "Mastering the Syllabus Early",
         image: "/images/englishMedium/standard-9.png",
+        innerImg: "/images/englishMedium/innerImg/standard-9.png",
         description:
           "The countdown begins. We cover a significant portion of the O Level syllabus in Standard 9. Our tutors emphasize 'Concept over Memorization,' ensuring students can tackle the tricky, unseen questions typical of Cambridge/Edexcel exams.",
         subjects: [
@@ -512,6 +538,7 @@ export const mediumsData: MediumData[] = [
         title: "O Level Education",
         subtitle: "achieving Excellence in Board Exams",
         image: "/images/englishMedium/o-level.png",
+        innerImg: "/images/englishMedium/innerImg/o-level.png",
         description:
           "It’s not just about hard work; it’s about strategy. We focus on Past Paper drilling, time management, and understanding the specific marking schemes of Cambridge/Edexcel. Our goal is to secure those A*s for a top college entry.",
         subjects: [
@@ -531,6 +558,7 @@ export const mediumsData: MediumData[] = [
         title: "A Level AS",
         subtitle: "Adapting to Advanced Academics",
         image: "/images/englishMedium/a-level-as.png",
+        innerImg: "/images/englishMedium/innerImg/a-level-as.png",
         description:
           "The jump from O to A Levels is massive. Many students struggle with the depth required. Our specialized mentors provide intensive support in core subjects, ensuring the student adapts to the analytical and research-based approach of AS Level.",
         subjects: [
@@ -550,6 +578,7 @@ export const mediumsData: MediumData[] = [
         title: "A Level A2",
         subtitle: "The Final Step to Top Universities",
         image: "/images/englishMedium/a-level-a2.png",
+        innerImg: "/images/englishMedium/innerImg/a-level-a2.png",
         description:
           "This is the career-defining year. We provide rigorous academic support for the A2 finals while also offering mentorship for university applications. We ensure your child leaves school with the grades and the confidence to compete globally.",
         subjects: [
@@ -579,6 +608,7 @@ export const mediumsData: MediumData[] = [
         title: "Play Group Early Learning",
         subtitle: "Interactive Early Development",
         image: "/images/englishVersion/play-group.png",
+        innerImg: "/images/englishVersion/innerImg/play-group.png",
         description:
           "We create a playful environment where children get comfortable with English instructions while enjoying typical Bangladeshi childhood games. Our focus is on removing the fear of a foreign language through sensory activities and social interaction.",
         subjects: [
@@ -598,6 +628,7 @@ export const mediumsData: MediumData[] = [
         title: "Nursery Level",
         subtitle: "Building a Strong Foundation",
         image: "/images/englishVersion/nursery.png",
+        innerImg: "/images/englishVersion/innerImg/nursery.png",
         description:
           "Nursery is where the academic journey begins. We introduce alphabets and numbers using the National Curriculum guidelines but with modern teaching aids. We ensure your child develops a love for reading and writing in English early on.",
         subjects: [
@@ -617,6 +648,7 @@ export const mediumsData: MediumData[] = [
         title: "Kindergarten Program",
         subtitle: "Preparation for Formal Schooling",
         image: "/images/englishVersion/kg.png",
+        innerImg: "/images/englishVersion/innerImg/kg.png",
         description:
           "KG bridges the gap between play and textbooks. We focus on reading fluency and handwriting. Our tutors ensure that children can understand and respond to questions in English, preparing them for the Class 1 syllabus.",
         subjects: [
@@ -636,6 +668,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 1 Primary Education",
         subtitle: "Confident Start to Board Curriculum",
         image: "/images/englishVersion/class-1.png",
+        innerImg: "/images/englishVersion/innerImg/class-1.png",
         description:
           "Class 1 introduces formal textbooks. The challenge for English Version students is understanding the English translation of the Board books. Our tutors simplify these texts, making learning easy and enjoyable without the language barrier.",
         subjects: [
@@ -654,6 +687,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 2 Primary Education",
         subtitle: "Developing Core Skills",
         image: "/images/englishVersion/class-2.png",
+        innerImg: "/images/englishVersion/innerImg/class-2.png",
         description:
           "We focus on strengthening the basics of Math and English Grammar. Since English Version students must answer in English, we emphasize correct spelling and sentence structure from this early stage to prevent future struggles.",
         subjects: [
@@ -672,6 +706,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 3 Primary Education",
         subtitle: "Mastering New Subjects",
         image: "/images/englishVersion/class-3.png",
+        innerImg: "/images/englishVersion/innerImg/class-3.png",
         description:
           "With the introduction of 'Science' and 'Bangladesh & Global Studies,' the vocabulary load increases. Our mentors help students grasp these new terms in English while keeping the core concepts clear as per the Board syllabus.",
         subjects: [
@@ -690,6 +725,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 4 Primary Education",
         subtitle: "Introduction to Creative Writing",
         image: "/images/englishVersion/class-4.png",
+        innerImg: "/images/englishVersion/innerImg/class-4.png",
         description:
           "This is a crucial year for mastering the 'Creative Question' (Srijonshil) method. We teach students how to structure their answers in English—moving away from memorization to analytical writing.",
         subjects: [
@@ -708,6 +744,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 5 Primary Final",
         subtitle: "Primary Scholarship Preparation",
         image: "/images/englishVersion/class-5.png",
+        innerImg: "/images/englishVersion/innerImg/class-5.png",
         description:
           "The final year of primary school requires focused preparation. Whether for PECE or school finals, we cover the entire NCTB syllabus with rigorous model tests. We ensure students can write standard answers in English that yield high marks.",
         subjects: [
@@ -726,6 +763,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 6 Middle School",
         subtitle: "Transition to High School Syllabus",
         image: "/images/englishVersion/class-6.png",
+        innerImg: "/images/englishVersion/innerImg/class-6.png",
         description:
           "The jump to Algebra and higher-level Science can be tricky in the English Version. Our tutors explain the concepts clearly and ensure students are using the correct English terminologies for Math and Science proofs.",
         subjects: [
@@ -744,6 +782,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 7 Middle School",
         subtitle: "Building Analytical Depth",
         image: "/images/englishVersion/class-7.png",
+        innerImg: "/images/englishVersion/innerImg/class-7.png",
         description:
           "We focus on deep understanding. Students learn to analyze literary texts and solve complex math problems. Our goal is to make them proficient in the language so that 'translating thoughts to English' doesn't slow them down during exams.",
         subjects: [
@@ -762,6 +801,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 8 Middle School",
         subtitle: "Foundation for Board Exams",
         image: "/images/englishVersion/class-8.png",
+        innerImg: "/images/englishVersion/innerImg/class-8.png",
         description:
           "Class 8 is critical for building a strong base for the future. We provide intensive coaching for Math and Science, ensuring students are ready for the JSC standard. We focus on accuracy in writing Creative Answers in English.",
         subjects: [
@@ -780,6 +820,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 9 Secondary School",
         subtitle: "Specialized Group Coaching",
         image: "/images/englishVersion/class-9.png",
+        innerImg: "/images/englishVersion/innerImg/class-9.png",
         description:
           "Whether it’s Physics/Chemistry or Accounting/Finance, the terminology in English Version is specific. Our expert tutors bridge the gap between complex theories and the Board’s requirement for English answers.",
         subjects: [
@@ -798,6 +839,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 10 Secondary School",
         subtitle: "SSC Preparation & Excellence",
         image: "/images/englishVersion/class-10.png",
+        innerImg: "/images/englishVersion/innerImg/class-10.png",
         description:
           "The target is GPA 5. We focus on Test Paper solving, Board Question analysis, and strict time management. We ensure your child’s answer scripts meet the highest standards of the English Version Board examiners.",
         subjects: [
@@ -816,6 +858,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 11 Higher Secondary",
         subtitle: "Mastering the College Syllabus",
         image: "/images/englishVersion/class-11.png",
+        innerImg: "/images/englishVersion/innerImg/class-11.png",
         description:
           "The HSC syllabus is vast. We help students navigate the thick English Version textbooks of Physics, Chemistry, and Math. Our tutors focus on concept clarity, which is essential for both Board exams and University admission.",
         subjects: [
@@ -834,6 +877,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 12 Higher Secondary",
         subtitle: "HSC Final Prep & Admission Target",
         image: "/images/englishVersion/class-12.png",
+        innerImg: "/images/englishVersion/innerImg/class-12.png",
         description:
           "It’s the final lap. We provide strategic preparation for HSC, focusing on high-scoring topics. Simultaneously, we guide students on how to handle admission tests (BUET/Medical/Varsity) where concepts must be crystal clear.",
         subjects: [
@@ -862,6 +906,7 @@ export const mediumsData: MediumData[] = [
         title: "Play Group Early Learning",
         subtitle: "খেলার ছলে দ্বীনি শিক্ষার হাতেখড়ি",
         image: "/images/madrasahMedium/play.png",
+        innerImg: "/images/madrasahMedium/innerImg/play.png",
         description:
           "ছোট্ট সোনামণিদের শিক্ষাজীবনের শুরুটা হোক আনন্দময় ও নিরাপদ পরিবেশে। আমাদের অভিজ্ঞ টিউটররা খেলার মাধ্যমে শিশুদের আরবী হরফ চেনা, ছোট ছোট দুআ এবং বাংলা-ইংরেজি বর্ণমালার সাথে পরিচয় করিয়ে দেন। আমরা নিশ্চিত করি যেন শিশুরা ছোটবেলা থেকেই ইসলামিক আদব-কায়দা এবং নৈতিক মূল্যবোধের সাথে বেড়ে ওঠে।",
         subjects: [
@@ -881,6 +926,7 @@ export const mediumsData: MediumData[] = [
         title: "Nursery Level",
         subtitle: "লেখা ও পড়ার প্রাথমিক ভিত্তি গঠন",
         image: "/images/madrasahMedium/nursery.png",
+        innerImg: "/images/madrasahMedium/innerImg/nursery.png",
         description:
           "নার্সারি ক্লাসে আমরা শিশুদের হাতে ধরে লেখা শেখানো এবং পড়ার প্রতি আগ্রহ তৈরিতে গুরুত্ব দিই। এই বয়সে শিশুদের মস্তিষ্কের বিকাশের জন্য আমাদের টিউটররা সৃজনশীল পদ্ধতির ব্যবহার করেন। নূরানী কায়দার প্রাথমিক পাঠের পাশাপাশি গণিত ও ইংরেজির বেসিক কনসেপ্টগুলো খুব যত্ন সহকারে শেখানো হয়।",
         subjects: [
@@ -900,6 +946,7 @@ export const mediumsData: MediumData[] = [
         title: "Kindergarten Program",
         subtitle: "প্রথম শ্রেণির জন্য পূর্ণাঙ্গ প্রস্তুতি",
         image: "/images/madrasahMedium/kg.png",
+        innerImg: "/images/madrasahMedium/innerImg/kg.png",
         description:
           "কেজি ক্লাস হলো ফরমাল স্কুলে প্রবেশের পূর্বপ্রস্তুতি। আমাদের পাঠ্যক্রম এমনভাবে সাজানো হয়েছে যেখানে শিশুরা সাবলীলভাবে রিডিং পড়া এবং সাধারণ যোগ-বিয়োগ শিখতে পারে। আমরা শিশুদের ইবাদত ও পড়ালেখার মধ্যে ভারসাম্য বজায় রাখতে শেখাই, যা তাদের পরবর্তী ক্লাসের জন্য আত্মবিশ্বাসী করে তোলে।",
         subjects: [
@@ -938,6 +985,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 1 Foundation Education",
         subtitle: "ইবতেদায়ী শিক্ষার আনুষ্ঠানিক সূচনা",
         image: "/images/madrasahMedium/class-1.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-1.png",
         description:
           "প্রথম শ্রেণিতে শিশুরা মাদ্রাসার মূল কারিকুলামের সাথে পরিচিত হয়। আমাদের টিউটররা প্রতিটি ছাত্রের মেধা অনুযায়ী পড়া বুঝিয়ে দেন। সহীহ কুরআন তিলাওয়াতের পাশাপাশি বাংলা, ইংরেজি এবং গণিতের শক্ত ভিত্তি গড়ে তোলাই আমাদের লক্ষ্য। ক্লাসের পড়া ক্লাসে শেষ করার মাধ্যমে আমরা শিশুদের ওপর চাপ কমাই।",
         subjects: [
@@ -955,6 +1003,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 2 Primary Education",
         subtitle: "বেসিক নলেজ ও স্কিল ডেভেলপমেন্ট",
         image: "/images/madrasahMedium/class-2.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-2.png",
         description:
           "দ্বিতীয় শ্রেণিতে আমরা শিক্ষার্থীদের পড়ার দক্ষতা এবং বোঝার ক্ষমতা বৃদ্ধিতে জোর দিই। আরবী ভাষা শিক্ষার পাশাপাশি আধুনিক গণিত এবং ইংরেজির ওপর বিশেষ গুরুত্ব দেওয়া হয়। আমাদের অভিজ্ঞ টিউটররা নিশ্চিত করেন যেন ছাত্রছাত্রীরা আনন্দের সাথে শিখতে পারে এবং তাদের ফলাফলে ধারাবাহিক উন্নতি বজায় থাকে।",
         subjects: [
@@ -972,6 +1021,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 3 Primary Education",
         subtitle: "বিজ্ঞান ও পরিবেশ শিক্ষার পরিচিতি",
         image: "/images/madrasahMedium/class-3.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-3.png",
         description:
           "তৃতীয় শ্রেণি থেকে শিক্ষার্থীদের কারিকুলামে নতুন বিষয় যুক্ত হয়। আমরা বিজ্ঞানের প্রাথমিক ধারণা, সমাজ এবং দ্বীনি শিক্ষার বিষয়গুলো সহজ ও সাবলীলভাবে উপস্থাপন করি। মুখস্থ না করে বুঝে পড়ার অভ্যাস গড়ে তোলা এবং সৃজনশীল মেধা বিকাশে আমাদের টিউটররা নিরলসভাবে কাজ করেন।",
         subjects: [
@@ -989,6 +1039,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 4 Primary Education",
         subtitle: "সৃজনশীল ও বিশ্লেষণধর্মী শিক্ষা",
         image: "/images/madrasahMedium/class-4.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-4.png",
         description:
           "চতুর্থ শ্রেণিতে পড়ালেখার গভীরতা কিছুটা বাড়ে। আমাদের টিউটররা ছাত্রদের আরবী ব্যাকরণ, গণিতের জ্যামিতি এবং ইংরেজি কম্পোজিশনের মতো বিষয়গুলোতে দক্ষ করে তোলেন। পিএসসি বা ইবতেদায়ী সমাপনী পরীক্ষার আগের বছর হিসেবে আমরা এই ক্লাসেই ছাত্রদের ভিত্তি মজবুত করার দিকে নজর দিই।",
         subjects: [
@@ -1006,6 +1057,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 5 Primary Completion",
         subtitle: "ইবতেদায়ী সমাপনী পরীক্ষার স্পেশাল কেয়ার",
         image: "/images/madrasahMedium/class-5.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-5.png",
         description:
           "পঞ্চম শ্রেণির শিক্ষার্থীদের জন্য আমাদের রয়েছে বিশেষ ইবতেদায়ী সমাপনী প্রস্তুতি প্রোগ্রাম। ১০ বছরের অভিজ্ঞতায় আমরা জানি কীভাবে ছাত্রদের বোর্ড পরীক্ষার জন্য প্রস্তুত করতে হয়। নিয়মিত মডেল টেস্ট, রিভিশন এবং টাইম ম্যানেজমেন্ট শেখানোর মাধ্যমে আমরা নিশ্চিত করি আপনার সন্তানের জিপিএ-৫ এবং স্কলারশিপ।",
         subjects: [
@@ -1023,6 +1075,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 6 Secondary Education",
         subtitle: "জুনিয়র দাখিল স্তরের আধুনিক শিক্ষা",
         image: "/images/madrasahMedium/class-6.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-6.png",
         description:
           "হাইস্কুল বা জুনিয়র দাখিল স্তরে পা রাখার এই সময়ে আমরা শিক্ষার্থীদের তথ্যপ্রযুক্তি (ICT) এবং আধুনিক বিজ্ঞানের সাথে পরিচয় করিয়ে দিই। আরবী সাহিত্যের পাশাপাশি ইংরেজি এবং গণিতে দুর্বলতা কাটানোর জন্য আমাদের রয়েছে অভিজ্ঞ সাবজেক্ট টিউটর। আমরা ছাত্রদের স্বাবলম্বী শিক্ষার্থী হিসেবে গড়ে তুলি।",
         subjects: [
@@ -1040,6 +1093,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 7 Secondary Education",
         subtitle: "বিষয়ভিত্তিক গভীর জ্ঞান অর্জন",
         image: "/images/madrasahMedium/class-7.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-7.png",
         description:
           "সপ্তম শ্রেণিতে আমরা শিক্ষার্থীদের প্রতিটি বিষয়ের গভীরে গিয়ে শেখার প্রতি উৎসাহিত করি। বিজ্ঞান, গণিত এবং আরবী বিষয়গুলোর জটিল টপিকগুলো সহজ উদাহরণের মাধ্যমে বুঝিয়ে দেওয়া হয়। আমাদের লক্ষ্য হলো শিক্ষার্থীদের জেডিসি পরীক্ষার জন্য আগে থেকেই মানসিকভাবে প্রস্তুত করা।",
         subjects: [
@@ -1057,6 +1111,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 8 Junior School Certificate",
         subtitle: "জেডিসি পরীক্ষার নিশ্চিত প্রস্তুতি",
         image: "/images/madrasahMedium/class-8.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-8.png",
         description:
           "জেডিসি (JDC) পরীক্ষার্থীদের জন্য আমাদের টিউটররা নিবিড় তত্ত্বাবধান প্রদান করেন। সিলেবাস দ্রুত শেষ করে আমরা রিভিশন এবং বিগত বছরের প্রশ্ন সমাধানের ওপর জোর দিই। সায়েন্স এবং ম্যাথের ভীতি দূর করে আমরা শিক্ষার্থীদের আত্মবিশ্বাসী করে তুলি, যা তাদের ভালো ফলাফলের নিশ্চয়তা দেয়।",
         subjects: [
@@ -1074,6 +1129,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 9 SSC Preparation",
         subtitle: "দাখিল স্তরে বিভাগভিত্তিক স্পেশালাইজেশন",
         image: "/images/madrasahMedium/class-9.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-9.png",
         description:
           "নবম শ্রেণিতে শিক্ষার্থীরা বিজ্ঞান, সাধারণ বা মুজাব্বিদ বিভাগ বেছে নেয়। আমাদের অভিজ্ঞ টিউটররা (বুয়েট/মেডিকেল/বিশ্ববিদ্যালয় শিক্ষার্থী) জটিল বিষয়গুলো যেমন পদার্থ, রসায়ন বা উচ্চতর ফিকহ খুব সহজভাবে বুঝিয়ে দেন। বোর্ড পরীক্ষার ভিত্তি গড়ার জন্য এটিই সেরা সময়।",
         subjects: [
@@ -1091,6 +1147,7 @@ export const mediumsData: MediumData[] = [
         title: "Class 10 SSC Final Preparation",
         subtitle: "দাখিল পরীক্ষার চূড়ান্ত প্রস্তুতি ও রিভিশন",
         image: "/images/madrasahMedium/class-10.png",
+        innerImg: "/images/madrasahMedium/innerImg/class-10.png",
         description:
           "দাখিল পরীক্ষার্থীদের জন্য আমাদের রয়েছে ক্র্যাশ কোর্স এবং নিবিড় রিভিশন প্রোগ্রাম। আমরা শিক্ষার্থীদের প্রতিটি বিষয়ের খুঁটিনাটি ঝালিয়ে নিই এবং তাদের দুর্বলতাগুলো চিহ্নিত করে সমাধান করি। আমাদের লক্ষ্য শুধু পাস করা নয়, বরং গোল্ডেন এ-প্লাস অর্জন করা এবং ভালো কলেজে ভর্তির সুযোগ তৈরি করা।",
         subjects: [
@@ -1110,6 +1167,7 @@ export const mediumsData: MediumData[] = [
         title: "Alim 1st Year",
         subtitle: "উচ্চশিক্ষার ভিত্তি ও আলিম সিলেবাস",
         image: "/images/madrasahMedium/alim-1st-year.png",
+        innerImg: "/images/madrasahMedium/innerImg/alim-1st-year.png",
         description:
           "কলেজ বা মাদ্রাসার এই স্তরটি বিশ্ববিদ্যালয় ভর্তির জন্য অত্যন্ত গুরুত্বপূর্ণ। আমাদের টিউটররা আলিম সিলেবাসের পাশাপাশি অ্যাডমিশন টেস্টের বেসিক কনসেপ্টগুলো ক্লিয়ার করে দেন। আরবী সাহিত্য, বালাগাত এবং আইসিটি বা বিজ্ঞানের বিষয়গুলোতে সমান গুরুত্ব দিয়ে আমরা শিক্ষার্থীদের গড়ে তুলি।",
         subjects: [
@@ -1129,6 +1187,7 @@ export const mediumsData: MediumData[] = [
         title: "Alim 2nd Year",
         subtitle: "আলিম ফাইনাল ও ভার্সিটি অ্যাডমিশন প্রস্তুতি",
         image: "/images/madrasahMedium/alim-2nd-year.png",
+        innerImg: "/images/madrasahMedium/innerImg/alim-2nd-year.png",  
         description:
           "আলিম পরীক্ষার্থীদের জন্য এটি চূড়ান্ত সময়। আমরা বোর্ড পরীক্ষার প্রস্তুতির পাশাপাশি ঢাকা বিশ্ববিদ্যালয় বা ইসলামিক বিশ্ববিদ্যালয়গুলোর ভর্তি পরীক্ষার জন্য গাইডলাইন প্রদান করি। আমাদের অভিজ্ঞ মেন্টরদের তত্ত্বাবধানে শিক্ষার্থীরা বোর্ড পরীক্ষায় সেরা ফলাফল এবং স্বপ্নের ক্যাম্পাসে ভর্তির যোগ্যতা অর্জন করে।",
         subjects: [
@@ -1155,7 +1214,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏗️",
         title: "Engineering University Admission",
         subtitle: "Prepare for Engineering Entrance Exams",
-        image: "/images/engineering-ua.jpg",
+        image: "/images/admissionTest/engineeringUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/engineeringUniversityAdmission.png",
         description:
           "Comprehensive guidance for engineering university admission including exam strategies, subject preparation, and practical problem-solving skills.",
         subjects: [
@@ -1174,7 +1235,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏛️",
         title: "Public University Admission",
         subtitle: "Prepare for Public University Entrance Tests",
-        image: "/images/public-university-ua.jpg",
+        image: "/images/admissionTest/publicUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/publicUniversityAdmission.png",
         description:
           "Guidance for all public university entrance exams, focusing on key subjects, exam strategies, and mock tests for top performance.",
         subjects: [
@@ -1193,7 +1256,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏥",
         title: "Medical College Admission (Private)",
         subtitle: "Medical Entrance Preparation",
-        image: "/images/medical-college-private.jpg",
+        image: "/images/admissionTest/medicalCollegeAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/medicalCollegeAdmission.png",
         description:
           "Preparation for private medical college admissions. Includes biology, chemistry, physics, English, and past exam pattern practice.",
         subjects: [
@@ -1212,7 +1277,9 @@ export const mediumsData: MediumData[] = [
         icon: "🎓",
         title: "National University Admission",
         subtitle: "NU Undergraduate Preparation",
-        image: "/images/nu-admission.jpg",
+        image: "/images/admissionTest/nationalUniversityAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/nationalUniversityAdmission.png",
         description:
           "Guidance for National University undergraduate admission tests. Covers core subjects, study strategies, and past question practice.",
         subjects: [
@@ -1231,7 +1298,9 @@ export const mediumsData: MediumData[] = [
         icon: "🎖️",
         title: "Cadet College Admission",
         subtitle: "Prepare for Cadet College Entrance",
-        image: "/images/cadet-admission.jpg",
+        image: "/images/admissionTest/cadetCollegeAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/cadetCollegeAdmission.png",
         description:
           "Comprehensive preparation for cadet college entrance exams including academic subjects, physical fitness, IQ tests, and interview preparation.",
         subjects: [
@@ -1251,7 +1320,9 @@ export const mediumsData: MediumData[] = [
         icon: "🏫",
         title: "School Admission",
         subtitle: "Prepare for School Entrance Tests",
-        image: "/images/school-admission.jpg",
+        image: "/images/admissionTest/schoolAdmission.png",
+        innerImg:
+          "/images/admissionTest/innerImg/schoolAdmission.png",
         description:
           "Preparation for school admission exams for primary and secondary levels. Covers basic subjects, logical reasoning, and general knowledge.",
         subjects: [
@@ -1281,6 +1352,7 @@ export const mediumsData: MediumData[] = [
         title: "Islamic Studies",
         subtitle: "সহীহ কুরআন ও সুন্নাহর আলোকে জীবন গঠন",
         image: "/images/religiousStudies/islamic-studies.png",
+        innerImg: "/images/religiousStudies/innerImg/islamic-studies.png",
         description:
           "আধুনিক ব্যস্ততায় যেন সন্তানের দ্বীনি শিক্ষা পিছিয়ে না পড়ে। আমাদের অভিজ্ঞ হাফেজ ও আলেমগণ পরম যত্নে আপনার সন্তানকে সহীহ শুদ্ধভাবে কুরআন তিলাওয়াত, নামাজের নিয়ম এবং ইসলামের বুনিয়াদি বিষয়গুলো শেখাবেন। আমরা কেবল আরবী পড়া নয়, বরং ইসলামি আদব-কায়দা ও চরিত্র গঠনে গুরুত্ব দিই।",
         subjects: [
@@ -1299,6 +1371,7 @@ export const mediumsData: MediumData[] = [
         title: "Hinduism Studies",
         subtitle: "সনাতন ধর্মের জ্ঞান ও আধ্যাত্মিক বিকাশ",
         image: "/images/religiousStudies/hinduism-studies.png",
+        innerImg: "/images/religiousStudies/innerImg/hinduism-studies.png",
         description:
           "আপনার সন্তানের মনে ধর্মের প্রতি শ্রদ্ধা ও আধ্যাত্মিক চেতনার উন্মেষ ঘটাতে আমাদের এই আয়োজন। অভিজ্ঞ পণ্ডিতদের তত্ত্বাবধানে গীতা পাঠ, মন্ত্র উচ্চারণ এবং ধর্মানুষ্ঠানের সঠিক নিয়ম শেখানো হয়। পাশাপাশি রামায়ণ ও মহাভারতের শিক্ষণীয় গল্পের মাধ্যমে তাদের নৈতিক চরিত্র গঠনে সহায়তা করা হয়।",
         subjects: [
@@ -1317,6 +1390,7 @@ export const mediumsData: MediumData[] = [
         title: "Buddhism Studies",
         subtitle: "শান্তি, মৈত্রী ও প্রজ্ঞার অনুশীলন",
         image: "/images/religiousStudies/buddhism-studies.png",
+        innerImg: "/images/religiousStudies/innerImg/buddhism-studies.png",
         description:
           "গৌতম বুদ্ধের অহিংসা ও শান্তির বাণী আপনার সন্তানের জীবনে ছড়িয়ে দিতে আমাদের অভিজ্ঞ ভিক্ষু ও ধর্মগুরুরা সহায়তা করবেন। ত্রিপিটকের মূল শিক্ষা, শীল পালন এবং ধ্যানের (Meditation) মাধ্যমে আমরা শিক্ষার্থীদের মানসিক প্রশান্তি ও মানবিক গুণাবলী অর্জনে উদ্বুদ্ধ করি।",
         subjects: [
@@ -1335,6 +1409,7 @@ export const mediumsData: MediumData[] = [
         title: "Christianity Studies",
         subtitle: "যীশুর প্রেম ও সেবার মহৎ শিক্ষা",
         image: "/images/religiousStudies/christianity-studies.png",
+        innerImg: "/images/religiousStudies/innerImg/christianity-studies.png",
         description:
           "বাইবেলের পবিত্র বাণী এবং যীশু খ্রিস্টের ত্যাগের আদর্শ নিয়ে আমাদের এই কোর্স। চার্চের ইতিহাস, প্রার্থনা সঙ্গীত এবং মানবসেবার গুরুত্ব সম্পর্কে শিশুদের শিক্ষা দেওয়া হয়। আমরা নিশ্চিত করি যেন শিক্ষার্থীরা সৎ, সত্যবাদী এবং সহানুভূতিশীল মানুষ হিসেবে গড়ে ওঠে।",
         subjects: [
@@ -1362,7 +1437,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Master the Art of Drawing",
         description:
           "Our drawing program teaches fundamental techniques from basic sketching to advanced realistic drawing. Students learn perspective, shading, proportion, and various drawing styles. Whether you're a beginner or want to refine your skills, our experienced art instructors provide personalized guidance to develop your artistic abilities.",
-        image: "/images/drawing.jpg",
+        image: "/images/artsAndCreativity/drawing.png",
+        innerImg: "/images/artsAndCreativity/innerImg/drawing.png",
         subjects: [
           "Basic Sketching",
           "Shading Techniques",
@@ -1381,7 +1457,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Express Yourself Through Colors",
         description:
           "Learn various painting techniques including watercolor, acrylic, and oil painting. Our classes cover color theory, composition, different painting styles, and creative expression. Students explore various subjects from landscapes to abstract art, developing their unique artistic voice under guidance of professional artists.",
-        image: "/images/painting.jpg",
+        image: "/images/artsAndCreativity/painting.png",
+        innerImg: "/images/artsAndCreativity/innerImg/painting.png",
         subjects: [
           "Watercolor Techniques",
           "Acrylic Painting",
@@ -1400,7 +1477,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Create Three-Dimensional Masterpieces",
         description:
           "Sculpture classes teach the art of creating three-dimensional forms using various materials including clay, plaster, and mixed media. Students learn fundamental techniques, understand form and space, and develop skills in both traditional and contemporary sculpture methods. Perfect for those interested in exploring 3D artistic expression.",
-        image: "/images/sculpture.jpg",
+        image: "/images/artsAndCreativity/sculpture.png",
+        innerImg: "/images/artsAndCreativity/innerImg/sculpture.png",
         subjects: [
           "Clay Modeling",
           "Carving Techniques",
@@ -1419,7 +1497,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Capture the World Through Your Lens",
         description:
           "Photography course covers both technical and artistic aspects of creating compelling images. Learn camera operation, composition rules, lighting techniques, and post-processing. Students explore various genres including portrait, landscape, street, and commercial photography while developing their unique photographic style.",
-        image: "/images/photography.jpg",
+        image: "/images/artsAndCreativity/photography.png",
+        innerImg: "/images/artsAndCreativity/innerImg/photography.png",
         subjects: [
           "Camera Basics",
           "Composition Rules",
@@ -1438,7 +1517,8 @@ export const mediumsData: MediumData[] = [
         subtitle: "Discover Your Musical Potential",
         description:
           "Music classes offer comprehensive training in vocal or instrumental music. Learn music theory, rhythm, melody, and performance techniques. Whether you want to learn classical music, contemporary styles, or traditional instruments, our qualified music teachers provide structured lessons tailored to your goals and skill level.",
-        image: "/images/music.jpg",
+        image: "/images/artsAndCreativity/music.png",
+        innerImg: "/images/artsAndCreativity/innerImg/music.png",
         subjects: [
           "Music Theory",
           "Instrument Training",
@@ -1575,6 +1655,7 @@ export const mediumsData: MediumData[] = [
         description:
           "Hesitation is the biggest barrier to career growth. Our Spoken English program moves beyond textbooks to real-world conversation. Whether you are a student or a corporate professional, we help you remove grammatical fear, fix your pronunciation, and speak fluently in any environment.",
         image: "/images/languageTraining/english.png",
+        innerImg: "/images/languageTraining/innerImg/english.png",
         subjects: [
           "Fluency building & public speaking",
           "Professional email writing & presentation",
@@ -1592,6 +1673,7 @@ export const mediumsData: MediumData[] = [
         description:
           "Cracking IELTS isn't just about knowing English; it's about knowing the exam strategy. Our certified mentors provide module-specific training (Listening, Reading, Writing, Speaking) to help you secure your desired Band Score (6.5 to 8.0+) for UK, Canada, or Australia.",
         image: "/images/languageTraining/ielts.png",
+        innerImg: "/images/languageTraining/innerImg/ielts.png",
         subjects: [
           "Writing Task 1 & 2 (Structure & Vocabulary)",
           "Speaking Mock Tests with feedback",
@@ -1609,6 +1691,7 @@ export const mediumsData: MediumData[] = [
         description:
           "TOEFL is the gold standard for US universities. Our course is designed to master the 'Internet-Based Test (iBT)' format. We focus on integrated tasks where you have to listen, read, and speak simultaneously, ensuring you are ready for the academic rigor of American campuses.",
         image: "/images/languageTraining/toefl.png",
+        innerImg: "/images/languageTraining/innerImg/toefl.png",
         subjects: [
           "Note-taking strategies for lectures",
           "Integrated Speaking & Writing tasks",
@@ -1626,6 +1709,7 @@ export const mediumsData: MediumData[] = [
         description:
           "Germany is a top destination for engineers and higher studies. We offer structured courses from A1 (Beginner) to B2 (Advanced) following the Goethe-Institut standards. Our instructors focus on grammar accuracy and speaking so you can survive and thrive in a German-speaking environment.",
         image: "/images/languageTraining/german.png",
+        innerImg: "/images/languageTraining/innerImg/german.png",
         subjects: [
           "A1 to B2 level complete grammar",
           "Preparation for Goethe-Zertifikat exams",
@@ -1643,6 +1727,7 @@ export const mediumsData: MediumData[] = [
         description:
           "PTE is the modern choice for students and migrants to Australia and the UK. Since it is AI-scored, we teach you the specific 'algorithms' and 'templates' to maximize your score. Our intensive practice ensures you master the computer-based format quickly.",
         image: "/images/languageTraining/pte.png",
+        innerImg: "/images/languageTraining/innerImg/pte.png",
         subjects: [
           "Speaking fluency tricks for AI scoring",
           "Essay and summary writing templates",

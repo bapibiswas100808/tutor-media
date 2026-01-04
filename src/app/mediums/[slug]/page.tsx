@@ -120,13 +120,19 @@ export default async function MediumPage({ params }: MediumPageProps) {
                 {/* Content */}
                 <div className="relative">
                   {/* Icon */}
-                  <div className="relative w-full h-[400px]">
-                    <Image
-                      src={classItem.image}
-                      alt={classItem.name}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="relative w-full h-[400px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                    {classItem?.image ? (
+                      <Image
+                        src={classItem.image}
+                        alt={classItem.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <h2 className="text-white text-3xl font-bold">
+                        {classItem.name}
+                      </h2>
+                    )}
                   </div>
 
                   <div className="p-6">
@@ -227,13 +233,13 @@ export default async function MediumPage({ params }: MediumPageProps) {
               href="/hire-tutor"
               className="px-8 py-4 bg-white text-blue-600 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
             >
-              Find a Tutor
+              Find a Mentor
             </Link>
             <Link
               href="/become-a-tutor"
               className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-colors"
             >
-              Become a Tutor
+              Become a Mentor
             </Link>
           </div>
         </div>
