@@ -51,6 +51,14 @@ export default function BecomeTutorForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [otpSuccessMessage, setOtpSuccessMessage] = useState("");
+  const [resendTimer, setResendTimer] = useState(0);
 
   const {
     register,
@@ -70,6 +78,91 @@ export default function BecomeTutorForm() {
 
   const divisionValue = watch("division");
   const locationValue = watch("location");
+  const emailValue = watch("email");
+
+  // Handle OTP sending
+  const handleSendOtp = async () => {
+    if (!emailValue) {
+      setOtpError("Please enter an email address");
+      return;
+    }
+
+    setOtpSending(true);
+    setOtpError("");
+    setOtpSuccessMessage("");
+
+    try {
+      const response = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailValue }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to send OTP");
+      }
+
+      setShowOtpInput(true);
+      setOtpSuccessMessage("OTP sent to your email. Please check your inbox.");
+      setResendTimer(60);
+
+      // Start countdown timer
+      const timer = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      setOtpError(
+        error instanceof Error ? error.message : "Failed to send OTP"
+      );
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  // Handle OTP verification
+  const handleVerifyOtp = async () => {
+    if (!otp || otp.length < 6) {
+      setOtpError("Please enter a valid 6-digit OTP");
+      return;
+    }
+
+    setOtpVerifying(true);
+    setOtpError("");
+
+    try {
+      const response = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailValue, otp: otp }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Invalid OTP");
+      }
+
+      setEmailVerified(true);
+      setOtp("");
+      setShowOtpInput(false);
+      setOtpSuccessMessage("Email verified successfully!");
+      setTimeout(() => setOtpSuccessMessage(""), 3000);
+    } catch (error) {
+      setOtpError(
+        error instanceof Error ? error.message : "Failed to verify OTP"
+      );
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
 
   const getDistricts = () => {
     if (!divisionValue) return [];
@@ -143,6 +236,16 @@ export default function BecomeTutorForm() {
   // };
 
   const onSubmit = async (data: BecomeTutorFormData) => {
+    // Check if email is verified
+    if (!emailVerified) {
+      Swal.fire({
+        icon: "warning",
+        title: "Email Not Verified",
+        text: "Please verify your email address before submitting the application.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -277,18 +380,83 @@ export default function BecomeTutorForm() {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Email Address *
+              Email Address *{" "}
+              {emailVerified && (
+                <span className="text-green-600">(Verified)</span>
+              )}
             </label>
-            <input
-              {...register("email")}
-              type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-              placeholder="your.email@example.com"
-            />
+            <div className="flex flex-col md:flex-row gap-2">
+              <input
+                {...register("email")}
+                type="email"
+                disabled={emailVerified}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                placeholder="your.email@example.com"
+              />
+              {!emailVerified && (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpSending || !emailValue}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
+                >
+                  {otpSending ? "Sending..." : "Send OTP"}
+                </button>
+              )}
+            </div>
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">
                 {errors.email.message}
               </p>
+            )}
+            {otpSuccessMessage && (
+              <p className="mt-1 text-sm text-green-600">{otpSuccessMessage}</p>
+            )}
+
+            {/* OTP Input Section */}
+            {showOtpInput && !emailVerified && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-md border border-blue-200">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="Enter 6-digit OTP"
+                    value={otp}
+                    onChange={(e) => {
+                      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                      setOtpError("");
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-lg tracking-widest"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={otpVerifying || otp.length < 6}
+                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
+                  >
+                    {otpVerifying ? "Verifying..." : "Verify"}
+                  </button>
+                </div>
+
+                {otpError && (
+                  <p className="mt-2 text-sm text-red-600">{otpError}</p>
+                )}
+
+                {resendTimer > 0 ? (
+                  <p className="mt-2 text-sm text-gray-600">
+                    Resend OTP in {resendTimer}s
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpSending}
+                    className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium"
+                  >
+                    {otpSending ? "Sending..." : "Resend OTP"}
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
