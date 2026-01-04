@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // Generate and store OTP (delete old one first to avoid confusion)
     const otp = generateOtp();
     storeOtp(email, otp);
-    
+
     // Reset attempts counter for new OTP
     const otpData = getOtp(email);
     if (otpData) {
