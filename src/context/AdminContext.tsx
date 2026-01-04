@@ -38,9 +38,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const adminLogin = async (email: string, password: string): Promise<void> => {
     // Check against environment variables
-    const ADMIN_EMAIL =
-      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@tutormedia.com";
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "";
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@tutormedia.com";
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 
     if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
       throw new Error("Invalid admin credentials");
