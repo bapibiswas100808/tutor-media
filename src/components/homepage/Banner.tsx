@@ -66,37 +66,57 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
           >
             {/* Function to generate same animation for all cards */}
             {[
-  { src: "/images/banner/4.png", rounded: "rounded-br-none", z: 4, phase: 0 },
-  { src: "/images/banner/2.png", rounded: "rounded-bl-none", z: 3, phase: 1 },
-  { src: "/images/banner/3.png", rounded: "rounded-tr-none", z: 2, phase: 2 },
-  { src: "/images/banner/1.png", rounded: "rounded-tl-none", z: 1, phase: 3 },
-].map((img, index) => (
-  <motion.div
-    key={img.src}
-    initial={{ opacity: 0, scale: 0.8 }}
-   animate={{
-      opacity: 1,
-      x: [0, 12, 0, -12, 0],
-      y: [0, -12, 0, 12, 0],
-    }}
-    transition={{
-      duration: 8,
-      delay: img.phase * 0.6,
-      repeat: Infinity,
-      ease: "linear",
-    }}
-
-
-
-    whileHover={{ scale: 1.1, zIndex: 10 }}
-    className={`relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl ${img.rounded} overflow-hidden shadow-2xl transition-all`}
-    style={{ zIndex: img.z }}
-  >
-    <div className="absolute inset-0 bg-white/20 backdrop-blur-md z-10" />
-    <Image src={img.src} alt="Banner" fill className="object-cover relative z-20" />
-  </motion.div>
-))}
-
+              {
+                src: "/images/banner/4.png",
+                rounded: "rounded-br-none",
+                z: 4,
+                phase: 0,
+              },
+              {
+                src: "/images/banner/2.png",
+                rounded: "rounded-bl-none",
+                z: 3,
+                phase: 1,
+              },
+              {
+                src: "/images/banner/3.png",
+                rounded: "rounded-tr-none",
+                z: 2,
+                phase: 2,
+              },
+              {
+                src: "/images/banner/1.png",
+                rounded: "rounded-tl-none",
+                z: 1,
+                phase: 3,
+              },
+            ].map((img) => (
+              <motion.div
+                key={img.src}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{
+                  opacity: 1,
+                  x: [0, 12, 0, -12, 0],
+                  y: [0, -12, 0, 12, 0],
+                }}
+                transition={{
+                  duration: 8,
+                  delay: img.phase * 0.6,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                whileHover={{ scale: 1.1, zIndex: 10 }}
+                className={`relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl ${img.rounded} overflow-hidden shadow-2xl transition-all`}
+                style={{ zIndex: img.z }}
+              >
+                <Image
+                  src={img.src}
+                  alt="Banner"
+                  fill
+                  className="object-cover relative z-20"
+                />
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>
