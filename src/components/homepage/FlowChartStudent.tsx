@@ -75,7 +75,7 @@ export default function FlowChartStudent() {
             >
               {/* Card */}
               <div className="w-9/12">
-                <div className="bg-white rounded-2xl shadow-xl p-4 hover:shadow-2xl transition-shadow duration-300 grid grid-cols-2 gap-3">
+                <div className="bg-white rounded-2xl shadow-xl p-4 hover:shadow-2xl transition-shadow duration-300 grid grid-cols-2 items-center gap-3">
                   <div
                     className={`w-full h-[170px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center`}
                   >
@@ -101,11 +101,15 @@ export default function FlowChartStudent() {
 
               {/* Connector Line */}
               <div className="w-2/12 flex items-center justify-center relative">
-                <div
-                  className={`absolute ${
-                    index % 2 === 0 ? "left-0" : "right-0"
-                  } w-1/2 h-0.5 bg-gradient-to-r from-gray-300 via-blue-400 to-gray-300`}
-                ></div>
+                {/* Horizontal line */}
+                {index < steps.length - 1 && (
+                  <div
+                    className={`absolute ${
+                      index % 2 === 0 ? "left-0" : "right-0"
+                    } w-1/2 h-0.5 bg-gradient-to-r from-gray-300 via-blue-400 to-gray-300`}
+                  />
+                )}
+                {/* Vertical dashed line */}
                 {index < steps.length - 1 && (
                   <svg
                     className="absolute top-0"
@@ -124,7 +128,11 @@ export default function FlowChartStudent() {
                     />
                   </svg>
                 )}
-                <div className="absolute w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-md"></div>
+                {/* Dot (hide for last item) */}
+                {index < steps.length - 1 && (
+                  <div className="absolute w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-md" />
+                )}
+                \
               </div>
 
               {/* Empty Space */}
@@ -153,7 +161,7 @@ export default function FlowChartStudent() {
                       src={step.image}
                       alt={step.title}
                       fill
-                      className="object-cover rounded-xl p-1"
+                      className="object-cover rounded-xl p-0.25"
                     />
                   </div>
                 </div>

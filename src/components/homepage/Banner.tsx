@@ -44,13 +44,13 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
               </Link>
               <Link
                 href="/become-a-tutor"
-                className="bg-[#FFCE58] hover:bg-[#ffd572] text-black font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+                className="bg-[#FFCE58] hover:bg-[#ffd572] text-gray-800 font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Become a Mentor
               </Link>
               <Link
                 href="/tuition-jobs"
-                className="bg-[#62B8FF] hover:bg-[#7fc5ff] text-black font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+                className="bg-[#62B8FF] hover:bg-[#7fc5ff] text-gray-800 font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
               >
                 Tuition Jobs
               </Link>

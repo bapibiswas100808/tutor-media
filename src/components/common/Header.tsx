@@ -87,38 +87,56 @@ export default function Header() {
       "User"
     );
   };
-
+console.log("asasas",user);
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="shrink-0 flex items-center hover:scale-105 transition-transform">
+          <Link
+            href="/"
+            className="shrink-0 flex items-center hover:scale-105 transition-transform duration-300"
+          >
             <Image
               src="/images/logo.png"
               alt="Tutor Media Logo"
               width={140}
               height={50}
               priority
-              className="object-contain h-50 w-auto"
+              className="h-12 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-blue-600 font-semibold text-xl duration-200  hover:scale-105 transition-transform"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`
+          relative font-semibold text-xl transition-all duration-300
+          ${isActive ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}
+          
+          after:content-[''] after:absolute after:left-0 after:-bottom-0.5
+          after:h-[1.5px] after:w-0 after:bg-blue-600
+          after:transition-all after:duration-300 after:ease-out
+          hover:after:w-full
+          
+         
+        `}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* CTA Button - Desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4 cursor-pointer">
             {isAdminPage && isAdminAuthenticated ? (
               // Admin logout button
               <div className="flex items-center space-x-4">
@@ -139,7 +157,7 @@ export default function Header() {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-3 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                     {getFirstName().charAt(0).toUpperCase()}
@@ -186,7 +204,7 @@ export default function Header() {
 
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2 border-t border-gray-200"
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2 border-t border-gray-200 cursor-pointer"
                       >
                         <LogOut size={18} />
                         <span>Logout</span>

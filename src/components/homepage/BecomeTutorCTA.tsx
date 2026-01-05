@@ -14,7 +14,7 @@ export default function BecomeTutorCTA() {
           viewport={{ once: true }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-3 leading-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-3">
             Join a Legacy of Excellence.
           </h2>
           <p className="text-xl md:text-2xl mb-6 opacity-90">
@@ -26,7 +26,7 @@ export default function BecomeTutorCTA() {
           <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
             <Link
               href="/become-a-tutor"
-              className="inline-block border-2 border-white  bg-yellow-500 hover:bg-white text-black font-bold py-2 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="inline-block border-2 border-white  bg-yellow-500 hover:bg-white text-gray-800 font-bold py-2 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Registration
             </Link>
