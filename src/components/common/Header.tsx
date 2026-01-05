@@ -87,7 +87,7 @@ export default function Header() {
       "User"
     );
   };
-console.log("asasas",user);
+  
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
       

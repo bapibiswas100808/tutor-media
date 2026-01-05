@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Tutor } from "@/data/tutorsList";
 import TutorCard from "@/components/tutors/TutorCard";
-import { CircleStar, Search, ShieldCheck, Star } from "lucide-react";
+import { CircleStar, Search, ShieldCheck } from "lucide-react";
 
 export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
   const [filter, setFilter] = useState<"all" | "premium" | "verified">("all");
