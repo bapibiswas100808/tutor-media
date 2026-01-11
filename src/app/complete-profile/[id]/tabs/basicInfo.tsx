@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+// import { Eye, EyeOff } from "lucide-react";
 
 export interface BasicInfoData {
   email: string;
-  password?: string;
-  confirmPassword?: string;
+  // password?: string;
+  // confirmPassword?: string;
   image?: string;
 
   expectedSalary?: string;
@@ -72,14 +72,16 @@ const TIME_OPTIONS = ["Morning", "Afternoon", "Evening", "Night"];
 
 interface BasicInfoProps {
   data: BasicInfoData;
-  setData: (data: BasicInfoData) => void;
+  setData: React.Dispatch<React.SetStateAction<BasicInfoData>>;
 }
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [showConfirm, setShowConfirm] = useState(false);
+  const [preview, setPreview] = useState<string>("");
+
 
   /* ---------- Handle Change ---------- */
   const handleChange = (
@@ -92,79 +94,82 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
 
     const newErrors: Record<string, string> = { ...errors };
 
-    if (name === "password" || name === "confirmPassword") {
-      const password = name === "password" ? value : newData.password || "";
-      const confirm =
-        name === "confirmPassword" ? value : newData.confirmPassword || "";
+    // if (name === "password" || name === "confirmPassword") {
+    //   const password = name === "password" ? value : newData.password || "";
+    //   const confirm =
+    //     name === "confirmPassword" ? value : newData.confirmPassword || "";
 
-      if (!password) {
-        newErrors.password = "Password is required";
-      } else if (password.length < 6) {
-        newErrors.password = "Password must be at least 6 characters";
-      } else {
-        delete newErrors.password;
-      }
+    //   if (!password) {
+    //     newErrors.password = "Password is required";
+    //   } else if (password.length < 6) {
+    //     newErrors.password = "Password must be at least 6 characters";
+    //   } else {
+    //     delete newErrors.password;
+    //   }
 
-      if (!confirm) {
-        newErrors.confirmPassword = "Please confirm your password";
-      } else if (password !== confirm) {
-        newErrors.confirmPassword = "Passwords do not match";
-      } else {
-        delete newErrors.confirmPassword;
-      }
-    }
-
+    //   if (!confirm) {
+    //     newErrors.confirmPassword = "Please confirm your password";
+    //   } else if (password !== confirm) {
+    //     newErrors.confirmPassword = "Passwords do not match";
+    //   } else {
+    //     delete newErrors.confirmPassword;
+    //   }
+    // }
     setErrors(newErrors);
   };
 
   /* ---------- IMAGE UPLOAD ---------- */
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    // 🔥 instant preview
-    const previewUrl = URL.createObjectURL(file);
-    setData({ ...data, image: previewUrl });
+  // preview only
+  const previewUrl = URL.createObjectURL(file);
+  setPreview(previewUrl);
 
-    setUploading(true);
+  setUploading(true);
 
-    const formData = new FormData();
-    formData.append("image", file);
+  const formData = new FormData();
+  formData.append("image", file);
 
-    try {
-      const res = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-        { method: "POST", body: formData }
-      );
+  try {
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+      { method: "POST", body: formData }
+    );
 
-      const result = await res.json();
+    const result = await res.json();
 
-      if (result.success) {
-        setData({ ...data, image: result.data.url });
-      }
-    } catch (err) {
-      console.error("Image upload failed", err);
-    } finally {
-      setUploading(false);
+    if (result.success) {
+      // ✅ save ONLY real URL
+      setData(prev => ({
+        ...prev,
+        image: result.data.url,
+      }));
     }
-  };
+  } catch (err) {
+    console.error("Upload failed", err);
+  } finally {
+    URL.revokeObjectURL(previewUrl);
+    setUploading(false);
+  }
+};
 
   return (
     <div className="space-y-5 text-gray-700">
       <div className="md:flex gap-4 items-end">
         {/* Profile Image */}
         <div className="flex-1 mb-4 md:mb-0">
-          {data.image && (
-            <div className="w-24 h-24 rounded-full mb-2 relative overflow-hidden">
-              <Image
-                src={data.image}
-                alt="Profile"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+           {(preview || data.image) && (
+          <div className="w-24 h-24 rounded-full mb-2 relative overflow-hidden">
+            <Image
+              src={preview || data.image!}
+              alt="Profile"
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
           <label className="block font-medium">Profile Image</label>
           <input
             type="file"
@@ -198,8 +203,8 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
         </div>
       </div>
 
-      <div className="md:flex gap-4 items-start">
-        {/* Password */}
+      {/* <div className="md:flex gap-4 items-start">
+        Password
         <div className="flex-1 mb-4 md:mb-0">
           <label className="block font-medium">Password *</label>
           <div className="relative">
@@ -227,7 +232,7 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
             <p className="text-red-500 text-sm">{errors.password}</p>
           )}
         </div>
-        {/* Confirm Password */}
+        Confirm Password
         <div className="flex-1">
           <label className="block font-medium">Retype Password *</label>
           <div className="relative">
@@ -256,7 +261,7 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
             <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* -------- Tuition Preferences -------- */}
       <div className="space-y-4">

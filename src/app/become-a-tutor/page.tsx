@@ -13,7 +13,7 @@ export default function BecomeTutorPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Become a Tutor
+              Become a Mentor
             </h1>
             <p className="text-lg text-gray-600">
               Apply to become a tutor on our platform and start earning by

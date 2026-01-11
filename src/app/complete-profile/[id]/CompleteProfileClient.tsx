@@ -42,8 +42,8 @@ export default function CompleteProfileClient({ tutorId }: Props) {
   // =========================
   const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
     email: "",
-    password: "",
-    confirmPassword: "",
+    // password: "",
+    // confirmPassword: "",
     image: "",
     expectedSalary: "",
     currentTuitionStatus: "",
@@ -183,10 +183,10 @@ export default function CompleteProfileClient({ tutorId }: Props) {
     const b = basicInfo;
     return (
       (b.email ?? "").trim() !== "" &&
-      (b.password ?? "").trim() !== "" &&
-      (b.password ?? "").length >= 6 &&
-      (b.confirmPassword ?? "").trim() !== "" &&
-      b.password === b.confirmPassword &&
+      // (b.password ?? "").trim() !== "" &&
+      // (b.password ?? "").length >= 6 &&
+      // (b.confirmPassword ?? "").trim() !== "" &&
+      // b.password === b.confirmPassword &&
       b.expectedSalary !== "" &&
       b.currentTuitionStatus !== "" &&
       b.daysPerWeek !== "" &&

@@ -14,7 +14,7 @@ export default function HireTutorPage() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Hire a Tutor
+              Hire a Mentor
             </h1>
             <p className="text-lg text-gray-600">
               Fill out this form to post your tuition requirements and connect
