@@ -54,10 +54,13 @@ export default function PersonalInformation({
           <div>
             <label className="block font-medium">Additional Phone Number</label>
             <input
+              type="tel"
               name="additionalNumber"
-              placeholder="Additional Phone Number"
+              placeholder="Additional Phone Number (e.g. +880 17XXXXXXXX)"
               value={data.additionalNumber || ""}
               onChange={handleChange}
+              autoComplete="tel"
+              inputMode="tel"
               className="w-full border rounded-lg px-3 py-2"
             />
           </div>
@@ -78,15 +81,24 @@ export default function PersonalInformation({
           </div>
 
           <div>
-            <label className="block font-medium">Date of Birth</label>
-            <input
-              type="date"
-              name="dateOfBirth"
-              value={data.dateOfBirth || ""}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
+  <label
+    htmlFor="dateOfBirth"
+    className="block text-sm font-medium text-gray-700"
+  >
+    Date of Birth
+  </label>
+
+  <input
+    id="dateOfBirth"
+    type="date"
+    name="dateOfBirth"
+    value={data.dateOfBirth || ""}
+    onChange={handleChange}
+    max={new Date().toISOString().split("T")[0]}
+    className="w-full border rounded-lg px-3 py-2"
+  />
+</div>
+
 
           <div>
             <label className="block font-medium">Religion</label>

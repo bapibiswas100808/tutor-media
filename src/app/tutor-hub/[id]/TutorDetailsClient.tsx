@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
 import {
   NotebookText,
@@ -17,6 +16,11 @@ import {
   CheckCircle2,
   StarIcon,
   CheckCircleIcon,
+  Check,
+  CheckCircle,
+  Vault,
+  X,
+  CircleX,
 } from "lucide-react";
 import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
@@ -66,8 +70,13 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
 };
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, isLoading } = useAuth();
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"1year" | "2years" | null>(
+    null
+  );
 
   useEffect(() => {
     if (!isLoading && user && tutor && String(user.id) === String(tutor.id)) {
@@ -137,184 +146,215 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8"
           >
-            <div className="h-32"></div>
-            <div className="px-8 pb-8">
-              <div className="flex flex-col md:flex-row gap-6 -mt-16">
+            {/* Top Banner Space */}
+            <div className="h-24 bg-gradient-to-r from-blue-600 to-purple-600" />
+            <div className="p-8">
+              <div className="flex flex-col items-center md:flex-row gap-6 -mt-20">
                 {/* Profile Image */}
-                <div className="relative">
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
-                    {imageUrl ? (
+                <div className="relative shrink-0 w-fit">
+                  <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-xl ring-4 ring-white bg-white">
+                    {imageUrl && !imageError ? (
                       <Image
                         src={imageUrl}
                         alt={tutor.fullName}
                         fill
+                        sizes="176px"
                         className="object-cover"
-                        sizes="128px"
-                        priority
+                        onError={() => setImageError(true)}
                       />
                     ) : (
-                      <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                         {tutor.fullName?.charAt(0)}
                       </div>
                     )}
                   </div>
 
+                  {/* Verified Badge */}
                   {tutor.isVerified && (
                     <div className="absolute top-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-lg border-2 border-white">
-                      <CheckCircleIcon className="w-6 h-6 " />
-
+                      <CheckCircleIcon className="w-6 h-6" />
                     </div>
                   )}
                 </div>
 
                 {/* Header Info */}
-                <div className="flex-1 mt-16 md:mt-0">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                          {tutor.fullName}
-                        </h1>
+                <div className="flex-1 mt-4 md:mt-16">
+                  {/* Name + Premium */}
+                  <div className="flex flex-wrap items-center gap-3 mb-1">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                      {tutor.fullName}
+                    </h1>
 
-                        {tutor?.isPremium && (
-                          <span className="bg-linear-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                            <StarIcon className="w-4 h-4" />
-                            PREMIUM
-                          </span>
-                        )}
-                      </div>
-                      {/* <p className="text-xl text-blue-600 font-semibold mb-2">
-                        {tutor.fullName}
-                      </p> */}
-                      <div className="flex items-center justify-between gap-10">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-700">
-                            ID:
-                          </span>
-                          <span className="text-sm text-gray-500 capitalize">
-                            {tutor.id}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-700">
-                            Gender:
-                          </span>
-                          <span className="text-sm text-gray-500 capitalize">
-                            {tutor.gender}
-                          </span>
-                        </div>
-                      </div>
+                    {tutor.isPremium && (
+                      <span className="bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow">
+                        <StarIcon className="w-4 h-4" />
+                        Premium
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Meta Info */}
+                  <div className="flex flex-wrap gap-6 text-sm mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-400">ID:</span>
+                      <span className="text-gray-600">{tutor.id}</span>
                     </div>
+
+                    {tutor.gender && (
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-400">
+                          Gender:
+                        </span>
+                        <span className="text-gray-600 capitalize">
+                          {tutor.gender}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Quick Stats */}
-                  <div className="flex items-center justify-between ">
-                    {/* Info Grid */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-sm text-gray-600">
+                  <div className="space-y-2 text-sm text-gray-600">
+                    {tutor.experience && (
+                      <div className="flex items-center">
                         <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
                         {tutor.experience}
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
+                    )}
+
+                    {tutor.qualification && (
+                      <div className="flex items-center">
                         <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
                         {tutor.qualification}
                       </div>
-                    </div>
-
-                    {/* CTA Buttons */}
-                    <div className="flex justify-center gap-3">
-                      {/* <Link
-                        href="/hire-tutor"
-                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
-                      >
-                        Hire Tutor
-                      </Link> */}
-                      {isAuthenticated &&
-                        user &&
-                        String(user.id) === String(tutor.id) && (
-                          <Link
-                            href={`/complete-profile/${tutor.id}`}
-                            className="bg-[#0D24A0] text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 hover:scale-105 transition-all"
-                          >
-                            Update Profile
-                          </Link>
-                        )}
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Profile Completion Section - Only visible to the tutor viewing their own profile */}
+          {/* Profile Completion & Premium Request Section - Only visible to the tutor viewing their own profile */}
           {isOwnProfile && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className={`rounded-3xl shadow-lg p-6 mb-8 ${
-                isProfileIncomplete
-                  ? "bg-red-50 border-2 border-red-200"
-                  : "bg-green-50 border-2 border-green-200"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                {isProfileIncomplete && (
-                  <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
-                )}
-                {!isProfileIncomplete && (
-                  <div className="w-6 h-6 text-green-600 shrink-0 mt-1">
-                    <CheckCircle2 className="w-6 h-6 text-green-500" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <h3
-                    className={`text-lg font-bold mb-2 ${
-                      isProfileIncomplete ? "text-red-800" : "text-green-800"
-                    }`}
-                  >
-                    Profile Completion: {completionPercentage}%
-                  </h3>
+            <div className="mb-8 flex flex-col gap-6 lg:flex-row">
+              {/* Profile Completion */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className={`flex-1 rounded-3xl shadow-lg p-8 flex flex-col ${
+                  isProfileIncomplete
+                    ? "bg-red-50 border-2 border-red-200"
+                    : "bg-green-50 border-2 border-green-200"
+                }`}
+              >
+                <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                  {isProfileIncomplete && (
+                    <AlertCircle className="w-28 h-28 text-red-600 shrink-0 mt-1" />
+                  )}
+                  {!isProfileIncomplete && (
+                    <div className="w-28 h-28 text-green-600 shrink-0 mt-1">
+                      <CheckCircle2 className="w-28 h-28 text-green-500" />
+                    </div>
+                  )}
 
-                  {/* Progress Bar */}
-                  <div className="w-full bg-gray-300 rounded-full h-3 mb-4 overflow-hidden">
-                    <div
-                      className={`h-full transition-all duration-500 ${
-                        isProfileIncomplete ? "bg-red-500" : "bg-green-500"
+                  <div className="flex-1 w-full">
+                    <h3
+                      className={`text-lg font-bold mb-2 text-center ${
+                        isProfileIncomplete ? "text-red-800" : "text-green-800"
                       }`}
-                      style={{ width: `${completionPercentage}%` }}
-                    ></div>
+                    >
+                      Profile Completion: {completionPercentage}%
+                    </h3>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-300 rounded-full h-3 mb-4 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500 ${
+                          isProfileIncomplete ? "bg-red-500" : "bg-green-500"
+                        }`}
+                        style={{ width: `${completionPercentage}%` }}
+                      ></div>
+                    </div>
+
+                    {isProfileIncomplete ? (
+                      <p className="text-red-600 text-sm mb-3 text-center">
+                        Your profile will NOT be shown to students until it
+                        reaches 80% completion.
+                      </p>
+                    ) : (
+                      <p className="text-green-700 text-sm font-semibold text-center mb-3">
+                        ✓ Your profile is complete and visible to all students!
+                      </p>
+                    )}
                   </div>
 
-                  {isProfileIncomplete ? (
-                    <div>
-                      <p className="text-red-700 font-semibold mb-2">
-                        ⚠️ Your profile is not fully completed
-                      </p>
-                      <p className="text-red-600 text-sm mb-3">
-                        Your profile will NOT be shown to students until it
-                        reaches 80% completion. Currently at{" "}
-                        {completionPercentage}% - you need to complete{" "}
-                        {80 - completionPercentage}% more.
-                      </p>
+                  <div className="w-full mt-auto">
+                    {isProfileIncomplete ? (
                       <Link
                         href={`/complete-profile/${tutor.id}`}
-                        className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                        className="block w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white text-center transition hover:bg-red-700"
                       >
                         Complete Your Profile
                       </Link>
-                    </div>
-                  ) : (
-                    <p className="text-green-700 text-sm font-semibold">
-                      ✓ Your profile is complete and visible to all students!
-                    </p>
-                  )}
+                    ) : (
+                      <Link
+                        href={`/complete-profile/${tutor.id}`}
+                        className="block w-full rounded-full bg-green-500 py-3 text-sm font-semibold text-white text-center transition hover:bg-green-600"
+                      >
+                        Update Your Profile
+                      </Link>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+
+              {/* Premium */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="rounded-3xl bg-linear-to-r from-yellow-100 to-orange-100 p-8 shadow-xl flex-1 border-2 border-orange-200 flex flex-col"
+              >
+                {/* Badge */}
+                <div className=" flex justify-center">
+                  <div className="relative h-40 w-40">
+                    <Image
+                      src="/images/premium.png"
+                      alt="Premium"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="mb-2 text-center text-2xl font-bold text-yellow-800">
+                  Premium Request
+                </h3>
+
+                {/* Description */}
+                <p className="mb-6 text-center text-md text-yellow-700">
+                  Premium members receive frequent tuition updates with priority
+                </p>
+
+                {/* Button wrapper with mt-auto */}
+                <div className="mt-auto">
+                  <Link
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(true);
+                    }}
+                    className="block w-full text-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500 py-3 text-sm font-semibold text-white transition-colors duration-300"
+                  >
+                    Premium Tutor registration
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
           )}
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -457,6 +497,107 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 </div>
               </motion.div>
             </div>
+
+            {/* Modal */}
+            {isOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="bg-white rounded-3xl w-11/12 max-w-md p-8 relative shadow-xl">
+                  {/* Crown Icon */}
+                  <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                    <Image
+                      src="/images/premium.png"
+                      alt="Crown"
+                      width={200}
+                      height={200}
+                      className="object-contain"
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-2xl font-bold text-center text-yellow-600 mb-6 mt-12">
+                    Benefits of Becoming Premium Membership
+                  </h2>
+
+                  {/* Benefits */}
+                  <ul className="flex flex-col gap-2 mb-6 font-bold text-gray-700">
+                    <li className="flex items-center gap-2">
+                      <span className="text-yellow-600">
+                        <CheckCircle size={20} />
+                      </span>
+                      Guaranteed at least one tuition.
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-yellow-600">
+                        <CheckCircle size={20} />
+                      </span>
+                      Nearby tuition notifications alert.
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-yellow-600">
+                        <CheckCircle size={20} />
+                      </span>
+                      Always on top of results.
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-yellow-600">
+                        <CheckCircle size={20} />
+                      </span>
+                      Prioritized during selection process.
+                    </li>
+                  </ul>
+
+                  {/* Plans */}
+                  <div className="flex gap-4 mb-6">
+                    <button
+                      onClick={() => setSelectedPlan("1year")}
+                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
+                        selectedPlan === "1year"
+                          ? "bg-yellow-600 text-white border-yellow-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+                      }`}
+                    >
+                      <div className="text-md font-bold">1 Year</div>
+                      <div className="text-lg font-bold">৳ 300.00</div>
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedPlan("2years")}
+                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
+                        selectedPlan === "2years"
+                          ? "bg-yellow-600 text-white border-yellow-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+                      }`}
+                    >
+                      <div className="text-md font-bold">2 Years</div>
+                      <div className="text-lg font-bold">৳ 500.00</div>
+                    </button>
+                  </div>
+
+                  {/* Pay Now Button */}
+                  <button
+                    disabled={!selectedPlan}
+                    className={`w-full py-3 rounded-xl text-white font-semibold transition cursor-pointer ${
+                      selectedPlan
+                        ? "bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
+                        : "bg-gray-300 cursor-not-allowed"
+                    }`}
+                    onClick={() => {
+                      alert(`Pay Now clicked for ${selectedPlan} plan!`);
+                    }}
+                  >
+                    Pay Now
+                  </button>
+
+                  {/* Close Button */}
+                  <button
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <CircleX size={40} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
