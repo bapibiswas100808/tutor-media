@@ -9,13 +9,30 @@ import Education, { EducationEntry } from "./tabs/education";
 import PersonalInformation, { PersonalInfoData } from "./tabs/personalInfo";
 import DocumentsInfo, { DocumentsInfoData } from "./tabs/documentsInfo";
 import Swal from "sweetalert2";
-import { FolderInput, GraduationCap, IdCard, User } from "lucide-react";
+// import { FolderInput, GraduationCap, IdCard, User } from "lucide-react";
+import Image from "next/image";
 
 const tabs = [
-  { label: "Basic Info", icon: User, color: "blue" },
-  { label: "Educational Info", icon: GraduationCap, color: "green" },
-  { label: "Personal Info", icon: IdCard, color: "purple" },
-  { label: "Documents Info", icon: FolderInput, color: "orange" },
+  {
+    label: "Tuition Info",
+    icon: "/images/completeProfile/tuition-info.png",
+    color: "blue",
+  },
+  {
+    label: "Educational Info",
+    icon: "/images/completeProfile/educational-info.png",
+    color: "green",
+  },
+  {
+    label: "Personal Info",
+    icon: "/images/completeProfile/personal-info.png",
+    color: "purple",
+  },
+  {
+    label: "Documents Info",
+    icon: "/images/completeProfile/documents-info.png",
+    color: "orange",
+  },
 ];
 
 interface Props {
@@ -284,31 +301,54 @@ export default function CompleteProfileClient({ tutorId }: Props) {
   // UI
   // =========================
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+    <div className="min-h-[calc(100vh-80px)] bg-gray-50 pt-5">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <h1 className="text-xl md:text-3xl font-bold mb-6 text-gray-800">
           {fullName
-            ? `${fullName} — Complete Your Profile`
-            : "Complete Your Profile"}
+            ? `${fullName} — Update Your Profile`
+            : "Update Your Profile"}
         </h1>
 
         {/* Tabs */}
         <div className="flex items-center justify-between gap-6 border-b border-gray-300 mb-8">
           {tabs.map((tab, index) => {
-            const Icon = tab.icon;
+            // const Icon = tab.icon;
             return (
               <button
                 key={tab.label}
                 onClick={() => setActiveTab(index)}
-                className={`pb-3 font-bold transition w-full flex flex-col items-center justify-center gap-1 cursor-pointer 
-          ${
-            activeTab === index
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-700 hover:text-blue-500"
-          }`}
+                className={`group pb-3 font-bold transition w-full flex flex-col items-center justify-center cursor-pointer 
+                  ${
+                    activeTab === index
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-700 hover:text-blue-500"
+                  }`}
               >
-                <Icon size={28} color={tab.color} />
-                <span className="hidden sm:inline">{tab.label}</span>
+                <div className="relative w-10 md:w-20 h-10 md:h-20">
+                  <Image
+                    src={tab.icon}
+                    alt={tab.label}
+                    fill
+                    priority
+                    className={`object-contain transition-transform duration-300
+                      ${
+                        activeTab === index
+                          ? "scale-110"
+                          : "group-hover:scale-110"
+                      }`}
+                  />
+                </div>
+
+                <span
+                  className={`hidden sm:inline text-lg transition-transform duration-300
+                    ${
+                      activeTab === index
+                        ? "scale-105"
+                        : "group-hover:scale-105"
+                    }`}
+                >
+                  {tab.label}
+                </span>
               </button>
             );
           })}

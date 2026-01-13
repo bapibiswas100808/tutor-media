@@ -15,10 +15,6 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
       className="relative flex items-center bg-linear-to-br from-white via-blue-300 to-gray-200 overflow-hidden"
       style={{ minHeight: "clamp(500px, 70vh, 900px)" }}
     >
-      {/* Decorative background elements */}
-      {/* <div className="absolute top-20 right-0 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
-      <div className="absolute bottom-20 left-0 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-20"></div> */}
-
       <div className="container mx-auto px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Left Side - Content */}
@@ -62,62 +58,54 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full h-full lg:flex flex-wrap justify-center items-center gap-6 lg:justify-end hidden"
+            className="relative w-full h-full hidden lg:grid grid-cols-2 items-end justify-end"
           >
-            {/* Function to generate same animation for all cards */}
             {[
-              {
-                src: "/images/banner/4.png",
-                rounded: "rounded-br-none",
-                z: 4,
-                phase: 0,
-              },
-              {
-                src: "/images/banner/2.png",
-                rounded: "rounded-bl-none",
-                z: 3,
-                phase: 1,
-              },
-              {
-                src: "/images/banner/3.png",
-                rounded: "rounded-tr-none",
-                z: 2,
-                phase: 2,
-              },
-              {
-                src: "/images/banner/1.png",
-                rounded: "rounded-tl-none",
-                z: 1,
-                phase: 3,
-              },
-            ].map((img) => (
+              { src: "/images/banner/4.png", rounded: "rounded-br-none", z: 4 },
+              { src: "/images/banner/2.png", rounded: "rounded-bl-none", z: 3 },
+              { src: "/images/banner/3.png", rounded: "rounded-tr-none", z: 2 },
+              { src: "/images/banner/1.png", rounded: "rounded-tl-none", z: 1 },
+            ].map((img, idx) => (
               <motion.div
                 key={img.src}
-                initial={{ opacity: 0, scale: 0.8 }}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{
                   opacity: 1,
-                  x: [0, 12, 0, -12, 0],
-                  y: [0, -12, 0, 12, 0],
+                  y: ["0%", "-2%", "0%", "2%", "0%"], // smoother floating
+                  x: ["0%", "1%", "0%", "-1%", "0%"],
                 }}
                 transition={{
-                  duration: 8,
-                  delay: img.phase * 0.6,
+                  duration: 8 + idx, // slight variation per image
                   repeat: Infinity,
-                  ease: "linear",
+                  ease: "easeInOut",
                 }}
-                whileHover={{ scale: 1.1, zIndex: 10 }}
-                className={`relative w-52 sm:w-56 md:w-64 h-52 sm:h-56 md:h-64 rounded-3xl ${img.rounded} overflow-hidden shadow-2xl transition-all`}
+                whileHover={{ scale: 1.05 }}
+                className={`relative aspect-square h-[90%] w-[90%] xl:min-w-fit rounded-3xl ${img.rounded} overflow-hidden shadow-2xl`}
                 style={{ zIndex: img.z }}
               >
                 <Image
                   src={img.src}
                   alt="Banner"
                   fill
-                  className="object-cover relative z-20"
+                  sizes="(max-width: 1024px) 0px, (max-width: 1280px) 224px, 256px"
+                  className="object-cover"
+                  priority
                 />
               </motion.div>
             ))}
           </motion.div>
+
+          <div className="lg:hidden flex justify-center">
+            <div className="relative w-64 aspect-square rounded-3xl overflow-hidden shadow-xl">
+              <Image
+                src="/images/banner/1.png"
+                alt="Banner"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>

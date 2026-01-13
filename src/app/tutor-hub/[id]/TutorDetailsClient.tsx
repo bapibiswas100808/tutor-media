@@ -16,16 +16,27 @@ import {
   CheckCircle2,
   StarIcon,
   CheckCircleIcon,
-  Check,
   CheckCircle,
-  Vault,
-  X,
   CircleX,
 } from "lucide-react";
 import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
+type EducationEntry = {
+  id: string;
+  academy: string;
+  curriculum?: string;
+  group?: string;
+  passingYear?: string;
+  result?: string;
+  instituteType?: string;
+  studyType?: string;
+  department?: string;
+  cgpa?: string;
+};
 
 // Calculate profile completion percentage
 const calculateCompletionPercentage = (tutor: Tutor | null): number => {
@@ -74,10 +85,11 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"1year" | "2years" | null>(
+  const [selectedPlan, setSelectedPlan] = useState<"1 year" | "2 years" | null>(
     null
   );
 
+  // Check if the logged-in user is viewing their own profile
   useEffect(() => {
     if (!isLoading && user && tutor && String(user.id) === String(tutor.id)) {
       setIsOwnProfile(true);
@@ -87,6 +99,20 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const completionPercentage = calculateCompletionPercentage(tutor);
   const isProfileIncomplete = completionPercentage < 80;
   const imageUrl = tutor?.basicInfo?.image || null;
+
+  // Tuition Preference Fields
+  const tuitionPreferenceFields = [
+    { label: "Expected Salary", key: "expectedSalary" },
+    { label: "Current Tuition Status", key: "currentTuitionStatus" },
+    { label: "Days Per Week", key: "daysPerWeek" },
+    { label: "Tutoring Experience", key: "tutoringExperience" },
+    { label: "Place of Learning", key: "placeOfLearning" },
+    { label: "Preferred Medium", key: "preferredMedium" },
+    { label: "Preferred Class", key: "preferredClass" },
+    { label: "Preferred Subject", key: "preferredSubjects" },
+    { label: "Preferred Time", key: "preferredTime" },
+    { label: "Preferred Area", key: "preferredArea" },
+  ];
 
   if (!tutor) {
     return (
@@ -250,13 +276,13 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     : "bg-green-50 border-2 border-green-200"
                 }`}
               >
-                <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                <div className="flex-1 flex flex-col items-center justify-center gap-2">
                   {isProfileIncomplete && (
-                    <AlertCircle className="w-28 h-28 text-red-600 shrink-0 mt-1" />
+                    <AlertCircle className="w-16 h-16 text-red-600 shrink-0 mt-1" />
                   )}
                   {!isProfileIncomplete && (
-                    <div className="w-28 h-28 text-green-600 shrink-0 mt-1">
-                      <CheckCircle2 className="w-28 h-28 text-green-500" />
+                    <div className="w-16 h-16 text-green-600 shrink-0 mt-1">
+                      <CheckCircle2 className="w-16 h-16 text-green-500" />
                     </div>
                   )}
 
@@ -270,7 +296,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </h3>
 
                     {/* Progress Bar */}
-                    <div className="w-full bg-gray-300 rounded-full h-3 mb-4 overflow-hidden">
+                    <div className="w-full bg-gray-300 rounded-full h-2 mb-2 overflow-hidden">
                       <div
                         className={`h-full transition-all duration-500 ${
                           isProfileIncomplete ? "bg-red-500" : "bg-green-500"
@@ -280,12 +306,12 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </div>
 
                     {isProfileIncomplete ? (
-                      <p className="text-red-600 text-sm mb-3 text-center">
+                      <p className="text-red-600 text-sm mb-2 text-center">
                         Your profile will NOT be shown to students until it
                         reaches 80% completion.
                       </p>
                     ) : (
-                      <p className="text-green-700 text-sm font-semibold text-center mb-3">
+                      <p className="text-green-700 text-sm font-semibold text-center mb-2">
                         ✓ Your profile is complete and visible to all students!
                       </p>
                     )}
@@ -319,8 +345,8 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 className="rounded-3xl bg-linear-to-r from-yellow-100 to-orange-100 p-8 shadow-xl flex-1 border-2 border-orange-200 flex flex-col"
               >
                 {/* Badge */}
-                <div className=" flex justify-center">
-                  <div className="relative h-40 w-40">
+                <div className="flex justify-center">
+                  <div className="relative h-22 w-26">
                     <Image
                       src="/images/premium.png"
                       alt="Premium"
@@ -336,7 +362,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 </h3>
 
                 {/* Description */}
-                <p className="mb-6 text-center text-md text-yellow-700">
+                <p className="mb-2 text-center text-md text-yellow-700">
                   Premium members receive frequent tuition updates with priority
                 </p>
 
@@ -375,7 +401,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
               </motion.div>
 
               {/* Tuition Preferences */}
-              {tutor.basicInfo && (
+              {tutor?.basicInfo && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -387,47 +413,18 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     Tuition Preferences
                   </h2>
 
-                  <div className="grid md:grid-cols-2 gap-6 text-gray-700">
-                    <Info
-                      label="Expected Salary"
-                      value={tutor.basicInfo.expectedSalary}
-                    />
-                    <Info
-                      label="Current Tuition Status"
-                      value={tutor.basicInfo.currentTuitionStatus}
-                    />
-                    <Info
-                      label="Days Per Week"
-                      value={tutor.basicInfo.daysPerWeek}
-                    />
-                    <Info
-                      label="Tutoring Experience"
-                      value={tutor.basicInfo.tutoringExperience}
-                    />
-                    <Info
-                      label="Place of Learning"
-                      value={tutor.basicInfo.placeOfLearning}
-                    />
-                    <Info
-                      label="Preferred Medium"
-                      value={tutor.basicInfo.preferredMedium}
-                    />
-                    <Info
-                      label="Preferred Class"
-                      value={tutor.basicInfo.preferredClass}
-                    />
-                    <Info
-                      label="Preferred Subject"
-                      value={tutor.basicInfo.preferredSubjects}
-                    />
-                    <Info
-                      label="Preferred Time"
-                      value={tutor.basicInfo.preferredTime}
-                    />
-                    <Info
-                      label="Preferred Area"
-                      value={tutor.basicInfo.preferredArea}
-                    />
+                  <div className="grid gap-6 md:grid-cols-2 text-gray-700">
+                    {tuitionPreferenceFields.map(({ label, key }) => (
+                      <Info
+                        key={key}
+                        label={label}
+                        value={
+                          tutor.basicInfo![
+                            key as keyof typeof tutor.basicInfo
+                          ] || "Not specified"
+                        }
+                      />
+                    ))}
                   </div>
                 </motion.div>
               )}
@@ -444,25 +441,27 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     <GraduationCap className="w-6 h-6 mr-3 text-blue-600" />
                     Education
                   </h2>
+
                   <ul className="space-y-3">
-                    {(tutor.education
-                      ? [
-                          ...(tutor.education.ssc || []),
-                          ...(tutor.education.hsc || []),
-                          ...(tutor.education.grad || []),
-                        ]
-                      : []
-                    ).map((edu, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <svg className="w-5 h-5 text-blue-500 mr-3 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium">{edu.academy}</p>
-                          {edu.passingYear && (
-                            <p className="text-sm">{edu.passingYear}</p>
-                          )}
-                        </div>
-                      </li>
-                    ))}
+                    {Object.entries(tutor.education).flatMap(
+                      ([level, records]) =>
+                        (records || []).map((edu: EducationEntry) => (
+                          <Info
+                            key={edu.id}
+                            label={level.toUpperCase()}
+                            value={
+                              `${edu.academy || "N/A"}${
+                                edu.passingYear ? ` (${edu.passingYear})` : ""
+                              }` +
+                              (edu.cgpa
+                                ? ` - CGPA: ${edu.cgpa}`
+                                : edu.result
+                                ? ` - Result: ${edu.result}`
+                                : "")
+                            }
+                          />
+                        ))
+                    )}
                   </ul>
                 </motion.div>
               )}
@@ -500,7 +499,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
             {/* Modal */}
             {isOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
                 <div className="bg-white rounded-3xl w-11/12 max-w-md p-8 relative shadow-xl">
                   {/* Crown Icon */}
                   <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
@@ -519,39 +518,31 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   </h2>
 
                   {/* Benefits */}
-                  <ul className="flex flex-col gap-2 mb-6 font-bold text-gray-700">
-                    <li className="flex items-center gap-2">
-                      <span className="text-yellow-600">
-                        <CheckCircle size={20} />
-                      </span>
-                      Guaranteed at least one tuition.
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-yellow-600">
-                        <CheckCircle size={20} />
-                      </span>
-                      Nearby tuition notifications alert.
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-yellow-600">
-                        <CheckCircle size={20} />
-                      </span>
-                      Always on top of results.
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-yellow-600">
-                        <CheckCircle size={20} />
-                      </span>
-                      Prioritized during selection process.
-                    </li>
-                  </ul>
+                  <div className="flex justify-center mb-6">
+                    <ul className="flex flex-col gap-2 text-gray-700 font-medium">
+                      {[
+                        "Guaranteed at least one tuition",
+                        "Nearby tuition notification alerts",
+                        "Always on top of results",
+                        "Prioritized during selection process",
+                      ].map((feature, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle
+                            size={20}
+                            className="text-yellow-600 mt-0.5"
+                          />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
                   {/* Plans */}
                   <div className="flex gap-4 mb-6">
                     <button
-                      onClick={() => setSelectedPlan("1year")}
+                      onClick={() => setSelectedPlan("1 year")}
                       className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
-                        selectedPlan === "1year"
+                        selectedPlan === "1 year"
                           ? "bg-yellow-600 text-white border-yellow-600"
                           : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
                       }`}
@@ -561,9 +552,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </button>
 
                     <button
-                      onClick={() => setSelectedPlan("2years")}
+                      onClick={() => setSelectedPlan("2 years")}
                       className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
-                        selectedPlan === "2years"
+                        selectedPlan === "2 years"
                           ? "bg-yellow-600 text-white border-yellow-600"
                           : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
                       }`}
@@ -582,7 +573,30 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                         : "bg-gray-300 cursor-not-allowed"
                     }`}
                     onClick={() => {
-                      alert(`Pay Now clicked for ${selectedPlan} plan!`);
+                      Swal.fire({
+                        title: "Confirm Payment",
+                        text: `Do you want to proceed with the ${selectedPlan} plan?`,
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, Pay Now",
+                        cancelButtonText: "Cancel",
+                        confirmButtonColor: "#2563eb", // blue-600
+                        cancelButtonColor: "#6b7280", // gray-500
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          // ✅ Proceed with payment logic
+                          Swal.fire({
+                            title: "Processing",
+                            text: "Redirecting to payment...",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                          });
+
+                          // call your payment function here
+                          // handlePayment(selectedPlan);
+                        }
+                      });
                     }}
                   >
                     Pay Now
