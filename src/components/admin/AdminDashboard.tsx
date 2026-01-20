@@ -6,6 +6,20 @@ import { Tutor } from "@/data/tutorsList";
 // import { TuitionJob } from "@/data/tuitionJobsList";
 import { Application } from "@/lib/applications";
 import Swal from "sweetalert2";
+export interface BkashPayment {
+  _id?: string;
+  studentId?: string;
+  tutorId?: string;
+  trxId?: string;
+  transactionId?: string;
+  plan?: string;
+  amount?: number | string;
+  sender?: string;
+  status?: string;
+  createdAt?: string;
+  method?: string;
+}
+
 export interface TuitionJob {
   id: number;
   _id: string | number;
@@ -26,16 +40,18 @@ export default function AdminDashboard({
   jobs: TuitionJob[];
   applications?: Application[];
 }) {
-  const [view, setView] = useState<"tutors" | "jobs" | "applications">(
-    "tutors"
-  );
+  const [view, setView] = useState<
+    "tutors" | "jobs" | "applications" | "payments"
+  >("tutors");
   const [tutors, setTutors] = useState<Tutor[]>(initialTutors || []);
   const [jobs, setJobs] = useState<TuitionJob[]>(initialJobs || []);
   const [applications, setApplications] = useState<Application[]>(
-    initialApplications || []
+    initialApplications || [],
   );
+  const [payments, setPayments] = useState<BkashPayment[]>([]);
   const [tutorEmailQuery, setTutorEmailQuery] = useState<string>("");
   const [jobTitleQuery, setJobTitleQuery] = useState<string>("");
+  const [paymentsPage, setPaymentsPage] = useState<number>(1);
 
   const PAGE_SIZE = 10;
   const [tutorPage, setTutorPage] = useState<number>(1);
@@ -48,7 +64,7 @@ export default function AdminDashboard({
   const [editFormData, setEditFormData] = useState<Partial<Tutor>>({});
   const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
   const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
-    {}
+    {},
   );
 
   //   useEffect(() => {
@@ -70,13 +86,38 @@ export default function AdminDashboard({
     setApplications(initialApplications || []);
   }, [initialTutors, initialJobs, initialApplications]);
 
+  // Fetch payments
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "https://pro-assignment-twelve-server.vercel.app";
+        const res = await fetch(`${baseUrl}/manual-bkash-payment`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setPayments(Array.isArray(data) ? data : data.payments || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch payments:", error);
+      }
+    };
+    fetchPayments();
+  }, []);
+
   const counts = useMemo(
     () => ({
       tutors: tutors.length,
       jobs: jobs.length,
       applications: applications.length,
+      payments: payments.length,
     }),
-    [tutors, jobs, applications]
+    [tutors, jobs, applications, payments],
   );
 
   const filteredTutors = useMemo(() => {
@@ -95,25 +136,33 @@ export default function AdminDashboard({
 
   const tutorTotalPages = Math.max(
     1,
-    Math.ceil(filteredTutors.length / PAGE_SIZE)
+    Math.ceil(filteredTutors.length / PAGE_SIZE),
   );
   const jobTotalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
   const applicationsTotalPages = Math.max(
     1,
-    Math.ceil(applications.length / PAGE_SIZE)
+    Math.ceil(applications.length / PAGE_SIZE),
+  );
+  const paymentsTotalPages = Math.max(
+    1,
+    Math.ceil(payments.length / PAGE_SIZE),
   );
 
   const currentTutorItems = filteredTutors.slice(
     (tutorPage - 1) * PAGE_SIZE,
-    tutorPage * PAGE_SIZE
+    tutorPage * PAGE_SIZE,
   );
   const currentJobItems = filteredJobs.slice(
     (jobPage - 1) * PAGE_SIZE,
-    jobPage * PAGE_SIZE
+    jobPage * PAGE_SIZE,
   );
   const currentApplicationItems = applications.slice(
     (applicationsPage - 1) * PAGE_SIZE,
-    applicationsPage * PAGE_SIZE
+    applicationsPage * PAGE_SIZE,
+  );
+  const currentPaymentItems = payments.slice(
+    (paymentsPage - 1) * PAGE_SIZE,
+    paymentsPage * PAGE_SIZE,
   );
 
   useEffect(() => {
@@ -129,6 +178,10 @@ export default function AdminDashboard({
       setApplicationsPage(applicationsTotalPages);
   }, [applicationsTotalPages, applicationsPage]);
 
+  useEffect(() => {
+    if (paymentsPage > paymentsTotalPages) setPaymentsPage(paymentsTotalPages);
+  }, [paymentsTotalPages, paymentsPage]);
+
   useEffect(() => setTutorPage(1), [tutorEmailQuery]);
   useEffect(() => setJobPage(1), [jobTitleQuery]);
 
@@ -141,7 +194,7 @@ export default function AdminDashboard({
     id: number | string,
     mongoId: string | undefined,
     field: "isVerified" | "isApproved" | "isPremium",
-    value: boolean
+    value: boolean,
   ) {
     const key = `${type}-${id}`;
     setLoadingMap((s) => ({ ...s, [key]: true }));
@@ -150,11 +203,11 @@ export default function AdminDashboard({
     // optimistic update
     if (type === "tutor") {
       setTutors((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, [field]: value } : t))
+        prev.map((t) => (t.id === id ? { ...t, [field]: value } : t)),
       );
     } else {
       setJobs((prev) =>
-        prev.map((j) => (j.id === id ? { ...j, [field]: value } : j))
+        prev.map((j) => (j.id === id ? { ...j, [field]: value } : j)),
       );
     }
 
@@ -202,11 +255,11 @@ export default function AdminDashboard({
       // revert optimistic update
       if (type === "tutor") {
         setTutors((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, [field]: !value } : t))
+          prev.map((t) => (t.id === id ? { ...t, [field]: !value } : t)),
         );
       } else {
         setJobs((prev) =>
-          prev.map((j) => (j.id === id ? { ...j, [field]: !value } : j))
+          prev.map((j) => (j.id === id ? { ...j, [field]: !value } : j)),
         );
       }
 
@@ -281,7 +334,7 @@ export default function AdminDashboard({
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
     applicationId: string,
-    shouldDelete: boolean
+    shouldDelete: boolean,
   ) => {
     const key = `application-${applicationId}`;
 
@@ -306,8 +359,8 @@ export default function AdminDashboard({
     // ✅ Optimistic update
     setApplications((prev) =>
       prev.map((a) =>
-        a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a
-      )
+        a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
+      ),
     );
 
     try {
@@ -336,8 +389,8 @@ export default function AdminDashboard({
       // 🔄 Revert optimistic update
       setApplications((prev) =>
         prev.map((a) =>
-          a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a
-        )
+          a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
+        ),
       );
 
       const message = err instanceof Error ? err.message : "Update failed";
@@ -409,11 +462,120 @@ export default function AdminDashboard({
             >
               Applications ({counts.applications})
             </button>
+
+            <button
+              className={`w-full text-left px-3 py-2 rounded ${
+                view === "payments"
+                  ? "bg-blue-50 border-l-4 border-blue-600"
+                  : "hover:bg-gray-50"
+              }`}
+              onClick={() => setView("payments")}
+            >
+              Payments ({counts.payments})
+            </button>
           </nav>
         </aside>
 
         <section className="flex-1">
-          {view === "tutors" ? (
+          {view === "payments" ? (
+            // Payments
+            <div className="bg-white border rounded p-4">
+              <h2 className="text-lg font-medium mb-2">Payments</h2>
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-sm text-gray-500">
+                  {payments.length === 0 ? (
+                    <>Showing 0 of 0</>
+                  ) : (
+                    <>
+                      Showing {(paymentsPage - 1) * PAGE_SIZE + 1} -{" "}
+                      {Math.min(paymentsPage * PAGE_SIZE, payments.length)} of{" "}
+                      {payments.length}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="text-left">
+                      {/* <th className="px-3 py-2">Student ID</th> */}
+                      <th className="px-3 py-2">Tutor ID</th>
+                      <th className="px-3 py-2">Transaction ID</th>
+                      <th className="px-3 py-2">Plan</th>
+                      <th className="px-3 py-2">Amount</th>
+                      <th className="px-3 py-2">Phone</th>
+                      {/* <th className="px-3 py-2">Status</th> */}
+                      <th className="px-3 py-2">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentPaymentItems.length === 0 ? (
+                      <tr className="border-t">
+                        <td className="px-3 py-2" colSpan={8}>
+                          No payments found
+                        </td>
+                      </tr>
+                    ) : (
+                      currentPaymentItems.map((p: BkashPayment) => (
+                        <tr key={p._id} className="border-t">
+                          {/* <td className="px-3 py-2">{p.studentId || "N/A"}</td> */}
+                          <td className="px-3 py-2">{p.tutorId || "N/A"}</td>
+                          <td className="px-3 py-2 font-mono text-xs">
+                            {p.trxId || p.transactionId || "N/A"}
+                          </td>
+                          <td className="px-3 py-2 capitalize">
+                            {p.plan || "N/A"}
+                          </td>
+                          <td className="px-3 py-2">৳{p.amount || "0"}</td>
+                          <td className="px-3 py-2">{p.sender || "N/A"}</td>
+                          {/* <td className="px-3 py-2">
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-semibold ${
+                                p.status === "verified"
+                                  ? "bg-green-100 text-green-800"
+                                  : p.status === "pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {p.status || "pending"}
+                            </span>
+                          </td> */}
+                          <td className="px-3 py-2 text-xs text-gray-500">
+                            {p.createdAt
+                              ? new Date(p.createdAt).toLocaleDateString()
+                              : "N/A"}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {/* Pagination */}
+              <div className="flex justify-center gap-2 mt-4">
+                <button
+                  disabled={paymentsPage === 1}
+                  onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span className="px-3 py-2 text-sm">
+                  Page {paymentsPage} of {paymentsTotalPages}
+                </span>
+                <button
+                  disabled={paymentsPage === paymentsTotalPages}
+                  onClick={() =>
+                    setPaymentsPage((p) => Math.min(paymentsTotalPages, p + 1))
+                  }
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          ) : view === "tutors" ? (
             // Tutors
             <div className="bg-white border rounded p-4">
               <h2 className="text-lg font-medium mb-2">Tutors</h2>
@@ -488,7 +650,7 @@ export default function AdminDashboard({
                                   t.id,
                                   t._id,
                                   "isVerified",
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                               title="Toggle verified status"
@@ -505,7 +667,7 @@ export default function AdminDashboard({
                                   t.id,
                                   t._id,
                                   "isApproved",
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                               title="Toggle approved status"
@@ -522,7 +684,7 @@ export default function AdminDashboard({
                                   t.id,
                                   t._id,
                                   "isPremium",
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                               title="Toggle premium status"
@@ -560,7 +722,7 @@ export default function AdminDashboard({
                                 onClick={async () => {
                                   try {
                                     const result = await confirmAction(
-                                      t.isDeleted
+                                      t.isDeleted,
                                     );
                                     if (!result.isConfirmed) return;
 
@@ -581,8 +743,8 @@ export default function AdminDashboard({
                                       prev.map((u) =>
                                         u.id === t.id || u._id === t._id
                                           ? { ...u, isDeleted: !t.isDeleted }
-                                          : u
-                                      )
+                                          : u,
+                                      ),
                                     );
 
                                     // ✅ Success toast
@@ -728,7 +890,7 @@ export default function AdminDashboard({
                                   j.id,
                                   String(j._id),
                                   "isApproved",
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                             />
@@ -799,8 +961,8 @@ export default function AdminDashboard({
                                       prev.map((job) =>
                                         job.id === j.id || job._id === j._id
                                           ? { ...job, isDeleted: !j.isDeleted }
-                                          : job
-                                      )
+                                          : job,
+                                      ),
                                     );
 
                                     // ✅ Success toast
@@ -894,7 +1056,7 @@ export default function AdminDashboard({
                       Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
                       {Math.min(
                         applicationsPage * PAGE_SIZE,
-                        applications.length
+                        applications.length,
                       )}{" "}
                       of {applications.length}
                     </>
@@ -1029,13 +1191,13 @@ export default function AdminDashboard({
                       >
                         {i + 1}
                       </button>
-                    )
+                    ),
                   )}
                   <button
                     className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
                     onClick={() =>
                       setApplicationsPage((p) =>
-                        Math.min(applicationsTotalPages, p + 1)
+                        Math.min(applicationsTotalPages, p + 1),
                       )
                     }
                     disabled={applicationsPage === applicationsTotalPages}
@@ -1236,8 +1398,8 @@ export default function AdminDashboard({
                               "approvedAt",
                               "premiumAt",
                               "role",
-                            ].includes(key)
-                        )
+                            ].includes(key),
+                        ),
                       );
 
                       const res = await fetch(
@@ -1249,13 +1411,13 @@ export default function AdminDashboard({
                             Authorization: `Bearer ${token}`,
                           },
                           body: JSON.stringify(updateData),
-                        }
+                        },
                       );
 
                       if (!res.ok) {
                         const errData = await res.json();
                         throw new Error(
-                          errData.message || "Failed to update tutor"
+                          errData.message || "Failed to update tutor",
                         );
                       }
 
@@ -1266,8 +1428,8 @@ export default function AdminDashboard({
                         prev.map((t) =>
                           t.id === editingTutor.id || t._id === editingTutor._id
                             ? { ...t, ...editFormData }
-                            : t
-                        )
+                            : t,
+                        ),
                       );
 
                       setEditingTutor(null);
@@ -1403,8 +1565,8 @@ export default function AdminDashboard({
                     // Only include defined fields
                     const updateData = Object.fromEntries(
                       Object.entries(editJobFormData).filter(
-                        ([v]) => v !== undefined
-                      )
+                        ([v]) => v !== undefined,
+                      ),
                     );
 
                     const res = await fetch(
@@ -1416,13 +1578,13 @@ export default function AdminDashboard({
                           Authorization: `Bearer ${token}`,
                         },
                         body: JSON.stringify(updateData),
-                      }
+                      },
                     );
 
                     if (!res.ok) {
                       const errData = await res.json().catch(() => null);
                       throw new Error(
-                        errData?.message || "Failed to update job"
+                        errData?.message || "Failed to update job",
                       );
                     }
 
@@ -1433,8 +1595,8 @@ export default function AdminDashboard({
                       prev.map((j) =>
                         j.id === editingJob.id || j._id === editingJob._id
                           ? { ...j, ...editJobFormData }
-                          : j
-                      )
+                          : j,
+                      ),
                     );
 
                     setEditingJob(null);

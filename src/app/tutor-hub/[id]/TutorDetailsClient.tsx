@@ -39,6 +39,7 @@ type EducationEntry = {
 };
 
 type BkashPaymentData = {
+  tutorId: string;
   sender: string;
   trxId: string;
   screenshot?: File;
@@ -98,31 +99,35 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   //  Handle bKash Payment Submission
-const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
-  if (!selectedPlan) return;
+  const handleBkashSubmit = async ({
+    tutorId,
+    sender,
+    trxId,
+  }: BkashPaymentData) => {
+    if (!selectedPlan) return;
 
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      plan: selectedPlan,
-      amount: selectedPlan === "premium" ? 500 : 300,
-      sender,
-      trxId,
-      method: "bkash",
-    }),
-  });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        tutorId,
+        plan: selectedPlan,
+        amount: selectedPlan === "premium" ? 500 : 300,
+        sender,
+        trxId,
+        method: "bkash",
+      }),
+    });
 
-  Swal.fire({
-    icon: "success",
-    title: "Payment Submitted",
-    text: "Verification may take up to 24 hours.",
-  });
-};
-
+    Swal.fire({
+      icon: "success",
+      title: "Payment Submitted",
+      text: "Verification may take up to 24 hours.",
+    });
+  };
 
   // Check if the logged-in user is viewing their own profile
   useEffect(() => {
@@ -211,7 +216,7 @@ const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
             className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8"
           >
             {/* Top Banner Space */}
-            <div className="h-24 bg-gradient-to-r from-blue-600 to-purple-600" />
+            <div className="h-24 bg-linear-to-r from-blue-600 to-purple-600" />
             <div className="p-8">
               <div className="flex flex-col items-center md:flex-row gap-6 -mt-20">
                 {/* Profile Image */}
@@ -227,7 +232,7 @@ const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
                         onError={() => setImageError(true)}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                      <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                         {tutor.fullName?.charAt(0)}
                       </div>
                     )}
@@ -250,7 +255,7 @@ const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
                     </h1>
 
                     {tutor.isPremium && (
-                      <span className="bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow">
+                      <span className="bg-linear-to-r from-orange-400 to-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow">
                         <StarIcon className="w-4 h-4" />
                         Premium
                       </span>
@@ -409,7 +414,7 @@ const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
                       e.preventDefault();
                       setIsOpen(true);
                     }}
-                    className="block w-full text-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500 py-3 text-sm font-semibold text-white transition-colors duration-300"
+                    className="block w-full text-center rounded-full bg-linear-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500 py-3 text-sm font-semibold text-white transition-colors duration-300"
                   >
                     Premium Tutor registration
                   </Link>
@@ -611,35 +616,51 @@ const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
                       if (!selectedPlan) return;
 
                       Swal.fire({
-                        title: "bKash Send Money",
+                        title:
+                          "bKash Send Money to 01990-539200 and Give Your Number and Transaction ID(Capital letters)",
                         html: `
+                        <input id="tutorId" class="swal2-input" placeholder="Your tutor ID">
                         <input id="sender" class="swal2-input" placeholder="Your bKash Number">
                         <input id="trxId" class="swal2-input" placeholder="Transaction ID">
                         `,
                         confirmButtonText: "Submit Payment",
                         showCancelButton: true,
                         preConfirm: (): BkashPaymentData | false => {
-  const sender = (document.getElementById("sender") as HTMLInputElement)?.value.trim();
-  const trxId = (document.getElementById("trxId") as HTMLInputElement)?.value.trim();
+                          const tutorId = (
+                            document.getElementById(
+                              "tutorId",
+                            ) as HTMLInputElement
+                          )?.value.trim();
+                          const sender = (
+                            document.getElementById(
+                              "sender",
+                            ) as HTMLInputElement
+                          )?.value.trim();
+                          const trxId = (
+                            document.getElementById("trxId") as HTMLInputElement
+                          )?.value.trim();
 
-  if (!sender || !trxId) {
-    Swal.showValidationMessage("bKash number and Transaction ID are required");
-    return false;
-  }
+                          if (!tutorId || !sender || !trxId) {
+                            Swal.showValidationMessage(
+                              "Tutor ID, bKash number, and Transaction ID are required",
+                            );
+                            return false;
+                          }
 
-  if (!/^01[3-9]\d{8}$/.test(sender)) {
-    Swal.showValidationMessage("Invalid bKash number");
-    return false;
-  }
+                          if (!/^01[3-9]\d{8}$/.test(sender)) {
+                            Swal.showValidationMessage("Invalid bKash number");
+                            return false;
+                          }
 
-  if (!/^[A-Z0-9]{10,15}$/.test(trxId)) {
-    Swal.showValidationMessage("Invalid Transaction ID");
-    return false;
-  }
+                          if (!/^[A-Z0-9]{10,15}$/.test(trxId)) {
+                            Swal.showValidationMessage(
+                              "Invalid Transaction ID",
+                            );
+                            return false;
+                          }
 
-  return { sender, trxId };
-}
-
+                          return { tutorId, sender, trxId };
+                        },
                       }).then((result) => {
                         if (result.isConfirmed && result.value) {
                           setSubmitting(true);
