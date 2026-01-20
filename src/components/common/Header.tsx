@@ -149,8 +149,9 @@ export default function Header() {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-3 px-3 py-2 rounded-full bg-blue-200 hover:bg-blue-100 transition-colors cursor-pointer"
+                  className="flex items-center space-x-2 pe-3 p-2 rounded-full bg-blue-200 hover:bg-blue-100 transition-colors cursor-pointer"
                 >
+                  
                   <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden">
                     {user?.basicInfo?.image ? (
                       <Image
@@ -180,7 +181,7 @@ export default function Header() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] "
+                      className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] p-2"
                     >
                       <div className="px-4 py-3 border-b border-gray-200 cursor-default">
                         <p className="font-semibold text-gray-800">
@@ -270,106 +271,120 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         <AnimatePresence>
-  {isOpen && (
-    <>
-      {/* Overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-40 bg-black/30 lg:hidden"
-        onClick={() => setIsOpen(false)}
-      />
-
-      {/* Mobile Navigation */}
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: "auto" }}
-        exit={{ opacity: 0, height: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed top-20 left-0 right-0 z-50 lg:hidden border-t border-gray-200 bg-white"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="py-4 space-y-2">  
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-
-          {isAuthenticated && user ? (
+          {isOpen && (
             <>
-              <div className="px-4 py-3 border-t border-gray-200 border-b">
-                <p className="font-semibold text-gray-800">
-                  {getFirstName()}
-                </p>
-                <p className="text-sm text-gray-500">{user.email}</p>
-              </div>
-
-              {user.role === "tutor" && (
-                <>
-                  <Link
-                    href={`/complete-profile/${user.id}`}
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Complete Profile
-                  </Link>
-
-                  <Link
-                    href={`/tutor-hub/${user.id}`}
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    My Profile
-                  </Link>
-                </>
-              )}
-
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setIsOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2"
-              >
-                <LogOut size={18} />
-                <span>Logout</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              {/* Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-40 bg-black/30 lg:hidden"
                 onClick={() => setIsOpen(false)}
-              >
-                Login
-              </Link>
+              />
 
-              <div className="px-4 pt-4 border-t border-gray-200">
-                <Link
-                  href="/become-a-tutor"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-lg font-medium transition-colors duration-200"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Become a Mentor
-                </Link>
-              </div>
+              {/* Mobile Navigation */}
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed top-19 left-0 right-0 z-50 lg:hidden border-t border-gray-400 bg-gray-100 rounded-2xl mx-2 shadow-lg overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-4 space-y-2">
+                  {navigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+
+                  {isAuthenticated && user ? (
+                    <>
+                      <div className="px-4 py-3 border-t border-gray-200 border-b flex items-center space-x-3">
+                        <div>
+                          <Image
+                            src={
+                              user.basicInfo?.image
+                                ? user.basicInfo.image
+                                : "/images/default-avatar.png"
+                            }
+                            alt={user.fullName || "User Avatar"}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-800">
+                          {getFirstName()}
+                        </p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                        </div>
+                      </div>
+
+                      {user.role === "tutor" && (
+                        <>
+                          <Link
+                            href={`/tutor-hub/${user.id}`}
+                            className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            My Profile
+                          </Link>
+
+                          <Link
+                            href={`/complete-profile/${user.id}`}
+                            className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Complete Profile
+                          </Link>
+                        </>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2"
+                      >
+                        <LogOut size={18} />
+                        <span>Logout</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        className="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        Login
+                      </Link>
+
+                      <div className="px-4 pt-4 border-t border-gray-200">
+                        <Link
+                          href="/become-a-tutor"
+                          className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Become a Mentor
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </motion.div>
             </>
           )}
-        </div>
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
-
+        </AnimatePresence>
       </div>
     </header>
   );

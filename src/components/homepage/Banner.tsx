@@ -13,25 +13,25 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
   return (
     <section
       className="relative flex items-center bg-linear-to-br from-white via-blue-300 to-gray-200 overflow-hidden"
-      style={{ minHeight: "clamp(500px, 70vh, 900px)" }}
+      // style={{ minHeight: "clamp(500px, 70vh, 900px)" }}
     >
-      <div className="container mx-auto px-4 py-20">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+      <div className="container mx-auto px-4 py-10 md:py-0">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 items-center">
           {/* Left Side - Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-2 text-center lg:text-left flex flex-col items-center lg:items-start"
+            className="space-y-2 text-center lg:text-left flex flex-col items-center lg:items-start py-10"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               {bannerData.heading}
             </h1>
 
             <p className="text-xl md:text-2xl font-medium text-gray-600 max-w-xl">
               {bannerData.subHeading}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start mt-8">
+            <div className="flex flex-col flex-wrap sm:flex-row gap-6 items-center sm:items-start mt-8">
               <Link
                 href="/hire-tutor"
                 className="bg-[#0D24A0] hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
@@ -58,7 +58,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full h-full hidden lg:grid grid-cols-2 items-end justify-end"
+            className="relative w-full h-[80%] hidden lg:grid grid-cols-2 items-end justify-end"
           >
             {[
               { src: "/images/banner/4.png", rounded: "rounded-br-none", z: 4 },
@@ -81,7 +81,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                   ease: "easeInOut",
                 }}
                 whileHover={{ scale: 1.05 }}
-                className={`relative aspect-square h-[90%] w-[90%] xl:min-w-fit rounded-3xl ${img.rounded} overflow-hidden shadow-2xl`}
+                className={`relative aspect-square h-[70%] w-[70%] xl:h-[90%] xl:w-[90%] rounded-3xl ${img.rounded} overflow-hidden shadow-2xl`}
                 style={{ zIndex: img.z }}
               >
                 <Image
@@ -97,7 +97,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
           </motion.div>
 
           <div className="lg:hidden flex justify-center">
-            <div className="relative w-64 aspect-square rounded-3xl overflow-hidden shadow-xl">
+            <div className="relative w-64 aspect-square rounded-3xl overflow-hidden shadow-xl mb-10">
               <Image
                 src="/images/banner/1.png"
                 alt="Banner"

@@ -25,15 +25,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/*---- Scrollbar ----*/
+/* ---- Scrollbar ----
 
 /* Firefox */
+
 * {
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: #3b82f6 #f1f5f9;
 }
 
 /* Chrome, Edge, Safari */
+
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;

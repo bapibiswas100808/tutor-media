@@ -38,6 +38,12 @@ type EducationEntry = {
   cgpa?: string;
 };
 
+type BkashPaymentData = {
+  sender: string;
+  trxId: string;
+  screenshot?: File;
+};
+
 // Calculate profile completion percentage
 const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   if (!tutor) return 0;
@@ -85,9 +91,38 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"1 year" | "2 years" | null>(
-    null
-  );
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  //  Handle bKash Payment Submission
+const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
+  if (!selectedPlan) return;
+
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      plan: selectedPlan,
+      amount: selectedPlan === "premium" ? 500 : 300,
+      sender,
+      trxId,
+      method: "bkash",
+    }),
+  });
+
+  Swal.fire({
+    icon: "success",
+    title: "Payment Submitted",
+    text: "Verification may take up to 24 hours.",
+  });
+};
+
 
   // Check if the logged-in user is viewing their own profile
   useEffect(() => {
@@ -369,7 +404,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 {/* Button wrapper with mt-auto */}
                 <div className="mt-auto">
                   <Link
-                    href="#"
+                    href="BkashPaymentModal"
                     onClick={(e) => {
                       e.preventDefault();
                       setIsOpen(true);
@@ -456,11 +491,11 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                               (edu.cgpa
                                 ? ` - CGPA: ${edu.cgpa}`
                                 : edu.result
-                                ? ` - Result: ${edu.result}`
-                                : "")
+                                  ? ` - Result: ${edu.result}`
+                                  : "")
                             }
                           />
-                        ))
+                        )),
                     )}
                   </ul>
                 </motion.div>
@@ -566,35 +601,51 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
                   {/* Pay Now Button */}
                   <button
-                    disabled={!selectedPlan}
+                    disabled={!selectedPlan || submitting}
                     className={`w-full py-3 rounded-xl text-white font-semibold transition cursor-pointer ${
                       selectedPlan
                         ? "bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
                         : "bg-gray-300 cursor-not-allowed"
                     }`}
                     onClick={() => {
-                      Swal.fire({
-                        title: "Confirm Payment",
-                        text: `Do you want to proceed with the ${selectedPlan} plan?`,
-                        icon: "question",
-                        showCancelButton: true,
-                        confirmButtonText: "Yes, Pay Now",
-                        cancelButtonText: "Cancel",
-                        confirmButtonColor: "#2563eb", // blue-600
-                        cancelButtonColor: "#6b7280", // gray-500
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          // ✅ Proceed with payment logic
-                          Swal.fire({
-                            title: "Processing",
-                            text: "Redirecting to payment...",
-                            icon: "success",
-                            timer: 1500,
-                            showConfirmButton: false,
-                          });
+                      if (!selectedPlan) return;
 
-                          // call your payment function here
-                          // handlePayment(selectedPlan);
+                      Swal.fire({
+                        title: "bKash Send Money",
+                        html: `
+                        <input id="sender" class="swal2-input" placeholder="Your bKash Number">
+                        <input id="trxId" class="swal2-input" placeholder="Transaction ID">
+                        `,
+                        confirmButtonText: "Submit Payment",
+                        showCancelButton: true,
+                        preConfirm: (): BkashPaymentData | false => {
+  const sender = (document.getElementById("sender") as HTMLInputElement)?.value.trim();
+  const trxId = (document.getElementById("trxId") as HTMLInputElement)?.value.trim();
+
+  if (!sender || !trxId) {
+    Swal.showValidationMessage("bKash number and Transaction ID are required");
+    return false;
+  }
+
+  if (!/^01[3-9]\d{8}$/.test(sender)) {
+    Swal.showValidationMessage("Invalid bKash number");
+    return false;
+  }
+
+  if (!/^[A-Z0-9]{10,15}$/.test(trxId)) {
+    Swal.showValidationMessage("Invalid Transaction ID");
+    return false;
+  }
+
+  return { sender, trxId };
+}
+
+                      }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                          setSubmitting(true);
+                          handleBkashSubmit(result.value).finally(() => {
+                            setSubmitting(false);
+                          });
                         }
                       });
                     }}
