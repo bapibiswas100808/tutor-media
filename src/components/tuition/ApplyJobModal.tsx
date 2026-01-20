@@ -139,8 +139,6 @@ ApplyJobModalProps) {
         tuitionJobId: String(job?._id), // Use _id from job object
       };
 
-      console.log("Submitting application payload:", applicationPayload);
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
         method: "POST",
         headers: {
@@ -154,8 +152,7 @@ ApplyJobModalProps) {
       if (!response.ok) {
         throw new Error(result?.message || "Failed to submit application");
       }
-
-      console.log("Application created:", result);
+      
       setIsSubmitted(true);
 
       setTimeout(() => {

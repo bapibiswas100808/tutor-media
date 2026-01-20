@@ -278,8 +278,6 @@ export default function BecomeTutorForm() {
         throw new Error(result.message || "Failed to submit application");
       }
 
-      console.log("Tutor application submitted:", result);
-
       // If ID exists → redirect
       if (result.id || result._id) {
         await Swal.fire({

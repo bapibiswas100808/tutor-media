@@ -13,7 +13,6 @@ export default async function TutorHubsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log(`Fetching tutor id: ${id}`);
 
   // Default to null (shows friendly not-found UI client-side)
   let tutor: Tutor | null = null;

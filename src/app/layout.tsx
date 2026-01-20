@@ -5,6 +5,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from "@/context/AdminContext";
+import BackToTop from "@/components/common/BackToTop";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,6 +41,7 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             <div className="pt-16">{children}</div>
+            <BackToTop />
             <Footer />
           </AuthProvider>
         </AdminProvider>

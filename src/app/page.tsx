@@ -24,7 +24,7 @@ interface BannerData {
 }
 const bannerData: BannerData = {
   heading: "Connecting Learners With Verified Tutors!",
-  subHeading: "Hire the right tutor or get tuition in your area.",
+  subHeading: "Hire the Right Tutor or Get Tuition in Your Area.",
 };
 
 // async function getBannerData(): Promise<BannerData> {
