@@ -1200,7 +1200,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Admission test\
+  // Admission test
   {
     name: "Admission Test",
     slug: "admission-test",
@@ -1343,7 +1343,7 @@ export const mediumsData: MediumData[] = [
     slug: "religious-studies",
     image: "/images/tutoringServices/religious-studies.png",
     description:
-      "শুদ্ধাচার, নৈতিকতা এবং আত্মিক প্রশান্তির জন্য সঠিক ধর্মীয় শিক্ষা নিশ্চিত করুন।",
+      "Ensure proper religious education for purity, morality, and spiritual peace.",
     classes: [
       {
         name: "Islamic Studies",
@@ -1422,7 +1422,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  // Arts & Creativity\
+  // Arts & Creativity
   {
     name: "Arts & Creativity",
     slug: "arts-creativity",
@@ -1531,7 +1531,6 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
-  
   // Language Training
   {
     name: "Language Training",
@@ -1633,6 +1632,7 @@ export const mediumsData: MediumData[] = [
       },
     ],
   },
+
   // Skill Development\
   // {
   //   name: "Skill Development",

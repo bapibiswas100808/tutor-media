@@ -2,13 +2,47 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { Tutor } from "@/data/tutorsList";
 import Image from "next/image";
-import { NotebookText, Paperclip, AlertCircle } from "lucide-react";
+import {
+  NotebookText,
+  Paperclip,
+  AlertCircle,
+  Shield,
+  Users,
+  GraduationCap,
+  Mail,
+  Phone,
+  MapPin,
+  CheckCircle2,
+  StarIcon,
+  CheckCircleIcon,
+  CheckCircle,
+  CircleX,
+} from "lucide-react";
 import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
+type EducationEntry = {
+  id: string;
+  academy: string;
+  curriculum?: string;
+  group?: string;
+  passingYear?: string;
+  result?: string;
+  instituteType?: string;
+  studyType?: string;
+  department?: string;
+  cgpa?: string;
+};
+
+type BkashPaymentData = {
+  sender: string;
+  trxId: string;
+  screenshot?: File;
+};
 
 // Calculate profile completion percentage
 const calculateCompletionPercentage = (tutor: Tutor | null): number => {
@@ -55,7 +89,42 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [submitting, setSubmitting] = useState(false);
 
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  //  Handle bKash Payment Submission
+const handleBkashSubmit = async ({ sender, trxId }: BkashPaymentData) => {
+  if (!selectedPlan) return;
+
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      plan: selectedPlan,
+      amount: selectedPlan === "premium" ? 500 : 300,
+      sender,
+      trxId,
+      method: "bkash",
+    }),
+  });
+
+  Swal.fire({
+    icon: "success",
+    title: "Payment Submitted",
+    text: "Verification may take up to 24 hours.",
+  });
+};
+
+
+  // Check if the logged-in user is viewing their own profile
   useEffect(() => {
     if (!isLoading && user && tutor && String(user.id) === String(tutor.id)) {
       setIsOwnProfile(true);
@@ -64,7 +133,21 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
   const completionPercentage = calculateCompletionPercentage(tutor);
   const isProfileIncomplete = completionPercentage < 80;
-  const imageUrl = tutor?.image || null;
+  const imageUrl = tutor?.basicInfo?.image || null;
+
+  // Tuition Preference Fields
+  const tuitionPreferenceFields = [
+    { label: "Expected Salary", key: "expectedSalary" },
+    { label: "Current Tuition Status", key: "currentTuitionStatus" },
+    { label: "Days Per Week", key: "daysPerWeek" },
+    { label: "Tutoring Experience", key: "tutoringExperience" },
+    { label: "Place of Learning", key: "placeOfLearning" },
+    { label: "Preferred Medium", key: "preferredMedium" },
+    { label: "Preferred Class", key: "preferredClass" },
+    { label: "Preferred Subject", key: "preferredSubjects" },
+    { label: "Preferred Time", key: "preferredTime" },
+    { label: "Preferred Area", key: "preferredArea" },
+  ];
 
   if (!tutor) {
     return (
@@ -124,200 +207,215 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8"
           >
-            <div className="h-32"></div>
-            <div className="px-8 pb-8">
-              <div className="flex flex-col md:flex-row gap-6 -mt-16">
+            {/* Top Banner Space */}
+            <div className="h-24 bg-gradient-to-r from-blue-600 to-purple-600" />
+            <div className="p-8">
+              <div className="flex flex-col items-center md:flex-row gap-6 -mt-20">
                 {/* Profile Image */}
-                <div className="relative">
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
-                    {imageUrl ? (
+                <div className="relative shrink-0 w-fit">
+                  <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-xl ring-4 ring-white bg-white">
+                    {imageUrl && !imageError ? (
                       <Image
                         src={imageUrl}
                         alt={tutor.fullName}
                         fill
+                        sizes="176px"
                         className="object-cover"
-                        sizes="128px"
-                        priority
+                        onError={() => setImageError(true)}
                       />
                     ) : (
-                      <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                         {tutor.fullName?.charAt(0)}
                       </div>
                     )}
                   </div>
 
+                  {/* Verified Badge */}
                   {tutor.isVerified && (
                     <div className="absolute top-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-lg border-2 border-white">
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      <CheckCircleIcon className="w-6 h-6" />
                     </div>
                   )}
                 </div>
 
                 {/* Header Info */}
-                <div className="flex-1 mt-16 md:mt-0">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                          {tutor.fullName}
-                        </h1>
+                <div className="flex-1 mt-4 md:mt-16">
+                  {/* Name + Premium */}
+                  <div className="flex flex-wrap items-center gap-3 mb-1">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                      {tutor.fullName}
+                    </h1>
 
-                        {tutor?.isPremium && (
-                          <span className="bg-linear-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                            <svg
-                              className="w-4 h-4"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            PREMIUM
-                          </span>
-                        )}
-                      </div>
-                      {/* <p className="text-xl text-blue-600 font-semibold mb-2">
-                        {tutor.fullName}
-                      </p> */}
-                      <div className="flex items-center justify-between gap-10">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-700">
-                            ID:
-                          </span>
-                          <span className="text-sm text-gray-500 capitalize">
-                            {tutor.id}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-700">
-                            Gender:
-                          </span>
-                          <span className="text-sm text-gray-500 capitalize">
-                            {tutor.gender}
-                          </span>
-                        </div>
-                      </div>
+                    {tutor.isPremium && (
+                      <span className="bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow">
+                        <StarIcon className="w-4 h-4" />
+                        Premium
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Meta Info */}
+                  <div className="flex flex-wrap gap-6 text-sm mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-400">ID:</span>
+                      <span className="text-gray-600">{tutor.id}</span>
                     </div>
+
+                    {tutor.gender && (
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-400">
+                          Gender:
+                        </span>
+                        <span className="text-gray-600 capitalize">
+                          {tutor.gender}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Quick Stats */}
-                  <div className="flex items-center justify-between ">
-                    {/* Info Grid */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-sm text-gray-600">
+                  <div className="space-y-2 text-sm text-gray-600">
+                    {tutor.experience && (
+                      <div className="flex items-center">
                         <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
                         {tutor.experience}
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
+                    )}
+
+                    {tutor.qualification && (
+                      <div className="flex items-center">
                         <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
                         {tutor.qualification}
                       </div>
-                    </div>
-                    {/* CTA Buttons */}
-                    <div className="flex justify-center gap-3">
-                      {/* <Link
-                        href="/hire-tutor"
-                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
-                      >
-                        Hire Tutor
-                      </Link> */}
-                      {/* <Link
-                        href={`/complete-profile/${tutor.id}`}
-                        className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 px-3 lg:px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-center shadow-lg"
-                      >
-                        Complete Profile
-                      </Link> */}
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Profile Completion Section - Only visible to the tutor viewing their own profile */}
+          {/* Profile Completion & Premium Request Section - Only visible to the tutor viewing their own profile */}
           {isOwnProfile && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className={`rounded-3xl shadow-lg p-6 mb-8 ${
-                isProfileIncomplete
-                  ? "bg-red-50 border-2 border-red-200"
-                  : "bg-green-50 border-2 border-green-200"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                {isProfileIncomplete && (
-                  <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
-                )}
-                {!isProfileIncomplete && (
-                  <div className="w-6 h-6 text-green-600 shrink-0 mt-1">
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                )}
-                <div className="flex-1">
-                  <h3
-                    className={`text-lg font-bold mb-2 ${
-                      isProfileIncomplete ? "text-red-800" : "text-green-800"
-                    }`}
-                  >
-                    Profile Completion: {completionPercentage}%
-                  </h3>
+            <div className="mb-8 flex flex-col gap-6 lg:flex-row">
+              {/* Profile Completion */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className={`flex-1 rounded-3xl shadow-lg p-8 flex flex-col ${
+                  isProfileIncomplete
+                    ? "bg-red-50 border-2 border-red-200"
+                    : "bg-green-50 border-2 border-green-200"
+                }`}
+              >
+                <div className="flex-1 flex flex-col items-center justify-center gap-2">
+                  {isProfileIncomplete && (
+                    <AlertCircle className="w-16 h-16 text-red-600 shrink-0 mt-1" />
+                  )}
+                  {!isProfileIncomplete && (
+                    <div className="w-16 h-16 text-green-600 shrink-0 mt-1">
+                      <CheckCircle2 className="w-16 h-16 text-green-500" />
+                    </div>
+                  )}
 
-                  {/* Progress Bar */}
-                  <div className="w-full bg-gray-300 rounded-full h-3 mb-4 overflow-hidden">
-                    <div
-                      className={`h-full transition-all duration-500 ${
-                        isProfileIncomplete ? "bg-red-500" : "bg-green-500"
+                  <div className="flex-1 w-full">
+                    <h3
+                      className={`text-lg font-bold mb-2 text-center ${
+                        isProfileIncomplete ? "text-red-800" : "text-green-800"
                       }`}
-                      style={{ width: `${completionPercentage}%` }}
-                    ></div>
+                    >
+                      Profile Completion: {completionPercentage}%
+                    </h3>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-300 rounded-full h-2 mb-2 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500 ${
+                          isProfileIncomplete ? "bg-red-500" : "bg-green-500"
+                        }`}
+                        style={{ width: `${completionPercentage}%` }}
+                      ></div>
+                    </div>
+
+                    {isProfileIncomplete ? (
+                      <p className="text-red-600 text-sm mb-2 text-center">
+                        Your profile will NOT be shown to students until it
+                        reaches 80% completion.
+                      </p>
+                    ) : (
+                      <p className="text-green-700 text-sm font-semibold text-center mb-2">
+                        ✓ Your profile is complete and visible to all students!
+                      </p>
+                    )}
                   </div>
 
-                  {isProfileIncomplete ? (
-                    <div>
-                      <p className="text-red-700 font-semibold mb-2">
-                        ⚠️ Your profile is not fully completed
-                      </p>
-                      <p className="text-red-600 text-sm mb-3">
-                        Your profile will NOT be shown to students until it
-                        reaches 80% completion. Currently at{" "}
-                        {completionPercentage}% - you need to complete{" "}
-                        {80 - completionPercentage}% more.
-                      </p>
+                  <div className="w-full mt-auto">
+                    {isProfileIncomplete ? (
                       <Link
                         href={`/complete-profile/${tutor.id}`}
-                        className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                        className="block w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white text-center transition hover:bg-red-700"
                       >
                         Complete Your Profile
                       </Link>
-                    </div>
-                  ) : (
-                    <p className="text-green-700 text-sm font-semibold">
-                      ✓ Your profile is complete and visible to all students!
-                    </p>
-                  )}
+                    ) : (
+                      <Link
+                        href={`/complete-profile/${tutor.id}`}
+                        className="block w-full rounded-full bg-green-500 py-3 text-sm font-semibold text-white text-center transition hover:bg-green-600"
+                      >
+                        Update Your Profile
+                      </Link>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+
+              {/* Premium */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="rounded-3xl bg-linear-to-r from-yellow-100 to-orange-100 p-8 shadow-xl flex-1 border-2 border-orange-200 flex flex-col"
+              >
+                {/* Badge */}
+                <div className="flex justify-center">
+                  <div className="relative h-22 w-26">
+                    <Image
+                      src="/images/premium.png"
+                      alt="Premium"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="mb-2 text-center text-2xl font-bold text-yellow-800">
+                  Premium Request
+                </h3>
+
+                {/* Description */}
+                <p className="mb-2 text-center text-md text-yellow-700">
+                  Premium members receive frequent tuition updates with priority
+                </p>
+
+                {/* Button wrapper with mt-auto */}
+                <div className="mt-auto">
+                  <Link
+                    href="BkashPaymentModal"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(true);
+                    }}
+                    className="block w-full text-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500 py-3 text-sm font-semibold text-white transition-colors duration-300"
+                  >
+                    Premium Tutor registration
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
           )}
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -330,97 +428,38 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="bg-white rounded-2xl shadow-lg p-8"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <svg
-                    className="w-6 h-6 mr-3 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <Users className="w-6 h-6 mr-3 text-blue-600" />
                   About
                 </h2>
                 <p className="text-gray-700 leading-relaxed">{tutor.bio}</p>
               </motion.div>
 
               {/* Tuition Preferences */}
-              {tutor.basicInfo && (
+              {tutor?.basicInfo && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="bg-white rounded-2xl shadow-lg p-8"
                 >
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <svg
-                      className="w-6 h-6 mr-3 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8c-1.657 0-3 1.343-3 3v1h6v-1c0-1.657-1.343-3-3-3z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 12h14v7H5z"
-                      />
-                    </svg>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <Shield className="w-6 h-6 mr-3 text-blue-600" />
                     Tuition Preferences
                   </h2>
 
-                  <div className="grid md:grid-cols-2 gap-6 text-gray-700">
-                    <Info
-                      label="Expected Salary"
-                      value={tutor.basicInfo.expectedSalary}
-                    />
-                    <Info
-                      label="Current Tuition Status"
-                      value={tutor.basicInfo.currentTuitionStatus}
-                    />
-                    <Info
-                      label="Days Per Week"
-                      value={tutor.basicInfo.daysPerWeek}
-                    />
-                    <Info
-                      label="Tutoring Experience"
-                      value={tutor.basicInfo.tutoringExperience}
-                    />
-                    <Info
-                      label="Place of Learning"
-                      value={tutor.basicInfo.placeOfLearning}
-                    />
-                    <Info
-                      label="Preferred Medium"
-                      value={tutor.basicInfo.preferredMedium}
-                    />
-                    <Info
-                      label="Preferred Class"
-                      value={tutor.basicInfo.preferredClass}
-                    />
-                    <Info
-                      label="Preferred Subject"
-                      value={tutor.basicInfo.preferredSubjects}
-                    />
-                    <Info
-                      label="Preferred Time"
-                      value={tutor.basicInfo.preferredTime}
-                    />
-                    <Info
-                      label="Preferred Area"
-                      value={tutor.basicInfo.preferredArea}
-                    />
+                  <div className="grid gap-6 md:grid-cols-2 text-gray-700">
+                    {tuitionPreferenceFields.map(({ label, key }) => (
+                      <Info
+                        key={key}
+                        label={label}
+                        value={
+                          tutor.basicInfo![
+                            key as keyof typeof tutor.basicInfo
+                          ] || "Not specified"
+                        }
+                      />
+                    ))}
                   </div>
                 </motion.div>
               )}
@@ -431,55 +470,33 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white rounded-2xl shadow-lg p-8 text-gray-700"
+                  className="bg-white rounded-2xl shadow-lg p-8 text-gray-800"
                 >
                   <h2 className="text-2xl font-bold mb-4 flex items-center">
-                    <svg
-                      className="w-6 h-6 mr-3 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 14l9-5-9-5-9 5 9 5z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-                      />
-                    </svg>
+                    <GraduationCap className="w-6 h-6 mr-3 text-blue-600" />
                     Education
                   </h2>
+
                   <ul className="space-y-3">
-                    {(tutor.education
-                      ? [
-                          ...(tutor.education.ssc || []),
-                          ...(tutor.education.hsc || []),
-                          ...(tutor.education.grad || []),
-                        ]
-                      : []
-                    ).map((edu, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <svg className="w-5 h-5 text-blue-500 mr-3 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium">{edu.academy}</p>
-                          {edu.passingYear && (
-                            <p className="text-sm">{edu.passingYear}</p>
-                          )}
-                        </div>
-                      </li>
-                    ))}
+                    {Object.entries(tutor.education).flatMap(
+                      ([level, records]) =>
+                        (records || []).map((edu: EducationEntry) => (
+                          <Info
+                            key={edu.id}
+                            label={level.toUpperCase()}
+                            value={
+                              `${edu.academy || "N/A"}${
+                                edu.passingYear ? ` (${edu.passingYear})` : ""
+                              }` +
+                              (edu.cgpa
+                                ? ` - CGPA: ${edu.cgpa}`
+                                : edu.result
+                                  ? ` - Result: ${edu.result}`
+                                  : "")
+                            }
+                          />
+                        )),
+                    )}
                   </ul>
                 </motion.div>
               )}
@@ -492,69 +509,160 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-white rounded-2xl shadow-lg p-6"
+                className="bg-white rounded-2xl shadow-lg p-6 text-gray-800"
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold mb-4 flex items-center">
+                  <AlertCircle className="w-6 h-6 mr-3 text-blue-600" />
                   Contact Information
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-start">
-                    <svg
-                      className="w-5 h-5 text-gray-400 mr-3 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <Mail className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
                     <span className="text-gray-700">{tutor.email}</span>
                   </div>
                   <div className="flex items-start">
-                    <svg
-                      className="w-5 h-5 text-gray-400 mr-3 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
+                    <Phone className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
                     <span className="text-gray-700">{tutor.phone}</span>
                   </div>
                   <div className="flex items-start">
-                    <svg
-                      className="w-5 h-5 text-gray-400 mr-3 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                    <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
                     <span className="text-gray-700">{tutor.location}</span>
                   </div>
                 </div>
               </motion.div>
             </div>
+
+            {/* Modal */}
+            {isOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                <div className="bg-white rounded-3xl w-11/12 max-w-md p-8 relative shadow-xl">
+                  {/* Crown Icon */}
+                  <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                    <Image
+                      src="/images/premium.png"
+                      alt="Crown"
+                      width={200}
+                      height={200}
+                      className="object-contain"
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-2xl font-bold text-center text-yellow-600 mb-6 mt-12">
+                    Benefits of Becoming Premium Membership
+                  </h2>
+
+                  {/* Benefits */}
+                  <div className="flex justify-center mb-6">
+                    <ul className="flex flex-col gap-2 text-gray-700 font-medium">
+                      {[
+                        "Guaranteed at least one tuition",
+                        "Nearby tuition notification alerts",
+                        "Always on top of results",
+                        "Prioritized during selection process",
+                      ].map((feature, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle
+                            size={20}
+                            className="text-yellow-600 mt-0.5"
+                          />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Plans */}
+                  <div className="flex gap-4 mb-6">
+                    <button
+                      onClick={() => setSelectedPlan("1 year")}
+                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
+                        selectedPlan === "1 year"
+                          ? "bg-yellow-600 text-white border-yellow-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+                      }`}
+                    >
+                      <div className="text-md font-bold">1 Year</div>
+                      <div className="text-lg font-bold">৳ 300.00</div>
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedPlan("2 years")}
+                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
+                        selectedPlan === "2 years"
+                          ? "bg-yellow-600 text-white border-yellow-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+                      }`}
+                    >
+                      <div className="text-md font-bold">2 Years</div>
+                      <div className="text-lg font-bold">৳ 500.00</div>
+                    </button>
+                  </div>
+
+                  {/* Pay Now Button */}
+                  <button
+                    disabled={!selectedPlan || submitting}
+                    className={`w-full py-3 rounded-xl text-white font-semibold transition cursor-pointer ${
+                      selectedPlan
+                        ? "bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
+                        : "bg-gray-300 cursor-not-allowed"
+                    }`}
+                    onClick={() => {
+                      if (!selectedPlan) return;
+
+                      Swal.fire({
+                        title: "bKash Send Money",
+                        html: `
+                        <input id="sender" class="swal2-input" placeholder="Your bKash Number">
+                        <input id="trxId" class="swal2-input" placeholder="Transaction ID">
+                        `,
+                        confirmButtonText: "Submit Payment",
+                        showCancelButton: true,
+                        preConfirm: (): BkashPaymentData | false => {
+  const sender = (document.getElementById("sender") as HTMLInputElement)?.value.trim();
+  const trxId = (document.getElementById("trxId") as HTMLInputElement)?.value.trim();
+
+  if (!sender || !trxId) {
+    Swal.showValidationMessage("bKash number and Transaction ID are required");
+    return false;
+  }
+
+  if (!/^01[3-9]\d{8}$/.test(sender)) {
+    Swal.showValidationMessage("Invalid bKash number");
+    return false;
+  }
+
+  if (!/^[A-Z0-9]{10,15}$/.test(trxId)) {
+    Swal.showValidationMessage("Invalid Transaction ID");
+    return false;
+  }
+
+  return { sender, trxId };
+}
+
+                      }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                          setSubmitting(true);
+                          handleBkashSubmit(result.value).finally(() => {
+                            setSubmitting(false);
+                          });
+                        }
+                      });
+                    }}
+                  >
+                    Pay Now
+                  </button>
+
+                  {/* Close Button */}
+                  <button
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <CircleX size={40} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

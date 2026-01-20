@@ -937,15 +937,6 @@ export default function AdminDashboard({
                         const tutorEmail = a.tutor?.email || "-";
                         const isDeleted = a.isDeleted || false;
 
-                        // Debug log
-                        console.log("Application data:", {
-                          _id: a._id,
-                          tutorId: a.tutorId,
-                          tutor: a.tutor,
-                          tutorName,
-                          job: a.job,
-                        });
-
                         return (
                           <tr
                             key={a._id}

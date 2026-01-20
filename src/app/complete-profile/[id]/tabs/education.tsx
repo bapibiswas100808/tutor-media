@@ -107,7 +107,7 @@ const EducationSection = ({
                 onChange={(e) =>
                   handleChange(index, e, setData)
                 }
-                className="border rounded-lg px-3 py-2 w-full"
+                className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
                 <option value="Bangla">Bangla</option>
@@ -126,7 +126,7 @@ const EducationSection = ({
                 onChange={(e) =>
                   handleChange(index, e, setData)
                 }
-                className="border rounded-lg px-3 py-2 w-full"
+                className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
                 <option value="Science">Science</option>
@@ -146,7 +146,7 @@ const EducationSection = ({
                 onChange={(e) =>
                   handleChange(index, e, setData)
                 }
-                className="border rounded-lg px-3 py-2 w-full"
+                className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
                 {years.map((y) => (
@@ -183,7 +183,7 @@ const EducationSection = ({
                 onChange={(e) =>
                   handleChange(index, e, setData)
                 }
-                className="border rounded-lg px-3 py-2 w-full"
+                className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
                 <option value="Public">Public</option>
@@ -202,7 +202,7 @@ const EducationSection = ({
                 onChange={(e) =>
                   handleChange(index, e, setData)
                 }
-                className="border rounded-lg px-3 py-2 w-full"
+                className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
                 <option value="Honours">Honours</option>

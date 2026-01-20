@@ -44,7 +44,7 @@ export default function FindTutorSection2() {
             className="col-span-3"
           >
             <div className="h-80">
-              <div className="relative w-full h-full shadow-2xl shadow-blue-500 rounded-full overflow-hidden">
+              <div className="relative w-full h-full border-2 border-blue-200 shadow-2xl shadow-blue-500 rounded-full overflow-hidden">
                 <Image
                   src={img}
                   alt="Tutor 1"

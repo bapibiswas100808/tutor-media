@@ -8,7 +8,7 @@ import { mediumsData } from "@/data/mediumsData";
 export default function MediumsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-purple-50 py-10 md:py-20">
-      <div className="container mx-auto px-4 ">
+      <div className="container max-w-7xl mx-auto px-4 ">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

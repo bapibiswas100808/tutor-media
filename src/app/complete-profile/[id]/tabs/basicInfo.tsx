@@ -2,12 +2,9 @@
 
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 
 export interface BasicInfoData {
   email: string;
-  password?: string;
-  confirmPassword?: string;
   image?: string;
 
   expectedSalary?: string;
@@ -20,7 +17,11 @@ export interface BasicInfoData {
   preferredSubjects?: string;
   preferredTime?: string;
   preferredArea?: string;
+
+  days: string[];
+  mode: "Online" | "Offline" | "Hybrid" | "";
 }
+
 const SALARY_OPTIONS = [
   "0 Tk / Month",
   "500 Tk / Month",
@@ -63,6 +64,16 @@ const DAYS_PER_WEEK_OPTIONS = [
   "7 Days / Week",
 ];
 
+const weekDays = [
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+];
+
 const EXPERIENCE_OPTIONS = Array.from(
   { length: 20 },
   (_, i) => `${i + 1} Year${i > 0 ? "s" : ""}`
@@ -72,49 +83,29 @@ const TIME_OPTIONS = ["Morning", "Afternoon", "Evening", "Night"];
 
 interface BasicInfoProps {
   data: BasicInfoData;
-  setData: (data: BasicInfoData) => void;
+  setData: React.Dispatch<React.SetStateAction<BasicInfoData>>;
 }
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [preview, setPreview] = useState<string>("");
 
   /* ---------- Handle Change ---------- */
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target as {
+      name: keyof BasicInfoData;
+      value: string;
+    };
 
-    const newData = { ...data, [name]: value };
-    setData(newData);
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-    const newErrors: Record<string, string> = { ...errors };
-
-    if (name === "password" || name === "confirmPassword") {
-      const password = name === "password" ? value : newData.password || "";
-      const confirm =
-        name === "confirmPassword" ? value : newData.confirmPassword || "";
-
-      if (!password) {
-        newErrors.password = "Password is required";
-      } else if (password.length < 6) {
-        newErrors.password = "Password must be at least 6 characters";
-      } else {
-        delete newErrors.password;
-      }
-
-      if (!confirm) {
-        newErrors.confirmPassword = "Please confirm your password";
-      } else if (password !== confirm) {
-        newErrors.confirmPassword = "Passwords do not match";
-      } else {
-        delete newErrors.confirmPassword;
-      }
-    }
-
-    setErrors(newErrors);
+    setErrors({ ...errors });
   };
 
   /* ---------- IMAGE UPLOAD ---------- */
@@ -122,10 +113,8 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 🔥 instant preview
     const previewUrl = URL.createObjectURL(file);
-    setData({ ...data, image: previewUrl });
-
+    setPreview(previewUrl);
     setUploading(true);
 
     const formData = new FormData();
@@ -133,20 +122,42 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
 
     try {
       const res = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
         { method: "POST", body: formData }
       );
 
       const result = await res.json();
 
       if (result.success) {
-        setData({ ...data, image: result.data.url });
+        setData((prev) => ({
+          ...prev,
+          image: result.data.url,
+        }));
       }
     } catch (err) {
-      console.error("Image upload failed", err);
+      console.error("Upload failed", err);
     } finally {
+      URL.revokeObjectURL(previewUrl);
       setUploading(false);
     }
+  };
+
+  /* ---------- Handle Mode Change ---------- */
+  const handleModeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setData((prev) => ({
+      ...prev,
+      mode: e.target.value as BasicInfoData["mode"],
+    }));
+  };
+
+  /* ---------- Handle Day Toggle ---------- */
+  const handleDayToggle = (day: string) => {
+    setData((prev) => ({
+      ...prev,
+      days: prev.days.includes(day)
+        ? prev.days.filter((d) => d !== day)
+        : [...prev.days, day],
+    }));
   };
 
   return (
@@ -154,14 +165,13 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
       <div className="md:flex gap-4 items-end">
         {/* Profile Image */}
         <div className="flex-1 mb-4 md:mb-0">
-          {data.image && (
+          {(preview || data.image) && (
             <div className="w-24 h-24 rounded-full mb-2 relative overflow-hidden">
               <Image
-                src={data.image}
+                src={preview || data.image!}
                 alt="Profile"
                 fill
                 className="object-cover"
-                priority
               />
             </div>
           )}
@@ -198,71 +208,8 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
         </div>
       </div>
 
-      <div className="md:flex gap-4 items-start">
-        {/* Password */}
-        <div className="flex-1 mb-4 md:mb-0">
-          <label className="block font-medium">Password *</label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              autoComplete="new-password"
-              value={data.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className={`w-full border rounded-lg px-3 py-2 pr-12 ${
-                errors.password ? "border-red-500" : ""
-              }`}
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowPassword((p) => !p)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-            </button>
-          </div>
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password}</p>
-          )}
-        </div>
-        {/* Confirm Password */}
-        <div className="flex-1">
-          <label className="block font-medium">Retype Password *</label>
-          <div className="relative">
-            <input
-              type={showConfirm ? "text" : "password"}
-              name="confirmPassword"
-              autoComplete="new-password"
-              value={data.confirmPassword}
-              onChange={handleChange}
-              onPaste={(e) => e.preventDefault()}
-              placeholder="Retype Password"
-              className={`w-full border rounded-lg px-3 py-2 pr-12 ${
-                errors.confirmPassword ? "border-red-500" : ""
-              }`}
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowConfirm((p) => !p)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showConfirm ? <Eye size={18} /> : <EyeOff size={18} />}
-            </button>
-          </div>
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-          )}
-        </div>
-      </div>
-
       {/* -------- Tuition Preferences -------- */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800">
-          Tuition Preferences
-        </h3>
 
         <div className="grid md:grid-cols-2 gap-4">
           {/* Expected Minimum Salary */}
@@ -353,19 +300,6 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
             </select>
           </div>
 
-          {/* Extra Facilities */}
-          {/* <div>
-            <label className="block font-medium">Extra Facilities</label>
-            <input
-              type="text"
-              name="extraFacilities"
-              value={data.extraFacilities || ""}
-              onChange={handleChange}
-              placeholder="e.g. Notes, Model Tests"
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div> */}
-
           {/* Preferred Medium */}
           <div>
             <label className="block font-medium">
@@ -439,6 +373,44 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
               placeholder="Mirpur, Dhanmondi"
               className="w-full border rounded-lg px-3 py-2"
             />
+          </div>
+
+          {/* Available Days */}
+          <div>
+            <label className="block font-medium">Available Days</label>
+            <div className="flex flex-wrap gap-2">
+              {weekDays.map((day) => (
+                <button
+                  key={day}
+                  type="button"
+                  aria-pressed={data.days.includes(day)}
+                  onClick={() => handleDayToggle(day)}
+                  className={`px-3 py-2 rounded-lg border cursor-pointer ${
+                    data.days.includes(day)
+                      ? "bg-[#0C259F] text-white border-[#0C259F]"
+                      : "bg-gray-400 text-white border-gray-200"
+                  }`}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Preferred Mode */}
+          <div>
+            <label className="block font-medium">Preferred Mode</label>
+            <select
+              value={data.mode}
+              onChange={handleModeChange}
+              className="w-full border rounded-lg px-3 py-2.5"
+              disabled={data.days.length === 0}
+            >
+              <option value="">Select Mode</option>
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
           </div>
         </div>
       </div>

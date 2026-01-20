@@ -172,7 +172,7 @@ const onSubmit = async (data: HireTutorFormData) => {
       }
     ); // <-- Closing parenthesis here
 
-    const result = await response.json(); // parse the response
+    const result = await response.json();
     console.log("Tutor application submitted:", result);
 
     await Swal.fire({
