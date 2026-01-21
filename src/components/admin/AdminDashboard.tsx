@@ -94,7 +94,7 @@ export default function AdminDashboard({
         const baseUrl =
           process.env.NEXT_PUBLIC_API_URL ||
           "https://pro-assignment-twelve-server.vercel.app";
-        const res = await fetch(`${baseUrl}/manual-bkash-payment`, {
+        const res = await fetch(`${baseUrl}/all-payments`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
