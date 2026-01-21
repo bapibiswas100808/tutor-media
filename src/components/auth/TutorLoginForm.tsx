@@ -80,7 +80,7 @@ export default function TutorLoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border border-gray-200"
+      className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border border-gray-200 text-gray-700"
     >
       <h2 className="text-3xl font-bold mb-2 text-gray-900">Tutor Login</h2>
       <p className="text-gray-600 text-sm mb-6">
@@ -117,7 +117,7 @@ export default function TutorLoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="••••••••"
+            placeholder="Enter your password"
             disabled={loading}
           />
           <button
