@@ -616,12 +616,52 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       if (!selectedPlan) return;
 
                       Swal.fire({
-                        title:
-                          "bKash Send Money to 01990-539200 and Give Your Number and Transaction ID(Capital letters)",
+                        title: "Pay with bKash (Send Money)",
+
                         html: `
-                        <input id="tutorId" class="swal2-input" placeholder="Your tutor ID">
-                        <input id="sender" class="swal2-input" placeholder="Your bKash Number">
-                        <input id="trxId" class="swal2-input" placeholder="Transaction ID">
+                        <p style="margin-bottom:8px;font-size:15px;">
+                            Send money via <b>bKash</b> to the number below:
+                          </p>
+
+                          <div style="
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            gap:8px;
+                            margin-bottom:12px;
+                          ">
+                            <code id="bkashNumber" style="
+                              font-size:18px;
+                              font-weight:700;
+                              padding:6px 12px;
+                              background:#f1f5f9;
+                              border-radius:6px;
+                            ">
+                              01990-539200
+                            </code>
+                            <button
+                              onclick="navigator.clipboard.writeText('01990539200')"
+                              style="
+                                padding:6px 10px;
+                                background:#22c55e;
+                                color:white;
+                                border:none;
+                                border-radius:6px;
+                                cursor:pointer;
+                              "
+                            >
+                              Copy
+                            </button>
+                          </div>
+
+                          <p style="font-size:13px;color:#555;margin-bottom:10px;">
+                            After sending money, enter your <b>bKash number</b> and
+                            <b>Transaction ID (CAPITAL LETTERS)</b> below.
+                          </p>
+
+                          <input id="tutorId" class="swal2-input" placeholder="Your Tutor ID">
+                          <input id="sender" class="swal2-input" placeholder="Your bKash Number">
+                          <input id="trxId" class="swal2-input" placeholder="Transaction ID">
                         `,
                         confirmButtonText: "Submit Payment",
                         showCancelButton: true,
