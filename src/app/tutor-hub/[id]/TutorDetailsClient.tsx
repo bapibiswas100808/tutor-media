@@ -39,10 +39,11 @@ type EducationEntry = {
 };
 
 type BkashPaymentData = {
-  tutorId: string;
+  // tutorId: string;
   sender: string;
   trxId: string;
-  screenshot?: File;
+  plan: string;
+  amount: number;
 };
 
 // Calculate profile completion percentage
@@ -93,40 +94,70 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const [isOpen, setIsOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [amount, setAmount] = useState<number>(0);
   const [submitting, setSubmitting] = useState(false);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const tutorId = user?.id;
 
   //  Handle bKash Payment Submission
   const handleBkashSubmit = async ({
-    tutorId,
     sender,
     trxId,
+    plan: selectedPlan,
+    amount,
   }: BkashPaymentData) => {
-    if (!selectedPlan) return;
+    if (!selectedPlan || !amount) return;
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        tutorId,
-        plan: selectedPlan,
-        amount: selectedPlan === "premium" ? 500 : 300,
-        sender,
-        trxId,
-        method: "bkash",
-      }),
-    });
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            tutorId,
+            plan: selectedPlan,
+            amount, // ✅ dynamic amount (300 / 500)
+            sender,
+            trxId,
+            method: "bkash",
+          }),
+        },
+      );
 
-    Swal.fire({
-      icon: "success",
-      title: "Payment Submitted",
-      text: "Verification may take up to 24 hours.",
-    });
+      // 🔴 Duplicate transaction
+      if (res.status === 409) {
+        Swal.fire({
+          icon: "error",
+          title: "Duplicate Payment",
+          text: "This Transaction ID was already submitted.",
+        });
+        return;
+      }
+
+      // 🔴 Other server error
+      if (!res.ok) {
+        throw new Error("Payment submission failed");
+      }
+
+      // ✅ Success
+      Swal.fire({
+        icon: "success",
+        title: "Payment Submitted",
+        text: "Verification may take up to 24 hours.",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   // Check if the logged-in user is viewing their own profile
@@ -580,7 +611,10 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   {/* Plans */}
                   <div className="flex gap-4 mb-6">
                     <button
-                      onClick={() => setSelectedPlan("1 year")}
+                      onClick={() => {
+                        setSelectedPlan("1 year");
+                        setAmount(300);
+                      }}
                       className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
                         selectedPlan === "1 year"
                           ? "bg-yellow-600 text-white border-yellow-600"
@@ -592,7 +626,10 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </button>
 
                     <button
-                      onClick={() => setSelectedPlan("2 years")}
+                      onClick={() => {
+                        setSelectedPlan("2 years");
+                        setAmount(500);
+                      }}
                       className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
                         selectedPlan === "2 years"
                           ? "bg-yellow-600 text-white border-yellow-600"
@@ -609,80 +646,149 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     disabled={!selectedPlan || submitting}
                     className={`w-full py-3 rounded-xl text-white font-semibold transition cursor-pointer ${
                       selectedPlan
-                        ? "bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
+                        ? "bg-yellow-600 hover:bg-yellow-700"
                         : "bg-gray-300 cursor-not-allowed"
                     }`}
                     onClick={() => {
-                      if (!selectedPlan) return;
+                      if (!selectedPlan || !tutorId) return;
 
                       Swal.fire({
                         title: "Pay with bKash (Send Money)",
 
                         html: `
-                        <p style="margin-bottom:8px;font-size:15px;">
-                            Send money via <b>bKash</b> to the number below:
-                          </p>
 
-                          <div style="
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            gap:8px;
-                            margin-bottom:12px;
-                          ">
-                            <code id="bkashNumber" style="
-                              font-size:18px;
-                              font-weight:700;
-                              padding:6px 12px;
-                              background:#f1f5f9;
-                              border-radius:6px;
-                            ">
-                              01990-539200
-                            </code>
-                            <button
-                              onclick="navigator.clipboard.writeText('01990539200')"
-                              style="
-                                padding:6px 10px;
-                                background:#22c55e;
-                                color:white;
-                                border:none;
-                                border-radius:6px;
-                                cursor:pointer;
-                              "
-                            >
-                              Copy
-                            </button>
-                          </div>
+                        <div style="margin-bottom:10px;font-size:18px;">
+  <span style="
+    margin-left:6px;
+    font-weight:600;
+    color:#2563eb;
+  ">
+    ${selectedPlan} (৳ ${amount}.00)
+  </span>
+</div>
 
-                          <p style="font-size:13px;color:#555;margin-bottom:10px;">
-                            After sending money, enter your <b>bKash number</b> and
-                            <b>Transaction ID (CAPITAL LETTERS)</b> below.
-                          </p>
+        <p style="margin-bottom:10px;font-size:16px;">
+          <b>Send money\</b> via <b>bKash</b> to the number below:
+        </p>
 
-                          <input id="tutorId" class="swal2-input" placeholder="Your Tutor ID">
-                          <input id="sender" class="swal2-input" placeholder="Your bKash Number">
-                          <input id="trxId" class="swal2-input" placeholder="Transaction ID">
-                        `,
+        <div style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:8px;
+          margin-bottom:12px;
+        ">
+          <span
+  style="
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+    font-size: 20px;
+    font-weight: 700;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-radius: 999px;
+    color: #92400e;
+    letter-spacing: 1.2px;
+    display: inline-block;
+  "
+>
+  01990-539200
+</span>
+
+
+          <button
+            onclick="navigator.clipboard.writeText('01990539200')"
+            style="
+              padding:6px 10px;
+              background:#22c55e;
+              color:white;
+              border:none;
+              border-radius:6px;
+              cursor:pointer;
+            "
+          >
+            Copy
+          </button>
+        </div>
+
+        <p style="font-size:16px;color:#555;margin-bottom:10px;line-height:1.5;">
+          After sending money, enter your <b>bKash number</b> and
+          <b>Transaction ID (CAPITAL LETTERS)</b>.
+        </p>
+
+        <div style="margin-bottom:8px;font-size:18px;">
+          <b>Tutor ID:</b>
+          <span style="
+            margin-left:6px;
+            font-weight:600;
+            color:#2563eb;
+          ">
+            ${tutorId}
+          </span>
+        </div>
+
+      <input
+  id="sender"
+  type="tel"
+  inputmode="numeric"
+  maxlength="11"
+  placeholder="Your bKash Number"
+  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,11)"
+  style="
+    width: 100%;
+    height: 44px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  "
+  onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 2px rgba(245,158,11,0.25)'"
+  onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
+/>
+
+        <input
+  id="trxId"
+  placeholder="Transaction ID (CAPITAL LETTERS)"
+  oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')"
+  style="
+    width: 100%;
+    height: 44px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  "
+  onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 2px rgba(245,158,11,0.25)'"
+  onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
+/>
+
+      `,
                         confirmButtonText: "Submit Payment",
+                        confirmButtonColor: "#f59e0b",
                         showCancelButton: true,
+
                         preConfirm: (): BkashPaymentData | false => {
-                          const tutorId = (
-                            document.getElementById(
-                              "tutorId",
-                            ) as HTMLInputElement
-                          )?.value.trim();
                           const sender = (
                             document.getElementById(
                               "sender",
                             ) as HTMLInputElement
                           )?.value.trim();
+
                           const trxId = (
                             document.getElementById("trxId") as HTMLInputElement
                           )?.value.trim();
 
-                          if (!tutorId || !sender || !trxId) {
+                          if (!sender || !trxId) {
                             Swal.showValidationMessage(
-                              "Tutor ID, bKash number, and Transaction ID are required",
+                              "bKash number and Transaction ID are required",
                             );
                             return false;
                           }
@@ -699,7 +805,12 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                             return false;
                           }
 
-                          return { tutorId, sender, trxId };
+                          return {
+                            sender,
+                            trxId,
+                            plan: selectedPlan, // ✅
+                            amount, // ✅
+                          };
                         },
                       }).then((result) => {
                         if (result.isConfirmed && result.value) {

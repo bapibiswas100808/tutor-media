@@ -3,9 +3,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Tutor } from "@/data/tutorsList";
-// import { TuitionJob } from "@/data/tuitionJobsList";
 import { Application } from "@/lib/applications";
 import Swal from "sweetalert2";
+import Link from "next/link";
 export interface BkashPayment {
   _id?: string;
   studentId?: string;
@@ -50,6 +50,7 @@ export default function AdminDashboard({
   );
   const [payments, setPayments] = useState<BkashPayment[]>([]);
   const [tutorEmailQuery, setTutorEmailQuery] = useState<string>("");
+  const [tutorIdQuery, setTutorIdQuery] = useState<string>("");
   const [jobTitleQuery, setJobTitleQuery] = useState<string>("");
   const [paymentsPage, setPaymentsPage] = useState<number>(1);
 
@@ -60,25 +61,11 @@ export default function AdminDashboard({
 
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
-  const [editingTutor, setEditingTutor] = useState<Tutor | null>(null);
-  const [editFormData, setEditFormData] = useState<Partial<Tutor>>({});
   const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
   const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
     {},
   );
 
-  //   useEffect(() => {
-  //     const userJson = localStorage.getItem("user");
-  //     const token = localStorage.getItem("token");
-  //     if (!userJson || !token) {
-  //       router.push("/login");
-  //       return;
-  //     }
-  //     const user = JSON.parse(userJson);
-  //     if (user.role !== "admin") {
-  //       router.push("/");
-  //     }
-  //   }, [router]);
 
   useEffect(() => {
     setTutors(initialTutors || []);
@@ -121,11 +108,21 @@ export default function AdminDashboard({
   );
 
   const filteredTutors = useMemo(() => {
-    const q = tutorEmailQuery.trim().toLowerCase();
-    return q
-      ? tutors.filter((t) => (t.email ?? "").toLowerCase().includes(q))
-      : tutors;
-  }, [tutors, tutorEmailQuery]);
+    const emailQ = tutorEmailQuery.trim().toLowerCase();
+    const idQ = tutorIdQuery.trim();
+
+    return tutors.filter((tutor) => {
+      // Email match (case-insensitive)
+      const emailMatch = emailQ
+        ? (tutor.email ?? "").toLowerCase().includes(emailQ)
+        : true;
+
+      // Tutor ID match (numbers only)
+      const idMatch = idQ ? String(tutor.id).includes(idQ) : true;
+
+      return emailMatch && idMatch;
+    });
+  }, [tutors, tutorEmailQuery, tutorIdQuery]);
 
   const filteredJobs = useMemo(() => {
     const q = jobTitleQuery.trim().toLowerCase();
@@ -282,54 +279,6 @@ export default function AdminDashboard({
     }
   }
 
-  // Update handlers
-  // const handleUpdate = async (
-  //   type: "job" | "tutor" | "application",
-  //   id: string | number
-  // ) => {
-  //   const job = jobs.find((j) => j.id === id || j._id === id);
-  //   if (!job) return;
-
-  //   const newTitle = window.prompt("Enter new title", job.title);
-  //   if (!newTitle || newTitle === job.title) return;
-
-  //   try {
-  //     const res = await fetch(`${BACKEND_BASE}/tuitionJobs/update/${id}`, {
-  //       method: "PATCH",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ title: newTitle }),
-  //     });
-
-  //     if (!res.ok) {
-  //       const text = await res.text();
-  //       throw new Error(text);
-  //     }
-
-  //     const data = await res.json();
-
-  //     // ✅ Update local state
-  //     setJobs((prev) =>
-  //       prev.map((j) =>
-  //         j.id === id || j._id === id ? { ...j, title: data.title } : j
-  //       )
-  //     );
-
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Success!",
-  //       text: "Profile updated successfully!",
-  //     });
-  //   } catch (error: unknown) {
-  //     if (error instanceof Error) {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Update Failed",
-  //         text:
-  //           error instanceof Error ? error.message : "Something went wrong!",
-  //       });
-  //     }
-  //   }
-  // };
 
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
@@ -591,22 +540,49 @@ export default function AdminDashboard({
                     </>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="search"
-                    value={tutorEmailQuery}
-                    onChange={(e) => setTutorEmailQuery(e.target.value)}
-                    placeholder="Search by email"
-                    className="border rounded px-3 py-2 text-sm w-72"
-                  />
-                  {tutorEmailQuery && (
-                    <button
-                      className="text-sm text-gray-600 hover:text-gray-800"
-                      onClick={() => setTutorEmailQuery("")}
-                    >
-                      Clear
-                    </button>
-                  )}
+
+                <div className="flex flex-wrap items-center gap-3 bg-white p-2 rounded-lg shadow-sm">
+                  {/* Search by Email */}
+                  <div className="flex items-center gap-2 border rounded px-2 py-1">
+                    <input
+                      type="search"
+                      value={tutorEmailQuery}
+                      onChange={(e) => setTutorEmailQuery(e.target.value)}
+                      placeholder="Search by email"
+                      className="outline-none px-2 py-1 text-sm w-72 bg-transparent"
+                    />
+                    {tutorEmailQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setTutorEmailQuery("")}
+                        className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  {/* Search by Tutor ID */}
+                  <div className="flex items-center gap-2 border rounded px-2 py-1">
+                    <input
+                      type="search"
+                      value={tutorIdQuery}
+                      onChange={
+                        (e) =>
+                          setTutorIdQuery(e.target.value.replace(/\D/g, "")) // numbers only
+                      }
+                      placeholder="Search by Tutor ID"
+                      className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
+                    />
+                    {tutorIdQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setTutorIdQuery("")}
+                        className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -615,7 +591,7 @@ export default function AdminDashboard({
                     <tr className="text-left">
                       <th className="px-3 py-2">Name</th>
                       <th className="px-3 py-2">Email</th>
-                      {/* <th className="px-3 py-2">Subjects</th> */}
+                      <th className="px-3 py-2">Id</th>
                       <th className="px-3 py-2">Location</th>
                       <th className="px-3 py-2">Verified</th>
                       <th className="px-3 py-2">Approved</th>
@@ -635,9 +611,7 @@ export default function AdminDashboard({
                         <tr key={t.id} className="border-t">
                           <td className="px-3 py-2">{t.fullName}</td>
                           <td className="px-3 py-2">{t.email}</td>
-                          {/* <td className="px-3 py-2">
-                            {t.subjects?.join(", ")}
-                          </td> */}
+                          <td className="px-3 py-2">{t.id}</td>
                           <td className="px-3 py-2">{t.location}</td>
                           <td className="px-3 py-2">
                             <input
@@ -692,7 +666,14 @@ export default function AdminDashboard({
                           </td>
                           <td className="px-3 py-2">
                             <div className="flex gap-2">
-                              <button
+                              <Link
+                                href={`/admin/edit-tutor/${t.id}`}
+                                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                              >
+                                Edit
+                              </Link>
+
+                              {/* <button
                                 onClick={async () => {
                                   const result = await Swal.fire({
                                     title: "Edit Tutor?",
@@ -716,7 +697,7 @@ export default function AdminDashboard({
                                 className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
                               >
                                 Edit
-                              </button>
+                              </button> */}
 
                               <button
                                 onClick={async () => {
@@ -1212,7 +1193,7 @@ export default function AdminDashboard({
       </div>
 
       {/* Edit Tutor Modal */}
-      {editingTutor && (
+      {/* {editingTutor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-full overflow-y-auto">
             <div className="p-6">
@@ -1470,7 +1451,7 @@ export default function AdminDashboard({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Edit Job Modal */}
       {editingJob && (

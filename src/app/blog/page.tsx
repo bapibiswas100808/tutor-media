@@ -20,7 +20,7 @@ export default async function BlogPage() {
   let blogs: BlogPost[] = [];
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allBlogs`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allBlogs-Hide`, {
       cache: "no-store",
     });
 
@@ -36,7 +36,7 @@ export default async function BlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-80 bg-gray-50 mt-4">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
           Our Blog
@@ -44,14 +44,15 @@ export default async function BlogPage() {
 
         <div className="max-w-6xl mx-auto">
           {blogs?.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="flex items-center justify-center h-80">
+              <div className="text-center">
               <p className="text-gray-500 text-lg">
                 No blog posts available yet.
               </p>
-              <p className="text-gray-400 text-sm mt-2">
-                Make sure your Strapi server is running at{" "}
-                {process.env.NEXT_PUBLIC_STRAPI_URL}
+              <p className="text-gray-400 text-2xl mt-2">
+                Coming soon!
               </p>
+            </div>
             </div>
           ) : (
             <div className="grid gap-8 md:grid-cols-3">
