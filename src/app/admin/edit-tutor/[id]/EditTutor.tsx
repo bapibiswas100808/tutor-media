@@ -4,10 +4,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-import BasicInfo, { BasicInfoData } from "@/app/complete-profile/[id]/tabs/basicInfo";
-import Education, { EducationEntry } from "@/app/complete-profile/[id]/tabs/education";
-import PersonalInformation, { PersonalInfoData } from "@/app/complete-profile/[id]/tabs/personalInfo";
-import DocumentsInfo, { DocumentsInfoData } from "@/app/complete-profile/[id]/tabs/documentsInfo";
+import BasicInfo, {
+  BasicInfoData,
+} from "@/app/complete-profile/[id]/tabs/basicInfo";
+import Education, {
+  EducationEntry,
+} from "@/app/complete-profile/[id]/tabs/education";
+import PersonalInformation, {
+  PersonalInfoData,
+} from "@/app/complete-profile/[id]/tabs/personalInfo";
+import DocumentsInfo, {
+  DocumentsInfoData,
+} from "@/app/complete-profile/[id]/tabs/documentsInfo";
 import Image from "next/image";
 
 /* ================= CONSTANTS ================= */
@@ -18,7 +26,10 @@ const tabs = [
   { label: "Basic Info", icon: "/images/completeProfile/tuition-info.png" },
   { label: "Education", icon: "/images/completeProfile/educational-info.png" },
   { label: "Personal Info", icon: "/images/completeProfile/personal-info.png" },
-  { label: "Documents Info", icon: "/images/completeProfile/documents-info.png" },
+  {
+    label: "Documents Info",
+    icon: "/images/completeProfile/documents-info.png",
+  },
 ];
 
 const EMPTY_PERSONAL_INFO: PersonalInfoData = {
@@ -86,11 +97,18 @@ export default function EditTutor({ id }: Props) {
     cgpa: "",
   });
 
-  const [sscData, setSscData] = useState<EducationEntry[]>([createEmptyEducation()]);
-  const [hscData, setHscData] = useState<EducationEntry[]>([createEmptyEducation()]);
-  const [gradData, setGradData] = useState<EducationEntry[]>([createEmptyEducation()]);
+  const [sscData, setSscData] = useState<EducationEntry[]>([
+    createEmptyEducation(),
+  ]);
+  const [hscData, setHscData] = useState<EducationEntry[]>([
+    createEmptyEducation(),
+  ]);
+  const [gradData, setGradData] = useState<EducationEntry[]>([
+    createEmptyEducation(),
+  ]);
 
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfoData>(EMPTY_PERSONAL_INFO);
+  const [personalInfo, setPersonalInfo] =
+    useState<PersonalInfoData>(EMPTY_PERSONAL_INFO);
 
   const [documentsInfo, setDocumentsInfo] = useState<DocumentsInfoData>({
     nidFront: undefined,
@@ -102,101 +120,100 @@ export default function EditTutor({ id }: Props) {
 
   /* ================= FETCH TUTOR DATA ================= */
 
-useEffect(() => {
-  const fetchTutor = async () => {
-    try {
-      const res = await fetch(`${BACKEND_BASE}/allTutors/${id}`, {
-        cache: "no-store",
-      });
-      if (!res.ok) throw new Error("Failed to fetch tutor");
+  useEffect(() => {
+    const fetchTutor = async () => {
+      try {
+        const res = await fetch(`${BACKEND_BASE}/allTutors/${id}`, {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("Failed to fetch tutor");
 
-      const data = await res.json();
+        const data = await res.json();
 
-      setBasicInfo(prev => ({
-        ...prev,
-        ...data.basicInfo,
-        email: data.email,
-      }));
+        setBasicInfo((prev) => ({
+          ...prev,
+          ...data.basicInfo,
+          email: data.email,
+        }));
 
-      setSscData(
-        data.education?.ssc?.length
-          ? data.education.ssc
-          : [createEmptyEducation()],
-      );
+        setSscData(
+          data.education?.ssc?.length
+            ? data.education.ssc
+            : [createEmptyEducation()],
+        );
 
-      setHscData(
-        data.education?.hsc?.length
-          ? data.education.hsc
-          : [createEmptyEducation()],
-      );
+        setHscData(
+          data.education?.hsc?.length
+            ? data.education.hsc
+            : [createEmptyEducation()],
+        );
 
-      setGradData(
-        data.education?.grad?.length
-          ? data.education.grad
-          : [createEmptyEducation()],
-      );
+        setGradData(
+          data.education?.grad?.length
+            ? data.education.grad
+            : [createEmptyEducation()],
+        );
 
-      setPersonalInfo({
-        ...EMPTY_PERSONAL_INFO,
-        ...(data.personalInfo || {}),
-      });
+        setPersonalInfo({
+          ...EMPTY_PERSONAL_INFO,
+          ...(data.personalInfo || {}),
+        });
 
-      setDocumentsInfo(prev => ({
-        ...prev,
-        ...(data.documentsInfo || {}),
-      }));
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "Failed to load tutor data", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setDocumentsInfo((prev) => ({
+          ...prev,
+          ...(data.documentsInfo || {}),
+        }));
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Failed to load tutor data", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchTutor();
-}, [id]);
-
+    fetchTutor();
+  }, [id]);
 
   if (loading) return <p className="text-center mt-20">Loading...</p>;
 
   /* ================= SAVE ================= */
 
-  const handleSave = async () => {
-    try {
-      const confirm = await Swal.fire({
-        title: "Save changes?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Save",
-      });
-      if (!confirm.isConfirmed) return;
+ const handleSave = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Admin token missing");
 
-      const token = localStorage.getItem("token");
-      if (!token) return Swal.fire("Unauthorized", "Please login again", "error");
+    const formData = new FormData();
+    formData.append("basicInfo", JSON.stringify(basicInfo));
+    formData.append(
+      "education",
+      JSON.stringify({ ssc: sscData, hsc: hscData, grad: gradData })
+    );
+    formData.append("personalInfo", JSON.stringify(personalInfo));
 
-      const formData = new FormData();
-      formData.append("basicInfo", JSON.stringify(basicInfo));
-      formData.append("education", JSON.stringify({ ssc: sscData, hsc: hscData, grad: gradData }));
-      formData.append("personalInfo", JSON.stringify(personalInfo));
+    // Append documents (File or URL)
+   Object.entries(documentsInfo).forEach(([key, value]) => {
+      if (value instanceof File) {
+        formData.append(key, value); // new uploaded file
+      } else if (typeof value === "string") {
+        formData.append(key, value); // existing image URL
+      }
+    });
 
-      Object.entries(documentsInfo).forEach(([key, value]) => {
-        if (value instanceof File) formData.append(key, value);
-      });
+    const res = await fetch(`${BACKEND_BASE}/allTutors/update/${id}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
 
-      const res = await fetch(`${BACKEND_BASE}/allTutors/update/${id}`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+    if (!res.ok) throw new Error("Update failed");
+    Swal.fire("Success", "Tutor updated successfully", "success");
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error", "Failed to save tutor data", "error");
+  }
+};
 
-      if (!res.ok) throw new Error("Update failed");
-      Swal.fire("Success", "Tutor updated successfully", "success");
-      router.push("/admin/dashboard");
-    } catch (err) {
-        console.error(err);
-      Swal.fire("Error", "Failed to save tutor data", "error");
-    }
-  };
 
   /* ================= RENDER TAB CONTENT ================= */
 
@@ -216,9 +233,13 @@ useEffect(() => {
           />
         );
       case 2:
-        return <PersonalInformation data={personalInfo} setData={setPersonalInfo} />;
+        return (
+          <PersonalInformation data={personalInfo} setData={setPersonalInfo} />
+        );
       case 3:
-        return <DocumentsInfo data={documentsInfo} setData={setDocumentsInfo} />;
+        return (
+          <DocumentsInfo data={documentsInfo} setData={setDocumentsInfo} />
+        );
       default:
         return null;
     }
@@ -231,48 +252,47 @@ useEffect(() => {
       <div className="max-w-6xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold mb-6">Edit Tutor Profile</h1>
 
-       {/* Tabs */}
-<div className="flex gap-3 border-b mb-6">
-  {tabs.map((tab, index) => (
-    <button
-                    key={tab.label}
-                    onClick={() => setActiveTab(index)}
-                    className={`group pb-3 font-bold transition w-full flex flex-col items-center justify-center cursor-pointer 
+        {/* Tabs */}
+        <div className="flex gap-3 border-b mb-6">
+          {tabs.map((tab, index) => (
+            <button
+              key={tab.label}
+              onClick={() => setActiveTab(index)}
+              className={`group pb-3 font-bold transition w-full flex flex-col items-center justify-center cursor-pointer 
                       ${
                         activeTab === index
                           ? "border-b-2 border-blue-600 text-blue-600"
                           : "text-gray-700 hover:text-blue-500"
                       }`}
-                  >
-                    <div className="relative w-10 md:w-14 h-10 md:h-20">
-                      <Image
-                        src={tab.icon}
-                        alt={tab.label}
-                        fill
-                        priority
-                        className={`object-contain transition-transform duration-300
+            >
+              <div className="relative w-10 md:w-14 h-10 md:h-20">
+                <Image
+                  src={tab.icon}
+                  alt={tab.label}
+                  fill
+                  priority
+                  className={`object-contain transition-transform duration-300
                           ${
                             activeTab === index
                               ? "scale-110"
                               : "group-hover:scale-110"
                           }`}
-                      />
-                    </div>
-    
-                    <span
-                      className={`hidden sm:inline text-lg transition-transform duration-300
+                />
+              </div>
+
+              <span
+                className={`hidden sm:inline text-lg transition-transform duration-300
                         ${
                           activeTab === index
                             ? "scale-105"
                             : "group-hover:scale-105"
                         }`}
-                    >
-                      {tab.label}
-                    </span>
-                  </button>
-  ))}
-</div>
-
+              >
+                {tab.label}
+              </span>
+            </button>
+          ))}
+        </div>
 
         {/* Tab Content */}
         <div className="mb-6">{renderTabContent()}</div>
