@@ -65,6 +65,7 @@ export default function EditTutor({ id }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
+  const [tutorName, setTutorName] = useState("");
 
   /* ===== STATES FOR TAB DATA ===== */
   const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
@@ -136,6 +137,9 @@ export default function EditTutor({ id }: Props) {
           email: data.email,
         }));
 
+        // Set tutor name
+        setTutorName(data.basicInfo?.fullName || data.fullName || "");
+
         setSscData(
           data.education?.ssc?.length
             ? data.education.ssc
@@ -178,42 +182,41 @@ export default function EditTutor({ id }: Props) {
 
   /* ================= SAVE ================= */
 
- const handleSave = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Admin token missing");
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Admin token missing");
 
-    const formData = new FormData();
-    formData.append("basicInfo", JSON.stringify(basicInfo));
-    formData.append(
-      "education",
-      JSON.stringify({ ssc: sscData, hsc: hscData, grad: gradData })
-    );
-    formData.append("personalInfo", JSON.stringify(personalInfo));
+      const formData = new FormData();
+      formData.append("basicInfo", JSON.stringify(basicInfo));
+      formData.append(
+        "education",
+        JSON.stringify({ ssc: sscData, hsc: hscData, grad: gradData }),
+      );
+      formData.append("personalInfo", JSON.stringify(personalInfo));
 
-    // Append documents (File or URL)
-   Object.entries(documentsInfo).forEach(([key, value]) => {
-      if (value instanceof File) {
-        formData.append(key, value); // new uploaded file
-      } else if (typeof value === "string") {
-        formData.append(key, value); // existing image URL
-      }
-    });
+      // Append documents (File or URL)
+      Object.entries(documentsInfo).forEach(([key, value]) => {
+        if (value instanceof File) {
+          formData.append(key, value); // new uploaded file
+        } else if (typeof value === "string") {
+          formData.append(key, value); // existing image URL
+        }
+      });
 
-    const res = await fetch(`${BACKEND_BASE}/allTutors/update/${id}`, {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
+      const res = await fetch(`${BACKEND_BASE}/allTutors/update/${id}`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
-    if (!res.ok) throw new Error("Update failed");
-    Swal.fire("Success", "Tutor updated successfully", "success");
-  } catch (err) {
-    console.error(err);
-    Swal.fire("Error", "Failed to save tutor data", "error");
-  }
-};
-
+      if (!res.ok) throw new Error("Update failed");
+      Swal.fire("Success", "Tutor updated successfully", "success");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Failed to save tutor data", "error");
+    }
+  };
 
   /* ================= RENDER TAB CONTENT ================= */
 
@@ -250,7 +253,11 @@ export default function EditTutor({ id }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-700 pt-5">
       <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold mb-6">Edit Tutor Profile</h1>
+        <h1 className="text-3xl font-bold mb-6">
+          {tutorName
+            ? `Edit Profile: ${tutorName} (ID: ${id})`
+            : `Edit Tutor Profile`}
+        </h1>
 
         {/* Tabs */}
         <div className="flex gap-3 border-b mb-6">

@@ -145,7 +145,7 @@ export default function TutorLoginForm() {
           href="/become-a-tutor"
           className="text-blue-600 hover:underline font-medium"
         >
-          Become a tutor
+          Become a Mentor
         </a>
       </p>
     </form>

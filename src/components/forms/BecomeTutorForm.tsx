@@ -22,7 +22,7 @@ const becomeTutorSchema = z
     division: z.string().min(1, "Please select your division"),
     location: z.string().min(1, "Please select your district"),
     locality: z.string().min(1, "Please select your location"),
-    preferredTutionArea: z
+    preferredTuitionArea: z
       .string()
       .min(1, "Please select your preferred tuition area"),
     qualification: z.string().min(2, "Please enter your qualification"),
@@ -199,41 +199,7 @@ export default function BecomeTutorForm() {
     return Array.from(new Set(allLocations)).sort();
   };
 
-  // const onSubmit = async (data: BecomeTutorFormData) => {
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const response = await createPublic("tutor-hubs", {
-  //       fullName: data.fullName,
-  //       email: data.email,
-  //       phone: data.phone,
-  //       gender: data.gender,
-  //       division: data.division,
-  //       location: data.location,
-  //       qualification: data.qualification,
-  //       experience: data.experience,
-  //       bio: data.bio,
-  //       isVerified: false,
-  //       isApproved: false,
-  //       isPremium: false,
-  //     });
-
-  //     if (response.error) {
-  //       alert(`Error: ${response.error}`);
-  //       setIsSubmitting(false);
-  //       return;
-  //     }
-
-  //     console.log("Tutor application submitted:", response.data);
-  //     setIsSubmitted(true);
-  //     reset();
-  //   } catch (error) {
-  //     console.error("Submission error:", error);
-  //     alert(`Error submitting application: ${error instanceof Error ? error.message : "Unknown error"}`);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+ 
 
   const onSubmit = async (data: BecomeTutorFormData) => {
     // Check if email is verified
@@ -313,30 +279,7 @@ export default function BecomeTutorForm() {
     }
   };
 
-  // if (isSubmitted) {
-  //   return (
-  //     <motion.div
-  //       initial={{ opacity: 0, scale: 0.9 }}
-  //       animate={{ opacity: 1, scale: 1 }}
-  //       className="max-w-md mx-auto text-center bg-green-50 border border-green-200 rounded-lg p-8"
-  //     >
-  //       <div className="text-6xl mb-4">🎓</div>
-  //       <h3 className="text-2xl font-bold text-green-800 mb-4">
-  //         Application Submitted Successfully!
-  //       </h3>
-  //       <p className="text-green-700 mb-6">
-  //         Thank you for applying to become a tutor. We&rsquo;ll review your
-  //         application and get back to you within 2-3 business days.
-  //       </p>
-  //       <button
-  //         onClick={() => setIsSubmitted(false)}
-  //         className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
-  //       >
-  //         Submit Another Application
-  //       </button>
-  //     </motion.div>
-  //   )
-  // }
+ 
 
   return (
     <motion.form
@@ -597,13 +540,13 @@ export default function BecomeTutorForm() {
 
           <div>
             <label
-              htmlFor="preferredTutionArea"
+              htmlFor="preferredTuitionArea"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
               Preferred Tuition Area *
             </label>
             <select
-              {...register("preferredTutionArea")}
+              {...register("preferredTuitionArea")}
               disabled={!locationValue}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
@@ -618,9 +561,9 @@ export default function BecomeTutorForm() {
                 </option>
               ))}
             </select>
-            {errors.preferredTutionArea && (
+            {errors.preferredTuitionArea && (
               <p className="mt-1 text-sm text-red-600">
-                {errors.preferredTutionArea.message}
+                {errors.preferredTuitionArea.message}
               </p>
             )}
           </div>
@@ -704,7 +647,6 @@ export default function BecomeTutorForm() {
         </div>
       </div> */}
 
-      {/* Security */}
       {/* Security */}
       <div className="rounded-lg">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Security</h3>
