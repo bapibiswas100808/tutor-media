@@ -21,16 +21,77 @@ export interface BkashPayment {
 }
 
 export interface TuitionJob {
+  _id: string;
   id: number;
-  _id: string | number;
-  title: string;
-  subject: string;
-  location: string;
-  budget: string;
+
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+  gender?: string;
+  division?: string;
+  district?: string;
+  location?: string;
+  preferredArea?: string;
+  budget?: string;
+  mode?: string;
+  subject?: string;
+  class?: string;
+  medium?: string;
+  description?: string;
+
+  isVerified?: boolean;
   isApproved?: boolean;
+  isPremium?: boolean;
   isDeleted?: boolean;
+  createdAt?: string;
 }
 
+// type EditableJobKey = keyof TuitionJob;
+
+type EditableJob = {
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+  gender?: string;
+  division?: string;
+  district?: string;
+  location?: string;
+  preferredArea?: string;
+  budget?: string;
+  mode?: string;
+  subject?: string;
+  class?: string;
+  medium?: string;
+  description?: string;
+};
+
+type EditableField = {
+  label: string;
+  key: keyof EditableJob;
+  type?: "textarea";
+};
+
+const editableJobFields = [
+  { label: "Name", key: "name" },
+  { label: "Title", key: "title" },
+  { label: "Phone", key: "phone" },
+  { label: "Email", key: "email" },
+  { label: "Gender", key: "gender" },
+  { label: "Division", key: "division" },
+  { label: "District", key: "district" },
+  { label: "Location", key: "location" },
+  { label: "Preferred Area", key: "preferredArea" },
+  { label: "Budget", key: "budget" },
+  { label: "Mode", key: "mode" },
+  { label: "Subject", key: "subject" },
+  { label: "Class", key: "class" },
+  { label: "Medium", key: "medium" },
+  { label: "Description", key: "description", type: "textarea" },
+] satisfies readonly EditableField[];
+
+/* ================= COMPONENT ================= */
 export default function AdminDashboard({
   tutors: initialTutors,
   jobs: initialJobs,
@@ -62,9 +123,22 @@ export default function AdminDashboard({
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
-  const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
-    {},
+  // const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
+  //   {},
+  // );
+  const [editJobFormData, setEditJobFormData] = useState<EditableJob>({});
+
+useEffect(() => {
+  if (!editingJob) return;
+
+  setEditJobFormData(
+    editableJobFields.reduce((acc, { key }) => {
+      const value = editingJob[key];
+      if (typeof value === "string") acc[key] = value;
+      return acc;
+    }, {} as EditableJob)
   );
+}, [editingJob]);
 
 
   // Sync initial data props
@@ -280,7 +354,6 @@ export default function AdminDashboard({
     }
   }
 
-
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
     applicationId: string,
@@ -357,7 +430,7 @@ export default function AdminDashboard({
     }
   };
 
-  // onfirm Action function
+  // confirm Action function
   const confirmAction = async (isDeleted: boolean) => {
     return Swal.fire({
       title: isDeleted ? "Restore tutor?" : "Delete tutor?",
@@ -671,7 +744,7 @@ export default function AdminDashboard({
                                 href={`/admin/edit-tutor/${t.id}`}
                                 className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
                               >
-                                Edit
+                                Update
                               </Link>
 
                               <button
@@ -1173,7 +1246,7 @@ export default function AdminDashboard({
           <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
             <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Title</label>
                 <input
@@ -1234,6 +1307,42 @@ export default function AdminDashboard({
                   className="w-full border px-3 py-2 rounded-md"
                 />
               </div>
+            </div> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {editableJobFields.map(({ label, key, type }) => (
+                <div key={key}>
+                  <label className="block text-sm font-medium mb-1">
+                    {label}
+                  </label>
+
+                  {type === "textarea" ? (
+                    <textarea
+                      value={editJobFormData[key] || ""}
+                      onChange={(e) =>
+                        setEditJobFormData({
+                          ...editJobFormData,
+                          [key]: e.target.value,
+                        })
+                      }
+                      className="w-full border px-3 py-2 rounded-md"
+                      rows={3}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={editJobFormData[key] || ""}
+                      onChange={(e) =>
+                        setEditJobFormData({
+                          ...editJobFormData,
+                          [key]: e.target.value,
+                        })
+                      }
+                      className="w-full border px-3 py-2 rounded-md"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
 
             <div className="flex gap-2 mt-4">
@@ -1260,7 +1369,7 @@ export default function AdminDashboard({
                     // Only include defined fields
                     const updateData = Object.fromEntries(
                       Object.entries(editJobFormData).filter(
-                        ([v]) => v !== undefined,
+                        ([, v]) => v !== undefined,
                       ),
                     );
 

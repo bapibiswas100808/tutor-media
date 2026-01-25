@@ -465,7 +465,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 <Users className="w-6 h-6 mr-3 text-blue-600" />
                 About
               </h2>
-              <p className="text-gray-700 leading-relaxed">{tutor.personalInfo.overview}</p>
+              <p className="text-gray-700 leading-relaxed">
+                {tutor.personalInfo.overview}
+              </p>
             </motion.div>
 
             {/* Tuition Preferences */}
@@ -482,24 +484,17 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 </h2>
 
                 <div className="grid gap-6 md:grid-cols-2 text-gray-700">
-  {tuitionPreferenceFields.map(({ label, key }) => {
-    const rawValue = tutor.basicInfo?.[key as keyof typeof tutor.basicInfo];
+                  {tuitionPreferenceFields.map(({ label, key }) => {
+                    const rawValue =
+                      tutor.basicInfo?.[key as keyof typeof tutor.basicInfo];
 
-    const value =
-      Array.isArray(rawValue)
-        ? rawValue.join(", ")
-        : rawValue ?? "Not specified";
+                    const value = Array.isArray(rawValue)
+                      ? rawValue.join(", ")
+                      : (rawValue ?? "Not specified");
 
-    return (
-      <Info
-        key={key}
-        label={label}
-        value={value}
-      />
-    );
-  })}
-</div>
-
+                    return <Info key={key} label={label} value={value} />;
+                  })}
+                </div>
               </motion.div>
             )}
 
