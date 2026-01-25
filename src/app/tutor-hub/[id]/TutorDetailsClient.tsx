@@ -10,9 +10,6 @@ import {
   Shield,
   Users,
   GraduationCap,
-  Mail,
-  Phone,
-  MapPin,
   CheckCircle2,
   StarIcon,
   CheckCircleIcon,
@@ -57,7 +54,7 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
 
   // Non-premium tutors can reach max 90%
   let completedFields = 0;
-  const totalFields = 14; // Total fields to check
+  const totalFields = 14;
 
   // Basic Info fields (8 fields)
   if (tutor.basicInfo?.expectedSalary) completedFields++;
@@ -76,12 +73,12 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
     completedFields++;
 
   // Availability fields (2 fields)
-  if (tutor.availability?.days && tutor.availability.days.length > 0)
+  if (tutor.basicInfo?.days && tutor.basicInfo.days.length > 0)
     completedFields++;
-  if (tutor.availability?.mode) completedFields++;
+  if (tutor.basicInfo?.mode) completedFields++;
 
   // Profile image (1 field)
-  if (tutor.image) completedFields++;
+  if (tutor.basicInfo.image) completedFields++;
 
   // Cap at 90% for non-premium tutors
   const percentage = Math.round((completedFields / totalFields) * 100);
@@ -152,6 +149,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
         text: "Verification may take up to 24 hours.",
       });
     } catch (error) {
+      console.error(error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -454,119 +452,92 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
             </div>
           )}
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* About */}
+          {/* Main Content */}
+          <div className="space-y-8">
+            {/* About */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-white rounded-2xl shadow-lg p-8"
+            >
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <Users className="w-6 h-6 mr-3 text-blue-600" />
+                About
+              </h2>
+              <p className="text-gray-700 leading-relaxed">{tutor.personalInfo.overview}</p>
+            </motion.div>
+
+            {/* Tuition Preferences */}
+            {tutor?.basicInfo && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
                 className="bg-white rounded-2xl shadow-lg p-8"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                  <Users className="w-6 h-6 mr-3 text-blue-600" />
-                  About
+                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                  <Shield className="w-6 h-6 mr-3 text-blue-600" />
+                  Tuition Preferences
                 </h2>
-                <p className="text-gray-700 leading-relaxed">{tutor.bio}</p>
+
+                <div className="grid gap-6 md:grid-cols-2 text-gray-700">
+  {tuitionPreferenceFields.map(({ label, key }) => {
+    const rawValue = tutor.basicInfo?.[key as keyof typeof tutor.basicInfo];
+
+    const value =
+      Array.isArray(rawValue)
+        ? rawValue.join(", ")
+        : rawValue ?? "Not specified";
+
+    return (
+      <Info
+        key={key}
+        label={label}
+        value={value}
+      />
+    );
+  })}
+</div>
+
               </motion.div>
+            )}
 
-              {/* Tuition Preferences */}
-              {tutor?.basicInfo && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="bg-white rounded-2xl shadow-lg p-8"
-                >
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                    <Shield className="w-6 h-6 mr-3 text-blue-600" />
-                    Tuition Preferences
-                  </h2>
-
-                  <div className="grid gap-6 md:grid-cols-2 text-gray-700">
-                    {tuitionPreferenceFields.map(({ label, key }) => (
-                      <Info
-                        key={key}
-                        label={label}
-                        value={
-                          tutor.basicInfo![
-                            key as keyof typeof tutor.basicInfo
-                          ] || "Not specified"
-                        }
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Education */}
-              {tutor.education && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white rounded-2xl shadow-lg p-8 text-gray-800"
-                >
-                  <h2 className="text-2xl font-bold mb-4 flex items-center">
-                    <GraduationCap className="w-6 h-6 mr-3 text-blue-600" />
-                    Education
-                  </h2>
-
-                  <ul className="space-y-3">
-                    {Object.entries(tutor.education).flatMap(
-                      ([level, records]) =>
-                        (records || []).map((edu: EducationEntry) => (
-                          <Info
-                            key={edu.id}
-                            label={level.toUpperCase()}
-                            value={
-                              `${edu.academy || "N/A"}${
-                                edu.passingYear ? ` (${edu.passingYear})` : ""
-                              }` +
-                              (edu.cgpa
-                                ? ` - CGPA: ${edu.cgpa}`
-                                : edu.result
-                                  ? ` - Result: ${edu.result}`
-                                  : "")
-                            }
-                          />
-                        )),
-                    )}
-                  </ul>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {/* Contact Info */}
+            {/* Education */}
+            {tutor.education && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-white rounded-2xl shadow-lg p-6 text-gray-800"
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-white rounded-2xl shadow-lg p-8 text-gray-800"
               >
-                <h3 className="text-2xl font-bold mb-4 flex items-center">
-                  <AlertCircle className="w-6 h-6 mr-3 text-blue-600" />
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <Mail className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-                    <span className="text-gray-700">{tutor.email}</span>
-                  </div>
-                  <div className="flex items-start">
-                    <Phone className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-                    <span className="text-gray-700">{tutor.phone}</span>
-                  </div>
-                  <div className="flex items-start">
-                    <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-                    <span className="text-gray-700">{tutor.location}</span>
-                  </div>
-                </div>
+                <h2 className="text-2xl font-bold mb-4 flex items-center">
+                  <GraduationCap className="w-6 h-6 mr-3 text-blue-600" />
+                  Education
+                </h2>
+
+                <ul className="space-y-3">
+                  {Object.entries(tutor.education).flatMap(([level, records]) =>
+                    (records || []).map((edu: EducationEntry) => (
+                      <Info
+                        key={edu.id}
+                        label={level.toUpperCase()}
+                        value={
+                          `${edu.academy || "N/A"}${
+                            edu.passingYear ? ` (${edu.passingYear})` : ""
+                          }` +
+                          (edu.cgpa
+                            ? ` - CGPA: ${edu.cgpa}`
+                            : edu.result
+                              ? ` - Result: ${edu.result}`
+                              : "")
+                        }
+                      />
+                    )),
+                  )}
+                </ul>
               </motion.div>
-            </div>
+            )}
 
             {/* Modal */}
             {isOpen && (
