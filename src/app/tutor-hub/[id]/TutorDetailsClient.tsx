@@ -17,7 +17,7 @@ import {
   CircleX,
 } from "lucide-react";
 import Info from "@/components/info/info";
-import { Tutor } from "@/data/tutorsList";
+import { Education, Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -44,46 +44,163 @@ type BkashPaymentData = {
 };
 
 // Calculate profile completion percentage
+// const calculateCompletionPercentage = (tutor: Tutor | null): number => {
+//   if (!tutor) return 0;
+
+//   // Premium tutors are automatically 100%
+//   if (tutor.isPremium) {
+//     return 100;
+//   }
+
+//   // Non-premium tutors can reach max 90%
+//   let completedFields = 0;
+//   const totalFields = 14;
+
+//   // Basic Info fields (8 fields)
+//   if (tutor.basicInfo?.expectedSalary) completedFields++;
+//   if (tutor.basicInfo?.currentTuitionStatus) completedFields++;
+//   if (tutor.basicInfo?.daysPerWeek) completedFields++;
+//   if (tutor.basicInfo?.tutoringExperience) completedFields++;
+//   if (tutor.basicInfo?.placeOfLearning) completedFields++;
+//   if (tutor.basicInfo?.preferredMedium) completedFields++;
+//   if (tutor.basicInfo?.preferredClass) completedFields++;
+//   if (tutor.basicInfo?.preferredSubjects) completedFields++;
+
+//   // Education fields (3 fields - at least one entry for each)
+//   if (tutor.education?.ssc && tutor.education.ssc.length > 0) completedFields++;
+//   if (tutor.education?.hsc && tutor.education.hsc.length > 0) completedFields++;
+//   if (tutor.education?.grad && tutor.education.grad.length > 0)
+//     completedFields++;
+
+//   // Availability fields (2 fields)
+//   if (tutor.basicInfo?.days && tutor.basicInfo.days.length > 0)
+//     completedFields++;
+//   if (tutor.basicInfo?.mode) completedFields++;
+
+//   // Profile image (1 field)
+//   if (tutor.basicInfo.image) completedFields++;
+
+//   // Cap at 90% for non-premium tutors
+//   const percentage = Math.round((completedFields / totalFields) * 100);
+//   return Math.min(percentage, 90);
+// };
+const isFilled = (v?: string | string[]) => {
+  if (!v) return false;
+  if (Array.isArray(v)) return v.length > 0;
+  return v.trim().length > 0;
+};
+
+const countFilled = (values: (string | string[] | undefined)[]) => {
+  return {
+    total: values.length,
+    completed: values.filter(isFilled).length,
+  };
+};
+
 const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   if (!tutor) return 0;
 
-  // Premium tutors are automatically 100%
-  if (tutor.isPremium) {
-    return 100;
+  // Premium tutor = full profile
+  if (tutor.isPremium) return 100;
+
+  let total = 0;
+  let completed = 0;
+
+  // ================= BASIC INFO =================
+  const basic = tutor.basicInfo;
+  if (basic) {
+    const basicFields = [
+      basic.expectedSalary,
+      basic.currentTuitionStatus,
+      basic.daysPerWeek,
+      basic.tutoringExperience,
+      basic.placeOfLearning,
+      basic.preferredMedium,
+      basic.preferredClass,
+      basic.preferredSubjects,
+      basic.preferredTime,
+      basic.preferredArea,
+      basic.mode,
+      basic.days,
+      basic.image,
+    ];
+
+    const r = countFilled(basicFields);
+    total += r.total;
+    completed += r.completed;
   }
 
-  // Non-premium tutors can reach max 90%
-  let completedFields = 0;
-  const totalFields = 14;
+  // ================= EDUCATION INFO =================
+  const hasValidEducation = (list?: EducationEntry[]) =>
+    list?.some(
+      (e) =>
+        isFilled(e.academy) &&
+        (isFilled(e.result) || isFilled(e.cgpa)),
+    ) ?? false;
 
-  // Basic Info fields (8 fields)
-  if (tutor.basicInfo?.expectedSalary) completedFields++;
-  if (tutor.basicInfo?.currentTuitionStatus) completedFields++;
-  if (tutor.basicInfo?.daysPerWeek) completedFields++;
-  if (tutor.basicInfo?.tutoringExperience) completedFields++;
-  if (tutor.basicInfo?.placeOfLearning) completedFields++;
-  if (tutor.basicInfo?.preferredMedium) completedFields++;
-  if (tutor.basicInfo?.preferredClass) completedFields++;
-  if (tutor.basicInfo?.preferredSubjects) completedFields++;
+  const education = tutor.education;
+  if (education) {
+    const levels: (keyof Education)[] = ["ssc", "hsc", "grad"];
 
-  // Education fields (3 fields - at least one entry for each)
-  if (tutor.education?.ssc && tutor.education.ssc.length > 0) completedFields++;
-  if (tutor.education?.hsc && tutor.education.hsc.length > 0) completedFields++;
-  if (tutor.education?.grad && tutor.education.grad.length > 0)
-    completedFields++;
+    total += levels.length;
+    completed += levels.filter((lvl) =>
+      hasValidEducation(education[lvl]),
+    ).length;
+  }
 
-  // Availability fields (2 fields)
-  if (tutor.basicInfo?.days && tutor.basicInfo.days.length > 0)
-    completedFields++;
-  if (tutor.basicInfo?.mode) completedFields++;
+  // ================= PERSONAL INFO =================
+  const personal = tutor.personalInfo;
+  if (personal) {
+    const personalFields = [
+      personal.fatherName,
+      personal.motherName,
+      personal.gender,
+      personal.dateOfBirth,
+      personal.religion,
+      personal.nationality,
+      personal.additionalNumber,
+      personal.address,
+      personal.identityType,
+      personal.facebookProfile,
+      personal.linkedinProfile,
+      personal.fatherNumber,
+      personal.motherNumber,
+      personal.overview, // overview এখানেই
+      personal.emergencyName,
+      personal.emergencyRelation,
+      personal.emergencyNumber,
+      personal.emergencyAddress,
+    ];
 
-  // Profile image (1 field)
-  if (tutor.basicInfo.image) completedFields++;
+    const r = countFilled(personalFields);
+    total += r.total;
+    completed += r.completed;
+  }
 
-  // Cap at 90% for non-premium tutors
-  const percentage = Math.round((completedFields / totalFields) * 100);
+  // ================= DOCUMENT INFO =================
+  const docs = tutor.documentsInfo;
+  if (docs) {
+    const docFields = [
+      docs.nidFront,
+      docs.nidBack,
+      docs.universityId,
+      docs.sscCertificate,
+      docs.hscCertificate,
+    ];
+
+    const r = countFilled(docFields);
+    total += r.total;
+    completed += r.completed;
+  }
+
+  // ================= FINAL =================
+  const percentage = Math.round((completed / total) * 100);
+
+  // Non-premium max cap
   return Math.min(percentage, 90);
 };
+
+
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
