@@ -35,17 +35,16 @@ export function calculateProfileCompletion(tutor: Tutor): number {
   // Check professional info
   if (tutor.qualification) completionScore++;
   if (tutor.experience) completionScore++;
-  if (tutor.bio) completionScore++;
+  if (tutor.personalInfo.overview) completionScore++;
 
   // Check education
   if (tutor.education) completionScore++;
 
   // Check availability
   if (
-    tutor.availability &&
-    tutor.availability.days &&
-    tutor.availability.days.length > 0 &&
-    tutor.availability.mode
+    tutor.basicInfo.days &&
+    tutor.basicInfo.days.length > 0 &&
+    tutor.basicInfo.mode
   ) {
     completionScore++;
   }

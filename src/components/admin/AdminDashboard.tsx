@@ -21,16 +21,77 @@ export interface BkashPayment {
 }
 
 export interface TuitionJob {
+  _id: string;
   id: number;
-  _id: string | number;
-  title: string;
-  subject: string;
-  location: string;
-  budget: string;
+
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+  gender?: string;
+  division?: string;
+  district?: string;
+  location?: string;
+  preferredArea?: string;
+  budget?: string;
+  mode?: string;
+  subject?: string;
+  class?: string;
+  medium?: string;
+  description?: string;
+
+  isVerified?: boolean;
   isApproved?: boolean;
+  isPremium?: boolean;
   isDeleted?: boolean;
+  createdAt?: string;
 }
 
+// type EditableJobKey = keyof TuitionJob;
+
+type EditableJob = {
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+  gender?: string;
+  division?: string;
+  district?: string;
+  location?: string;
+  preferredArea?: string;
+  budget?: string;
+  mode?: string;
+  subject?: string;
+  class?: string;
+  medium?: string;
+  description?: string;
+};
+
+type EditableField = {
+  label: string;
+  key: keyof EditableJob;
+  type?: "textarea";
+};
+
+const editableJobFields = [
+  { label: "Name", key: "name" },
+  { label: "Title", key: "title" },
+  { label: "Phone", key: "phone" },
+  { label: "Email", key: "email" },
+  { label: "Gender", key: "gender" },
+  { label: "Division", key: "division" },
+  { label: "District", key: "district" },
+  { label: "Location", key: "location" },
+  { label: "Preferred Area", key: "preferredArea" },
+  { label: "Budget", key: "budget" },
+  { label: "Mode", key: "mode" },
+  { label: "Subject", key: "subject" },
+  { label: "Class", key: "class" },
+  { label: "Medium", key: "medium" },
+  { label: "Description", key: "description", type: "textarea" },
+] satisfies readonly EditableField[];
+
+/* ================= COMPONENT ================= */
 export default function AdminDashboard({
   tutors: initialTutors,
   jobs: initialJobs,
@@ -62,11 +123,25 @@ export default function AdminDashboard({
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
-  const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
-    {},
+  // const [editJobFormData, setEditJobFormData] = useState<Partial<TuitionJob>>(
+  //   {},
+  // );
+  const [editJobFormData, setEditJobFormData] = useState<EditableJob>({});
+
+useEffect(() => {
+  if (!editingJob) return;
+
+  setEditJobFormData(
+    editableJobFields.reduce((acc, { key }) => {
+      const value = editingJob[key];
+      if (typeof value === "string") acc[key] = value;
+      return acc;
+    }, {} as EditableJob)
   );
+}, [editingJob]);
 
 
+  // Sync initial data props
   useEffect(() => {
     setTutors(initialTutors || []);
     setJobs(initialJobs || []);
@@ -279,7 +354,6 @@ export default function AdminDashboard({
     }
   }
 
-
   // Toggle Application Status (Soft Delete)
   const toggleApplicationStatus = async (
     applicationId: string,
@@ -356,7 +430,7 @@ export default function AdminDashboard({
     }
   };
 
-  // onfirm Action function
+  // confirm Action function
   const confirmAction = async (isDeleted: boolean) => {
     return Swal.fire({
       title: isDeleted ? "Restore tutor?" : "Delete tutor?",
@@ -670,34 +744,8 @@ export default function AdminDashboard({
                                 href={`/admin/edit-tutor/${t.id}`}
                                 className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
                               >
-                                Edit
+                                Update
                               </Link>
-
-                              {/* <button
-                                onClick={async () => {
-                                  const result = await Swal.fire({
-                                    title: "Edit Tutor?",
-                                    text: "You are about to edit this tutor's information.",
-                                    icon: "question",
-                                    showCancelButton: true,
-                                    confirmButtonText: "Yes, Edit",
-                                    cancelButtonText: "Cancel",
-                                    confirmButtonColor: "#2563eb", // blue-600
-                                    cancelButtonColor: "#6b7280", // gray-500
-                                    background: "#111827", // gray-900 (optional)
-                                    color: "#F9FAFB",
-                                  });
-
-                                  if (!result.isConfirmed) return;
-
-                                  // ✅ Proceed to edit
-                                  setEditingTutor(t);
-                                  setEditFormData(t);
-                                }}
-                                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                              >
-                                Edit
-                              </button> */}
 
                               <button
                                 onClick={async () => {
@@ -1192,274 +1240,13 @@ export default function AdminDashboard({
         </section>
       </div>
 
-      {/* Edit Tutor Modal */}
-      {/* {editingTutor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-full overflow-y-auto">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Edit Tutor</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.fullName || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        fullName: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={editFormData.email || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        email: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    value={editFormData.phone || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        phone: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gender
-                  </label>
-                  <select
-                    value={editFormData.gender || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        gender: e.target.value as "male" | "female" | "other",
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Division
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.division || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        division: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.location || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        location: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Qualification
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.qualification || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        qualification: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Experience
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.experience || ""}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        experience: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Bio
-                </label>
-                <textarea
-                  value={editFormData.bio || ""}
-                  onChange={(e) =>
-                    setEditFormData({ ...editFormData, bio: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex gap-2 mt-6">
-                <button
-                  onClick={async () => {
-                    try {
-                      const result = await Swal.fire({
-                        title: "Save changes?",
-                        text: "This will update the tutor information.",
-                        icon: "question",
-                        showCancelButton: true,
-                        confirmButtonColor: "#16a34a", // green-600
-                        cancelButtonColor: "#6b7280",
-                        confirmButtonText: "Yes, Save",
-                      });
-
-                      if (!result.isConfirmed) return;
-
-                      const token = localStorage.getItem("token");
-
-                      // Create updateData without immutable fields
-                      const updateData = Object.fromEntries(
-                        Object.entries(editFormData).filter(
-                          ([key]) =>
-                            ![
-                              "_id",
-                              "id",
-                              "createdAt",
-                              "updatedAt",
-                              "verifiedAt",
-                              "approvedAt",
-                              "premiumAt",
-                              "role",
-                            ].includes(key),
-                        ),
-                      );
-
-                      const res = await fetch(
-                        `${BACKEND_BASE}/allTutors/update/${editingTutor.id}`,
-                        {
-                          method: "PATCH",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                          },
-                          body: JSON.stringify(updateData),
-                        },
-                      );
-
-                      if (!res.ok) {
-                        const errData = await res.json();
-                        throw new Error(
-                          errData.message || "Failed to update tutor",
-                        );
-                      }
-
-                      await res.json(); // Consume response
-
-                      // ✅ Update local state
-                      setTutors((prev) =>
-                        prev.map((t) =>
-                          t.id === editingTutor.id || t._id === editingTutor._id
-                            ? { ...t, ...editFormData }
-                            : t,
-                        ),
-                      );
-
-                      setEditingTutor(null);
-
-                      // ✅ Success toast
-                      Swal.fire({
-                        toast: true,
-                        position: "top-end",
-                        icon: "success",
-                        title: "Tutor updated successfully",
-                        showConfirmButton: false,
-                        timer: 2500,
-                        timerProgressBar: true,
-                      });
-                    } catch (err) {
-                      Swal.fire({
-                        icon: "error",
-                        title: "Update failed",
-                        text:
-                          err instanceof Error
-                            ? err.message
-                            : "Something went wrong",
-                      });
-                    }
-                  }}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                >
-                  Save Changes
-                </button>
-
-                <button
-                  onClick={() => setEditingTutor(null)}
-                  className="flex-1 px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       {/* Edit Job Modal */}
       {editingJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
             <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Title</label>
                 <input
@@ -1520,6 +1307,42 @@ export default function AdminDashboard({
                   className="w-full border px-3 py-2 rounded-md"
                 />
               </div>
+            </div> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {editableJobFields.map(({ label, key, type }) => (
+                <div key={key}>
+                  <label className="block text-sm font-medium mb-1">
+                    {label}
+                  </label>
+
+                  {type === "textarea" ? (
+                    <textarea
+                      value={editJobFormData[key] || ""}
+                      onChange={(e) =>
+                        setEditJobFormData({
+                          ...editJobFormData,
+                          [key]: e.target.value,
+                        })
+                      }
+                      className="w-full border px-3 py-2 rounded-md"
+                      rows={3}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={editJobFormData[key] || ""}
+                      onChange={(e) =>
+                        setEditJobFormData({
+                          ...editJobFormData,
+                          [key]: e.target.value,
+                        })
+                      }
+                      className="w-full border px-3 py-2 rounded-md"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
 
             <div className="flex gap-2 mt-4">
@@ -1546,7 +1369,7 @@ export default function AdminDashboard({
                     // Only include defined fields
                     const updateData = Object.fromEntries(
                       Object.entries(editJobFormData).filter(
-                        ([v]) => v !== undefined,
+                        ([, v]) => v !== undefined,
                       ),
                     );
 

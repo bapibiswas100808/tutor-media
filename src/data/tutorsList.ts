@@ -1,65 +1,6 @@
-/* ---------- Education ---------- */
-
-export interface SSCEducation {
-  academy: string;
-  curriculum: string;
-  group: string;
-  passingYear: string;
-  result: string;
-}
-
-export interface HSCEducation {
-  academy: string;
-  curriculum: string;
-  group: string;
-  passingYear: string;
-  result: string;
-}
-
-export interface GradEducation {
-  academy: string;
-  cgpa: string;
-  curriculum: string;
-  instituteType: "Public" | "Private";
-  passingYear: string;
-  studyType: string;
-  department: string;
-}
-
-export interface Education {
-  ssc?: SSCEducation[];
-  hsc?: HSCEducation[];
-  grad?: GradEducation[];
-}
-
-/* ---------- Availability ---------- */
-
-export interface Availability {
-  days: string[];
-  mode: "Online" | "Offline" | "Hybrid";
-}
-
-/* ---------- Basic Info ---------- */
-
-export interface BasicInfo {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  image?: string;
-  expectedSalary?: string;
-  currentTuitionStatus?: string;
-  daysPerWeek?: string;
-  tutoringExperience?: string;
-  placeOfLearning?: string;
-  preferredMedium?: string;
-  preferredClass?: string;
-  preferredSubjects?: string;
-  preferredTime?: string;
-  preferredArea?: string;
-}
-
-/* ---------- Tutor ---------- */
-
+// =======================
+// Tutor (Root)
+// =======================
 export interface Tutor {
   _id: string;
   id: number;
@@ -67,16 +8,18 @@ export interface Tutor {
   fullName: string;
   email: string;
   phone: string;
+
   gender: "male" | "female" | "other";
 
   division: string;
   location: string;
+  locality: string;
+
   qualification: string;
   experience: string;
-  bio?: string;
+  password: string;
 
-  role: "tutor";
-  image?: string;
+  role: "tutor" | "admin" | "student";
 
   isVerified: boolean;
   isApproved: boolean;
@@ -85,15 +28,224 @@ export interface Tutor {
 
   createdAt: string;
   updatedAt: string;
-  verifiedAt?: string;
+
   approvedAt?: string;
+  verifiedAt?: string;
   premiumAt?: string;
 
-  availability?: Availability;
-  education?: Education;
-  basicInfo?: BasicInfo;
+  basicInfo: BasicInfo;
+  education: Education;
+  documentsInfo: DocumentsInfo;
+  personalInfo: PersonalInfo;
 }
 
+// =======================
+// BasicInfo
+// =======================
+export interface BasicInfo {
+  email: string;
+  image?: string;
+
+  expectedSalary: string;
+  currentTuitionStatus: "available" | "busy" | "part_time";
+
+  daysPerWeek: string;
+  tutoringExperience: string;
+
+  placeOfLearning: "student_home" | "tutor_home" | "online";
+
+  preferredMedium: "bangla" | "english" | "both";
+  preferredClass: string;
+  preferredSubjects: string;
+  preferredTime: string;
+  preferredArea: string;
+
+  days: Day[];
+  mode: "Online" | "Offline" | "Hybrid";
+}
+
+
+// =======================
+// EducationInfo
+// =======================
+export interface Education {
+  ssc: EducationEntry[];
+  hsc: EducationEntry[];
+  grad: EducationEntry[];
+}
+
+export interface EducationEntry {
+  id: string;
+
+  academy: string;
+  curriculum: string;
+  group: string;
+
+  passingYear: string;
+  result: string;
+
+  instituteType: string;
+  studyType: string;
+  department: string;
+  cgpa: string;
+}
+
+
+// =======================
+// DocumentsInfo
+// =======================
+export interface DocumentsInfo {
+  nidFront: string;
+  nidBack: string;
+
+  sscCertificate: string;
+  hscCertificate?: string;
+
+  universityId: string;
+}
+
+
+// =======================
+// PersonalInfo
+// =======================
+export interface PersonalInfo {
+  fatherName: string;
+  motherName: string;
+
+  gender: "Male" | "Female" | "Other";
+  dateOfBirth: string;
+
+  religion: string;
+  nationality: string;
+
+  additionalNumber: string;
+  address: string;
+
+  identityType: "NID" | "Passport" | "Birth Certificate";
+
+  facebookProfile?: string;
+  linkedinProfile?: string;
+
+  fatherNumber: string;
+  motherNumber: string;
+
+  overview: string;
+
+  emergencyName: string;
+  emergencyRelation: string;
+  emergencyNumber: string;
+  emergencyAddress: string;
+}
+
+
+// =======================
+// Day Type
+// =======================
+export type Day =
+  | "Sunday"
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday";
+
+
+
+// /* ---------- Education ---------- */
+
+// export interface SSCEducation {
+//   academy: string;
+//   curriculum: string;
+//   group: string;
+//   passingYear: string;
+//   result: string;
+// }
+
+// export interface HSCEducation {
+//   academy: string;
+//   curriculum: string;
+//   group: string;
+//   passingYear: string;
+//   result: string;
+// }
+
+// export interface GradEducation {
+//   academy: string;
+//   cgpa: string;
+//   curriculum: string;
+//   instituteType: "Public" | "Private";
+//   passingYear: string;
+//   studyType: string;
+//   department: string;
+// }
+
+// export interface Education {
+//   ssc?: SSCEducation[];
+//   hsc?: HSCEducation[];
+//   grad?: GradEducation[];
+// }
+
+// /* ---------- Availability ---------- */
+
+// export interface Availability {
+//   days: string[];
+//   mode: "Online" | "Offline" | "Hybrid";
+// }
+
+// /* ---------- Basic Info ---------- */
+
+// export interface BasicInfo {
+//   email: string;
+//   password: string;
+//   confirmPassword: string;
+//   image?: string;
+//   expectedSalary?: string;
+//   currentTuitionStatus?: string;
+//   daysPerWeek?: string;
+//   tutoringExperience?: string;
+//   placeOfLearning?: string;
+//   preferredMedium?: string;
+//   preferredClass?: string;
+//   preferredSubjects?: string;
+//   preferredTime?: string;
+//   preferredArea?: string;
+// }
+
+// /* ---------- Tutor ---------- */
+
+// export interface Tutor {
+//   _id: string;
+//   id: number;
+
+//   fullName: string;
+//   email: string;
+//   phone: string;
+//   gender: "male" | "female" | "other";
+
+//   division: string;
+//   location: string;
+//   qualification: string;
+//   experience: string;
+
+//   role: "tutor";
+//   image?: string;
+
+//   isVerified: boolean;
+//   isApproved: boolean;
+//   isPremium: boolean;
+//   isDeleted: boolean;
+
+//   createdAt: string;
+//   updatedAt: string;
+//   verifiedAt?: string;
+//   approvedAt?: string;
+//   premiumAt?: string;
+
+//   availability?: Availability;
+//   education?: Education;
+//   basicInfo?: BasicInfo;
+// }
 
 // export const tutorsList: Tutor[] = [
 //   {
