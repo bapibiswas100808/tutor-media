@@ -17,11 +17,12 @@ import {
   CircleX,
 } from "lucide-react";
 import Info from "@/components/info/info";
-import { Education, Tutor } from "@/data/tutorsList";
+import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import CountdownTimer from "@/components/common/CountdownTimer";
+import { calculateProfileCompletion } from "@/lib/profileCompletion";
 
 type EducationEntry = {
   id: string;
@@ -44,164 +45,6 @@ type BkashPaymentData = {
   amount: number;
   tutorId: number | string;
   method: string;
-};
-
-// Calculate profile completion percentage
-// const calculateCompletionPercentage = (tutor: Tutor | null): number => {
-//   if (!tutor) return 0;
-
-//   // Premium tutors are automatically 100%
-//   if (tutor.isPremium) {
-//     return 100;
-//   }
-
-//   // Non-premium tutors can reach max 90%
-//   let completedFields = 0;
-//   const totalFields = 14;
-
-//   // Basic Info fields (8 fields)
-//   if (tutor.basicInfo?.expectedSalary) completedFields++;
-//   if (tutor.basicInfo?.currentTuitionStatus) completedFields++;
-//   if (tutor.basicInfo?.daysPerWeek) completedFields++;
-//   if (tutor.basicInfo?.tutoringExperience) completedFields++;
-//   if (tutor.basicInfo?.placeOfLearning) completedFields++;
-//   if (tutor.basicInfo?.preferredMedium) completedFields++;
-//   if (tutor.basicInfo?.preferredClass) completedFields++;
-//   if (tutor.basicInfo?.preferredSubjects) completedFields++;
-
-//   // Education fields (3 fields - at least one entry for each)
-//   if (tutor.education?.ssc && tutor.education.ssc.length > 0) completedFields++;
-//   if (tutor.education?.hsc && tutor.education.hsc.length > 0) completedFields++;
-//   if (tutor.education?.grad && tutor.education.grad.length > 0)
-//     completedFields++;
-
-//   // Availability fields (2 fields)
-//   if (tutor.basicInfo?.days && tutor.basicInfo.days.length > 0)
-//     completedFields++;
-//   if (tutor.basicInfo?.mode) completedFields++;
-
-//   // Profile image (1 field)
-//   if (tutor.basicInfo.image) completedFields++;
-
-//   // Cap at 90% for non-premium tutors
-//   const percentage = Math.round((completedFields / totalFields) * 100);
-//   return Math.min(percentage, 90);
-// };
-
-const isFilled = (v?: string | string[]) => {
-  if (!v) return false;
-  if (Array.isArray(v)) return v.length > 0;
-  return v.trim().length > 0;
-};
-
-const countFilled = (values: (string | string[] | undefined)[]) => {
-  return {
-    total: values.length,
-    completed: values.filter(isFilled).length,
-  };
-};
-
-const calculateCompletionPercentage = (tutor: Tutor | null): number => {
-  if (!tutor) return 0;
-
-  // Premium tutor = full profile
-  if (tutor.isPremium) return 100;
-
-  let total = 0;
-  let completed = 0;
-
-  // ================= BASIC INFO =================
-  const basic = tutor.basicInfo;
-  if (basic) {
-    const basicFields = [
-      basic.expectedSalary,
-      basic.currentTuitionStatus,
-      basic.daysPerWeek,
-      basic.tutoringExperience,
-      basic.placeOfLearning,
-      basic.preferredMedium,
-      basic.preferredClass,
-      basic.preferredSubjects,
-      basic.preferredTime,
-      basic.preferredArea,
-      basic.mode,
-      basic.days,
-      basic.image,
-    ];
-
-    const r = countFilled(basicFields);
-    total += r.total;
-    completed += r.completed;
-  }
-
-  // ================= EDUCATION INFO =================
-  const hasValidEducation = (list?: EducationEntry[]) =>
-    list?.some(
-      (e) => isFilled(e.academy) && (isFilled(e.result) || isFilled(e.cgpa)),
-    ) ?? false;
-
-  const education = tutor.education;
-  if (education) {
-    const levels: (keyof Education)[] = ["ssc", "hsc", "grad"];
-
-    total += levels.length;
-    completed += levels.filter((lvl) =>
-      hasValidEducation(education[lvl]),
-    ).length;
-  }
-
-  // ================= PERSONAL INFO =================
-  const personal = tutor.personalInfo;
-  if (personal) {
-    const personalFields = [
-      personal.fatherName,
-      personal.motherName,
-      personal.gender,
-      personal.dateOfBirth,
-      personal.religion,
-      personal.nationality,
-      personal.additionalNumber,
-      personal.address,
-      personal.identityType,
-      personal.facebookProfile,
-      personal.linkedinProfile,
-      personal.fatherNumber,
-      personal.motherNumber,
-      personal.overview, // overview এখানেই
-      personal.emergencyName,
-      personal.emergencyRelation,
-      personal.emergencyNumber,
-      personal.emergencyAddress,
-    ];
-
-    const r = countFilled(personalFields);
-    total += r.total;
-    completed += r.completed;
-  }
-
-  // ================= DOCUMENT INFO =================
-  const docs = tutor.documentsInfo;
-  if (docs) {
-    const docFields = [
-      docs.nidFront,
-      docs.nidBack,
-      docs.universityId,
-      docs.sscCertificate,
-      docs.hscCertificate,
-    ];
-
-    const r = countFilled(docFields);
-    total += r.total;
-    completed += r.completed;
-  }
-
-  // ================= FINAL =================
-  if (total === 0) return 0; // ✅ NEW PROFILE SAFE GUARD
-
-  const percentage = Math.round((completed / total) * 100);
-
-  // Non-premium max cap
-  return Math.min(percentage, 90);
 };
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
@@ -284,7 +127,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
     }
   }, [user, tutor, isLoading]);
 
-  const completionPercentage = calculateCompletionPercentage(tutor);
+  const completionPercentage = calculateProfileCompletion(tutor);
   const isProfileIncomplete = completionPercentage < 80;
   const imageUrl = tutor?.basicInfo?.image || null;
 
@@ -731,41 +574,46 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
                   {/* Offer Price Plans*/}
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
-  {/* 2-Year Plan Offer */}
-  <div className="relative flex-1">
-    {/** Set original and offer prices */}
-    {(() => {
-      const originalPrice = 500;
-      const offerPrice = 270;
-      const savings = originalPrice - offerPrice;
+                    {/* 2-Year Plan Offer */}
+                    <div className="relative flex-1">
+                      {/** Set original and offer prices */}
+                      {(() => {
+                        const originalPrice = 500;
+                        const offerPrice = 270;
+                        const savings = originalPrice - offerPrice;
 
-      return (
-        <button
-          onClick={() => {
-            setSelectedPlan("2 years");
-            setAmount(offerPrice);
-          }}
-          className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
-            selectedPlan === "2 years"
-              ? "bg-yellow-600 text-white border-yellow-600"
-              : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
-          }`}
-        >
-          <div className="text-lg font-bold">2 Years</div>
-          <div className="text-sm line-through opacity-70">৳ {originalPrice}.00</div>
-          <div className="text-2xl font-extrabold">৳ {offerPrice}.00</div>
-          <div className="text-xs font-medium opacity-80">Save ৳ {savings}</div>
-        </button>
-      );
-    })()}
+                        return (
+                          <button
+                            onClick={() => {
+                              setSelectedPlan("2 years");
+                              setAmount(offerPrice);
+                            }}
+                            className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
+                              selectedPlan === "2 years"
+                                ? "bg-yellow-600 text-white border-yellow-600"
+                                : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+                            }`}
+                          >
+                            <div className="text-lg font-bold">2 Years</div>
+                            <div className="text-sm line-through opacity-70">
+                              ৳ {originalPrice}.00
+                            </div>
+                            <div className="text-2xl font-extrabold">
+                              ৳ {offerPrice}.00
+                            </div>
+                            <div className="text-xs font-medium opacity-80">
+                              Save ৳ {savings}
+                            </div>
+                          </button>
+                        );
+                      })()}
 
-    {/* Countdown Timer */}
-    <div className="mt-2 text-center">
-      <CountdownTimer endTime="2026-02-05T23:59:59" />
-    </div>
-  </div>
-</div>
-
+                      {/* Countdown Timer */}
+                      <div className="mt-2 text-center">
+                        <CountdownTimer endTime="2026-02-05T23:59:59" />
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Pay Now Button */}
                   <button
