@@ -41,6 +41,8 @@ type BkashPaymentData = {
   trxId: string;
   plan: string;
   amount: number;
+  tutorId: number | string;
+  method: string;
 };
 
 // Calculate profile completion percentage
@@ -84,6 +86,7 @@ type BkashPaymentData = {
 //   const percentage = Math.round((completedFields / totalFields) * 100);
 //   return Math.min(percentage, 90);
 // };
+
 const isFilled = (v?: string | string[]) => {
   if (!v) return false;
   if (Array.isArray(v)) return v.length > 0;
@@ -133,9 +136,7 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   // ================= EDUCATION INFO =================
   const hasValidEducation = (list?: EducationEntry[]) =>
     list?.some(
-      (e) =>
-        isFilled(e.academy) &&
-        (isFilled(e.result) || isFilled(e.cgpa)),
+      (e) => isFilled(e.academy) && (isFilled(e.result) || isFilled(e.cgpa)),
     ) ?? false;
 
   const education = tutor.education;
@@ -199,8 +200,6 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   // Non-premium max cap
   return Math.min(percentage, 90);
 };
-
-
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
@@ -583,7 +582,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 About
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                {tutor.personalInfo.overview}
+                {tutor?.personalInfo?.overview || "No overview available."}
               </p>
             </motion.div>
 
@@ -893,6 +892,8 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                             trxId,
                             plan: selectedPlan, // ✅
                             amount, // ✅
+                            tutorId, // ✅ IMPORTANT
+                            method: "bkash",
                           };
                         },
                       }).then((result) => {
