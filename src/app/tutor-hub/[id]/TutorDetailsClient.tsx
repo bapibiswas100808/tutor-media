@@ -711,7 +711,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                       <div className="text-md font-bold">1 Year</div>
                       <div className="text-lg font-bold">৳ 300.00</div>
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         setSelectedPlan("2 years");
@@ -731,35 +731,41 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
                   {/* Offer Price Plans*/}
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
-                    {/* 2-Year Plan Offer */}
-                    <div className="relative flex-1">
-                      <button
-                        onClick={() => {
-                          setSelectedPlan("2 years");
-                          setAmount(270);
-                        }}
-                        className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
-                          selectedPlan === "2 years"
-                            ? "bg-yellow-600 text-white border-yellow-600"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
-                        }`}
-                      >
-                        <div className="text-lg font-bold">2 Years</div>
-                        <div className="text-sm line-through opacity-70">
-                          ৳ 500.00
-                        </div>
-                        <div className="text-2xl font-extrabold">৳ 270.00</div>
-                        <div className="text-xs font-medium opacity-80">
-                          Save ৳ 230
-                        </div>
-                      </button>
+  {/* 2-Year Plan Offer */}
+  <div className="relative flex-1">
+    {/** Set original and offer prices */}
+    {(() => {
+      const originalPrice = 500;
+      const offerPrice = 270;
+      const savings = originalPrice - offerPrice;
 
-                      {/* Countdown Timer */}
-                      <div className="mt-2 text-center">
-                        <CountdownTimer endTime="2026-02-05T23:59:59" />
-                      </div>
-                    </div>
-                  </div>
+      return (
+        <button
+          onClick={() => {
+            setSelectedPlan("2 years");
+            setAmount(offerPrice);
+          }}
+          className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
+            selectedPlan === "2 years"
+              ? "bg-yellow-600 text-white border-yellow-600"
+              : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+          }`}
+        >
+          <div className="text-lg font-bold">2 Years</div>
+          <div className="text-sm line-through opacity-70">৳ {originalPrice}.00</div>
+          <div className="text-2xl font-extrabold">৳ {offerPrice}.00</div>
+          <div className="text-xs font-medium opacity-80">Save ৳ {savings}</div>
+        </button>
+      );
+    })()}
+
+    {/* Countdown Timer */}
+    <div className="mt-2 text-center">
+      <CountdownTimer endTime="2026-02-05T23:59:59" />
+    </div>
+  </div>
+</div>
+
 
                   {/* Pay Now Button */}
                   <button
