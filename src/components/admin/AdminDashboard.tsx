@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { Tutor } from "@/data/tutorsList";
 import { Application } from "@/lib/applications";
+import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import Swal from "sweetalert2";
 import Link from "next/link";
 export interface BkashPayment {
@@ -113,6 +114,7 @@ export default function AdminDashboard({
   const [tutorEmailQuery, setTutorEmailQuery] = useState<string>("");
   const [tutorIdQuery, setTutorIdQuery] = useState<string>("");
   const [jobTitleQuery, setJobTitleQuery] = useState<string>("");
+  const [paymentTutorIdQuery, setPaymentTutorIdQuery] = useState<string>("");
   const [paymentsPage, setPaymentsPage] = useState<number>(1);
 
   const PAGE_SIZE = 10;
@@ -128,18 +130,17 @@ export default function AdminDashboard({
   // );
   const [editJobFormData, setEditJobFormData] = useState<EditableJob>({});
 
-useEffect(() => {
-  if (!editingJob) return;
+  useEffect(() => {
+    if (!editingJob) return;
 
-  setEditJobFormData(
-    editableJobFields.reduce((acc, { key }) => {
-      const value = editingJob[key];
-      if (typeof value === "string") acc[key] = value;
-      return acc;
-    }, {} as EditableJob)
-  );
-}, [editingJob]);
-
+    setEditJobFormData(
+      editableJobFields.reduce((acc, { key }) => {
+        const value = editingJob[key];
+        if (typeof value === "string") acc[key] = value;
+        return acc;
+      }, {} as EditableJob),
+    );
+  }, [editingJob]);
 
   // Sync initial data props
   useEffect(() => {
@@ -206,6 +207,13 @@ useEffect(() => {
       : jobs;
   }, [jobs, jobTitleQuery]);
 
+  const filteredPayments = useMemo(() => {
+    const q = paymentTutorIdQuery.trim();
+    return q
+      ? payments.filter((p) => String(p.tutorId ?? "").includes(q))
+      : payments;
+  }, [payments, paymentTutorIdQuery]);
+
   const tutorTotalPages = Math.max(
     1,
     Math.ceil(filteredTutors.length / PAGE_SIZE),
@@ -217,7 +225,7 @@ useEffect(() => {
   );
   const paymentsTotalPages = Math.max(
     1,
-    Math.ceil(payments.length / PAGE_SIZE),
+    Math.ceil(filteredPayments.length / PAGE_SIZE),
   );
 
   const currentTutorItems = filteredTutors.slice(
@@ -232,7 +240,7 @@ useEffect(() => {
     (applicationsPage - 1) * PAGE_SIZE,
     applicationsPage * PAGE_SIZE,
   );
-  const currentPaymentItems = payments.slice(
+  const currentPaymentItems = filteredPayments.slice(
     (paymentsPage - 1) * PAGE_SIZE,
     paymentsPage * PAGE_SIZE,
   );
@@ -256,6 +264,7 @@ useEffect(() => {
 
   useEffect(() => setTutorPage(1), [tutorEmailQuery]);
   useEffect(() => setJobPage(1), [jobTitleQuery]);
+  useEffect(() => setPaymentsPage(1), [paymentTutorIdQuery]);
 
   const BACKEND_BASE =
     process.env.NEXT_PUBLIC_API_URL ||
@@ -506,14 +515,37 @@ useEffect(() => {
               <h2 className="text-lg font-medium mb-2">Payments</h2>
               <div className="flex items-center justify-between mb-4">
                 <div className="text-sm text-gray-500">
-                  {payments.length === 0 ? (
+                  {filteredPayments.length === 0 ? (
                     <>Showing 0 of 0</>
                   ) : (
                     <>
                       Showing {(paymentsPage - 1) * PAGE_SIZE + 1} -{" "}
-                      {Math.min(paymentsPage * PAGE_SIZE, payments.length)} of{" "}
-                      {payments.length}
+                      {Math.min(
+                        paymentsPage * PAGE_SIZE,
+                        filteredPayments.length,
+                      )}{" "}
+                      of {filteredPayments.length}
                     </>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 border rounded px-2 py-1">
+                  <input
+                    type="search"
+                    value={paymentTutorIdQuery}
+                    onChange={(e) =>
+                      setPaymentTutorIdQuery(e.target.value.replace(/\D/g, ""))
+                    }
+                    placeholder="Search by Tutor ID"
+                    className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
+                  />
+                  {paymentTutorIdQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setPaymentTutorIdQuery("")}
+                      className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                    >
+                      Clear
+                    </button>
                   )}
                 </div>
               </div>
@@ -667,6 +699,7 @@ useEffect(() => {
                       <th className="px-3 py-2">Email</th>
                       <th className="px-3 py-2">Id</th>
                       <th className="px-3 py-2">Location</th>
+                      <th className="px-3 py-2">Profile %</th>
                       <th className="px-3 py-2">Verified</th>
                       <th className="px-3 py-2">Approved</th>
                       <th className="px-3 py-2">Premium</th>
@@ -676,143 +709,166 @@ useEffect(() => {
                   <tbody>
                     {currentTutorItems.length === 0 ? (
                       <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={7}>
+                        <td className="px-3 py-2" colSpan={9}>
                           No tutors found
                         </td>
                       </tr>
                     ) : (
-                      currentTutorItems.map((t) => (
-                        <tr key={t.id} className="border-t">
-                          <td className="px-3 py-2">{t.fullName}</td>
-                          <td className="px-3 py-2">{t.email}</td>
-                          <td className="px-3 py-2">{t.id}</td>
-                          <td className="px-3 py-2">{t.location}</td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="checkbox"
-                              checked={!!t.isVerified}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
-                              onChange={(e) =>
-                                toggleField(
-                                  "tutor",
-                                  t.id,
-                                  t._id,
-                                  "isVerified",
-                                  e.target.checked,
-                                )
-                              }
-                              title="Toggle verified status"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="checkbox"
-                              checked={!!t.isApproved}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
-                              onChange={(e) =>
-                                toggleField(
-                                  "tutor",
-                                  t.id,
-                                  t._id,
-                                  "isApproved",
-                                  e.target.checked,
-                                )
-                              }
-                              title="Toggle approved status"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="checkbox"
-                              checked={!!t.isPremium}
-                              disabled={!!loadingMap[`tutor-${t.id}`]}
-                              onChange={(e) =>
-                                toggleField(
-                                  "tutor",
-                                  t.id,
-                                  t._id,
-                                  "isPremium",
-                                  e.target.checked,
-                                )
-                              }
-                              title="Toggle premium status"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <div className="flex gap-2">
-                              <Link
-                                href={`/admin/edit-tutor/${t.id}`}
-                                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                              >
-                                Update
-                              </Link>
+                      currentTutorItems.map((t) => {
+                        const profilePercentage = calculateProfileCompletion(t);
+                        const isLow = profilePercentage < 80;
+                        return (
+                          <tr key={t.id} className="border-t">
+                            <td className="px-3 py-2">{t.fullName}</td>
+                            <td className="px-3 py-2">{t.email}</td>
+                            <td className="px-3 py-2">{t.id}</td>
+                            <td className="px-3 py-2">{t.location}</td>
+                            <td className="px-3 py-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-16 bg-gray-200 rounded-full h-2 overflow-hidden">
+                                  <div
+                                    className={`h-full transition-all duration-300 ${
+                                      isLow ? "bg-red-500" : "bg-green-500"
+                                    }`}
+                                    style={{ width: `${profilePercentage}%` }}
+                                  />
+                                </div>
+                                <span
+                                  className={`text-xs font-medium ${isLow ? "text-red-600" : "text-green-600"}`}
+                                >
+                                  {profilePercentage}%
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="checkbox"
+                                checked={!!t.isVerified}
+                                disabled={!!loadingMap[`tutor-${t.id}`]}
+                                onChange={(e) =>
+                                  toggleField(
+                                    "tutor",
+                                    t.id,
+                                    t._id,
+                                    "isVerified",
+                                    e.target.checked,
+                                  )
+                                }
+                                title="Toggle verified status"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="checkbox"
+                                checked={!!t.isApproved}
+                                disabled={!!loadingMap[`tutor-${t.id}`]}
+                                onChange={(e) =>
+                                  toggleField(
+                                    "tutor",
+                                    t.id,
+                                    t._id,
+                                    "isApproved",
+                                    e.target.checked,
+                                  )
+                                }
+                                title="Toggle approved status"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="checkbox"
+                                checked={!!t.isPremium}
+                                disabled={!!loadingMap[`tutor-${t.id}`]}
+                                onChange={(e) =>
+                                  toggleField(
+                                    "tutor",
+                                    t.id,
+                                    t._id,
+                                    "isPremium",
+                                    e.target.checked,
+                                  )
+                                }
+                                title="Toggle premium status"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <div className="flex gap-2">
+                                <Link
+                                  href={`/admin/edit-tutor/${t.id}`}
+                                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                  Update
+                                </Link>
 
-                              <button
-                                onClick={async () => {
-                                  try {
-                                    const result = await confirmAction(
-                                      t.isDeleted,
-                                    );
-                                    if (!result.isConfirmed) return;
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      const result = await confirmAction(
+                                        t.isDeleted,
+                                      );
+                                      if (!result.isConfirmed) return;
 
-                                    const endpoint = t.isDeleted
-                                      ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
-                                      : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
+                                      const endpoint = t.isDeleted
+                                        ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
+                                        : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
 
-                                    const res = await fetch(endpoint, {
-                                      method: "PATCH",
-                                    });
-                                    if (!res.ok) {
-                                      const text = await res.text();
-                                      throw new Error(text || "Action failed");
+                                      const res = await fetch(endpoint, {
+                                        method: "PATCH",
+                                      });
+                                      if (!res.ok) {
+                                        const text = await res.text();
+                                        throw new Error(
+                                          text || "Action failed",
+                                        );
+                                      }
+
+                                      // ✅ Update local state
+                                      setTutors((prev) =>
+                                        prev.map((u) =>
+                                          u.id === t.id || u._id === t._id
+                                            ? { ...u, isDeleted: !t.isDeleted }
+                                            : u,
+                                        ),
+                                      );
+
+                                      // ✅ Success toast
+                                      Swal.fire({
+                                        toast: true,
+                                        position: "top-end",
+                                        icon: "success",
+                                        title: t.isDeleted
+                                          ? "Tutor restored"
+                                          : "Tutor deleted",
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        background: "#111827",
+                                        color: "#F9FAFB",
+                                      });
+                                    } catch (error: unknown) {
+                                      Swal.fire({
+                                        icon: "error",
+                                        title: "Update Failed",
+                                        text:
+                                          error instanceof Error
+                                            ? error.message
+                                            : "Something went wrong",
+                                      });
                                     }
-
-                                    // ✅ Update local state
-                                    setTutors((prev) =>
-                                      prev.map((u) =>
-                                        u.id === t.id || u._id === t._id
-                                          ? { ...u, isDeleted: !t.isDeleted }
-                                          : u,
-                                      ),
-                                    );
-
-                                    // ✅ Success toast
-                                    Swal.fire({
-                                      toast: true,
-                                      position: "top-end",
-                                      icon: "success",
-                                      title: t.isDeleted
-                                        ? "Tutor restored"
-                                        : "Tutor deleted",
-                                      showConfirmButton: false,
-                                      timer: 2000,
-                                      timerProgressBar: true,
-                                      background: "#111827",
-                                      color: "#F9FAFB",
-                                    });
-                                  } catch (error: unknown) {
-                                    Swal.fire({
-                                      icon: "error",
-                                      title: "Update Failed",
-                                      text:
-                                        error instanceof Error
-                                          ? error.message
-                                          : "Something went wrong",
-                                    });
-                                  }
-                                }}
-                                className={`px-2 py-1 text-xs rounded ${
-                                  t.isDeleted
-                                    ? "bg-green-600 hover:bg-green-700 text-white"
-                                    : "bg-red-600 hover:bg-red-700 text-white"
-                                }`}
-                              >
-                                {t.isDeleted ? "Restore" : "Delete"}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
+                                  }}
+                                  className={`px-2 py-1 text-xs rounded ${
+                                    t.isDeleted
+                                      ? "bg-green-600 hover:bg-green-700 text-white"
+                                      : "bg-red-600 hover:bg-red-700 text-white"
+                                  }`}
+                                >
+                                  {t.isDeleted ? "Restore" : "Delete"}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>
