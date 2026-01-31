@@ -21,6 +21,7 @@ import { Education, Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import CountdownTimer from "@/components/common/CountdownTimer";
 
 type EducationEntry = {
   id: string;
@@ -195,6 +196,8 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   }
 
   // ================= FINAL =================
+  if (total === 0) return 0; // ✅ NEW PROFILE SAFE GUARD
+
   const percentage = Math.round((completed / total) * 100);
 
   // Non-premium max cap
@@ -570,21 +573,23 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
           {/* Main Content */}
           <div className="space-y-8">
-            {/* About */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-lg p-8"
-            >
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                <Users className="w-6 h-6 mr-3 text-blue-600" />
-                About
-              </h2>
-              <p className="text-gray-700 leading-relaxed">
-                {tutor?.personalInfo?.overview || "No overview available."}
-              </p>
-            </motion.div>
+            {/* Overview */}
+            {tutor?.personalInfo?.overview && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-white rounded-2xl shadow-lg p-8"
+              >
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <Users className="w-6 h-6 mr-3 text-blue-600" />
+                  Overview
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  {tutor?.personalInfo?.overview || "No overview available."}
+                </p>
+              </motion.div>
+            )}
 
             {/* Tuition Preferences */}
             {tutor?.basicInfo && (
@@ -690,8 +695,8 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </ul>
                   </div>
 
-                  {/* Plans */}
-                  <div className="flex gap-4 mb-6">
+                  {/*Normal Price Plans */}
+                  {/* <div className="flex gap-4 mb-6">
                     <button
                       onClick={() => {
                         setSelectedPlan("1 year");
@@ -720,8 +725,47 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     >
                       <div className="text-md font-bold">2 Years</div>
                       <div className="text-lg font-bold">৳ 500.00</div>
+                      <div className="text-lg font-bold">Offer Price: ৳ 270.00</div>
                     </button>
-                  </div>
+                  </div> */}
+
+                  {/* Offer Price Plans*/}
+                  <div className="flex flex-col md:flex-row gap-4 mb-6">
+  {/* 2-Year Plan Offer */}
+  <div className="relative flex-1">
+    {/** Set original and offer prices */}
+    {(() => {
+      const originalPrice = 500;
+      const offerPrice = 270;
+      const savings = originalPrice - offerPrice;
+
+      return (
+        <button
+          onClick={() => {
+            setSelectedPlan("2 years");
+            setAmount(offerPrice);
+          }}
+          className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
+            selectedPlan === "2 years"
+              ? "bg-yellow-600 text-white border-yellow-600"
+              : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
+          }`}
+        >
+          <div className="text-lg font-bold">2 Years</div>
+          <div className="text-sm line-through opacity-70">৳ {originalPrice}.00</div>
+          <div className="text-2xl font-extrabold">৳ {offerPrice}.00</div>
+          <div className="text-xs font-medium opacity-80">Save ৳ {savings}</div>
+        </button>
+      );
+    })()}
+
+    {/* Countdown Timer */}
+    <div className="mt-2 text-center">
+      <CountdownTimer endTime="2026-02-05T23:59:59" />
+    </div>
+  </div>
+</div>
+
 
                   {/* Pay Now Button */}
                   <button
