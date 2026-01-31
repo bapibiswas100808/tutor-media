@@ -41,6 +41,8 @@ type BkashPaymentData = {
   trxId: string;
   plan: string;
   amount: number;
+  tutorId: number | string;
+  method: string;
 };
 
 // Calculate profile completion percentage
@@ -133,9 +135,7 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   // ================= EDUCATION INFO =================
   const hasValidEducation = (list?: EducationEntry[]) =>
     list?.some(
-      (e) =>
-        isFilled(e.academy) &&
-        (isFilled(e.result) || isFilled(e.cgpa)),
+      (e) => isFilled(e.academy) && (isFilled(e.result) || isFilled(e.cgpa)),
     ) ?? false;
 
   const education = tutor.education;
@@ -199,8 +199,6 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   // Non-premium max cap
   return Math.min(percentage, 90);
 };
-
-
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
@@ -893,6 +891,8 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                             trxId,
                             plan: selectedPlan, // ✅
                             amount, // ✅
+                            tutorId, // ✅ IMPORTANT
+                            method: "bkash",
                           };
                         },
                       }).then((result) => {
