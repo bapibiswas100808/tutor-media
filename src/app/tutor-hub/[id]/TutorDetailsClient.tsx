@@ -86,6 +86,7 @@ type BkashPaymentData = {
 //   const percentage = Math.round((completedFields / totalFields) * 100);
 //   return Math.min(percentage, 90);
 // };
+
 const isFilled = (v?: string | string[]) => {
   if (!v) return false;
   if (Array.isArray(v)) return v.length > 0;
@@ -581,7 +582,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                 About
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                {tutor.personalInfo.overview}
+                {tutor?.personalInfo?.overview || "No overview available."}
               </p>
             </motion.div>
 
