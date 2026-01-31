@@ -195,10 +195,12 @@ const calculateCompletionPercentage = (tutor: Tutor | null): number => {
   }
 
   // ================= FINAL =================
-  const percentage = Math.round((completed / total) * 100);
+if (total === 0) return 0; // ✅ NEW PROFILE SAFE GUARD
 
-  // Non-premium max cap
-  return Math.min(percentage, 90);
+const percentage = Math.round((completed / total) * 100);
+
+// Non-premium max cap
+return Math.min(percentage, 90);
 };
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
@@ -570,8 +572,9 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
           {/* Main Content */}
           <div className="space-y-8">
-            {/* About */}
-            <motion.div
+            {/* Overview */}
+            {tutor?.personalInfo?.overview &&(
+              <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -579,12 +582,13 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
             >
               <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
                 <Users className="w-6 h-6 mr-3 text-blue-600" />
-                About
+                Overview
               </h2>
               <p className="text-gray-700 leading-relaxed">
                 {tutor?.personalInfo?.overview || "No overview available."}
               </p>
             </motion.div>
+            )}
 
             {/* Tuition Preferences */}
             {tutor?.basicInfo && (
