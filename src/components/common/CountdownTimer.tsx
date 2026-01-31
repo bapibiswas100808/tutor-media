@@ -1,35 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 interface CountdownTimerProps {
-  // Offer end time as a future Date string
+  /** Offer end time as a future Date string */
   endTime: string;
 }
 
-export default function CountdownTimer({ endTime }: CountdownTimerProps) {
-  const calculateTimeLeft = () => {
-    const difference = +new Date(endTime) - +new Date();
-    let timeLeft = {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    };
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
+export default function CountdownTimer({ endTime }: CountdownTimerProps) {
+  const calculateTimeLeft = useCallback((): TimeLeft => {
+    const now = new Date().getTime();
+    const difference = new Date(endTime).getTime() - now;
+
+    if (difference <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
-    return timeLeft;
-  };
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }, [endTime]);
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,25 +39,32 @@ export default function CountdownTimer({ endTime }: CountdownTimerProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [endTime]);
+  }, [calculateTimeLeft]);
 
-  // If offer ended
-  if (
+  // Offer expired
+  const isExpired =
     timeLeft.days === 0 &&
     timeLeft.hours === 0 &&
     timeLeft.minutes === 0 &&
-    timeLeft.seconds === 0
-  ) {
-    return <span className="text-red-500 font-bold">Offer expired!</span>;
+    timeLeft.seconds === 0;
+
+  if (isExpired) {
+    return (
+      <span className="text-red-600 font-bold">
+        Offer expired!
+      </span>
+    );
   }
 
   return (
-    <div className="text-sm text-red-600 font-semibold mt-1">
+    <div className="text-sm text-red-600 font-semibold mt-2">
       Hurry! Offer ends in:{" "}
-      {timeLeft.days > 0 && `${timeLeft.days}d `} 
-      {timeLeft.hours.toString().padStart(2, "0")}h : 
-      {timeLeft.minutes.toString().padStart(2, "0")}m : 
-      {timeLeft.seconds.toString().padStart(2, "0")}s
+      {timeLeft.days > 0 && <span>{timeLeft.days}d </span>}
+      <span>
+        {timeLeft.hours.toString().padStart(2, "0")}h :{" "}
+        {timeLeft.minutes.toString().padStart(2, "0")}m :{" "}
+        {timeLeft.seconds.toString().padStart(2, "0")}s
+      </span>
     </div>
   );
 }
