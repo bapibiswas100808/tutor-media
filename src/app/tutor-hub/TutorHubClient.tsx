@@ -11,24 +11,31 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter tutors
-  const filteredTutors = tutorHubs
-    // ✅ 1. Only approved tutors
-    .filter((tutor) => tutor.isApproved)
-    .filter((tutor) => tutor.isDeleted !== true)
-    // ✅ 2. Apply UI filters
-    .filter((tutor) => {
-      const matchesFilter =
-        filter === "all" ||
-        (filter === "premium" && tutor.isPremium) ||
-        (filter === "verified" && tutor.isVerified);
+const filteredTutors = tutorHubs
+  // ✅ 1. Only approved & not deleted
+  .filter((tutor) => tutor.isApproved && tutor.isDeleted !== true)
 
-      const matchesSearch =
-        searchTerm === "" ||
-        tutor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tutor.location.toLowerCase().includes(searchTerm.toLowerCase());
+  // ✅ 2. Apply UI filters + search
+  .filter((tutor) => {
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "premium" && tutor.isPremium) ||
+      (filter === "verified" && tutor.isVerified);
 
-      return matchesFilter && matchesSearch;
-    });
+    const matchesSearch =
+      searchTerm === "" ||
+      tutor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tutor.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesFilter && matchesSearch;
+  })
+
+  // ✅ 3. Premium tutors first
+  .sort((a, b) => {
+    if (a.isPremium === b.isPremium) return 0;
+    return a.isPremium ? -1 : 1;
+  });
+
 
   // Approved Tutors
   const approvedTutors = tutorHubs.filter((t) => t.isApproved);
