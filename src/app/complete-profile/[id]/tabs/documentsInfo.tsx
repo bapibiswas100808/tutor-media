@@ -69,7 +69,7 @@ export default function DocumentsInfo({ data, setData }: DocumentsInfoProps) {
   return (
     <div className="space-y-6 text-gray-700">
       <h3 className="text-lg font-semibold text-gray-800">
-        Document Verification
+        Document Information
       </h3>
 
       <div className="grid md:grid-cols-2 gap-6">
