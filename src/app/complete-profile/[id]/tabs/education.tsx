@@ -27,7 +27,7 @@ interface Props {
 
 const years = Array.from(
   { length: new Date().getFullYear() - 1950 + 1 },
-  (_, i) => `${new Date().getFullYear() - i}`
+  (_, i) => `${new Date().getFullYear() - i}`,
 );
 
 /* ===========================
@@ -36,14 +36,12 @@ const years = Array.from(
 const handleChange = (
   index: number,
   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  setData: React.Dispatch<React.SetStateAction<EducationEntry[]>>
+  setData: React.Dispatch<React.SetStateAction<EducationEntry[]>>,
 ) => {
   const { name, value } = e.target;
 
-  setData(prev =>
-    prev.map((item, i) =>
-      i === index ? { ...item, [name]: value } : item
-    )
+  setData((prev) =>
+    prev.map((item, i) => (i === index ? { ...item, [name]: value } : item)),
   );
 };
 
@@ -80,19 +78,14 @@ const EducationSection = ({
 
     {Array.isArray(data) &&
       data.map((entry, index) => (
-        <div
-          key={entry.id}
-          className="grid md:grid-cols-2 gap-4 items-end"
-        >
+        <div key={entry.id} className="grid md:grid-cols-2 gap-4 items-end">
           {/* Institute */}
           <div>
             <label>Institute</label>
             <input
               name="academy"
               value={entry.academy}
-              onChange={(e) =>
-                handleChange(index, e, setData)
-              }
+              onChange={(e) => handleChange(index, e, setData)}
               className="border rounded-lg px-3 py-2 w-full"
             />
           </div>
@@ -104,9 +97,7 @@ const EducationSection = ({
               <select
                 name="curriculum"
                 value={entry.curriculum}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
@@ -123,9 +114,7 @@ const EducationSection = ({
               <select
                 name="group"
                 value={entry.group}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
@@ -143,9 +132,7 @@ const EducationSection = ({
               <select
                 name="passingYear"
                 value={entry.passingYear}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
@@ -165,9 +152,7 @@ const EducationSection = ({
               <input
                 name="result"
                 value={entry.result}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
             </div>
@@ -180,9 +165,7 @@ const EducationSection = ({
               <select
                 name="instituteType"
                 value={entry.instituteType}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
@@ -199,9 +182,7 @@ const EducationSection = ({
               <select
                 name="studyType"
                 value={entry.studyType}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
                 <option value="">Select</option>
@@ -218,9 +199,7 @@ const EducationSection = ({
               <input
                 name="department"
                 value={entry.department}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
             </div>
@@ -233,9 +212,7 @@ const EducationSection = ({
               <input
                 name="cgpa"
                 value={entry.cgpa}
-                onChange={(e) =>
-                  handleChange(index, e, setData)
-                }
+                onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
             </div>
@@ -246,9 +223,7 @@ const EducationSection = ({
             <button
               type="button"
               onClick={() =>
-                setData(prev =>
-                  prev.filter((_, i) => i !== index)
-                )
+                setData((prev) => prev.filter((_, i) => i !== index))
               }
               className="text-red-500 mt-6"
             >
@@ -273,6 +248,9 @@ export default function Education({
 }: Props) {
   return (
     <div className="space-y-8 text-gray-700">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        Educational Information
+      </h3>
       <EducationSection
         title="SSC"
         data={sscData}
