@@ -44,17 +44,17 @@ const socialLinks = [
   {
     name: "LinkedIn",
     href: "https://www.linkedin.com/company/tutor-media",
-    icon: "/images/socialMedia/linkedin.png",
+    icon: "/images/socialMedia/linkedIn.png",
   },
   {
     name: "WhatsApp",
     href: "https://wa.me/message/ZMWV33J4K2MPO1",
-    icon: "/images/socialMedia/whatsapp.png",
+    icon: "/images/socialMedia/whatsApp.png",
   },
   {
     name: "TikTok",
     href: "https://www.tiktok.com/@tutormedia.edu?_r=1&_t=ZS-92731CQwSdY",
-    icon: "/images/socialMedia/tiktok.png",
+    icon: "/images/socialMedia/tikTok.png",
   },
   {
     name: "Instagram",
@@ -114,7 +114,7 @@ export default function Footer() {
             <div key={title}>
               <h3 className="relative text-lg font-semibold mb-4 inline-block">
                 {title}
-                <span className="absolute left-0 -bottom-1 h-[2px] w-8 bg-blue-300 rounded-full" />
+                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h3>
 
               <ul className="space-y-2">
@@ -122,7 +122,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-gray-300 relative transition-colors duration-200 hover:text-white after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+                      className="text-gray-300 relative transition-colors duration-200 hover:text-white after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
                     >
                       {link.name}
                     </Link>
@@ -139,15 +139,16 @@ export default function Footer() {
             <div>
               <h4 className="relative text-lg font-semibold mb-4 inline-block">
                 Contact Us
-                <span className="absolute left-0 -bottom-1 h-[2px] w-8 bg-blue-300 rounded-full" />
+                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
               {/* <p className="text-gray-300">📧 tutor.media9301@gmail.com</p> */}
               <p className="text-gray-300">📧 contact@tutormediabd.com</p>
               <p className="text-gray-300">📞 +880 1990-539200</p>
             </div>
             <div>
-              <h4 className="relative text-lg font-semibold mb-4 inline-block">Office Address
-                <span className="absolute left-0 -bottom-1 h-[2px] w-8 bg-blue-300 rounded-full" />
+              <h4 className="relative text-lg font-semibold mb-4 inline-block">
+                Office Address
+                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
               <p className="text-gray-300">
                 Khulna,
@@ -156,8 +157,9 @@ export default function Footer() {
               </p>
             </div>
             <div>
-              <h4 className="relative text-lg font-semibold mb-4 inline-block">Support Hours
-                <span className="absolute left-0 -bottom-1 h-[2px] w-8 bg-blue-300 rounded-full" />
+              <h4 className="relative text-lg font-semibold mb-4 inline-block">
+                Support Hours
+                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
               <p className="text-gray-300">
                 Monday – Thursday: 9:00 AM – 6:00 PM
