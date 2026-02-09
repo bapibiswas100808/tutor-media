@@ -21,7 +21,7 @@ import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import CountdownTimer from "@/components/common/CountdownTimer";
+// import CountdownTimer from "@/components/common/CountdownTimer";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 
 type EducationEntry = {
@@ -38,7 +38,6 @@ type EducationEntry = {
 };
 
 type BkashPaymentData = {
-  // tutorId: string;
   sender: string;
   trxId: string;
   plan: string;
@@ -46,6 +45,11 @@ type BkashPaymentData = {
   tutorId: number | string;
   method: string;
 };
+
+interface ApiErrorResponse {
+  message?: string;
+}
+
 
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
@@ -61,13 +65,93 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const tutorId = user?.id;
 
   //  Handle bKash Payment Submission
+  // const handleBkashSubmit = async ({
+  //   sender,
+  //   trxId,
+  //   plan: selectedPlan,
+  //   amount,
+  // }: BkashPaymentData) => {
+  //   if (!selectedPlan || !amount) return;
+
+  //   try {
+  //     const res = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           authorization: `Bearer ${token}`,
+  //         },
+  //         body: JSON.stringify({
+  //           tutorId,
+  //           plan: selectedPlan,
+  //           amount, // ✅ dynamic amount (300 / 500)
+  //           sender,
+  //           trxId,
+  //           method: "bkash",
+  //         }),
+  //       },
+  //     );
+
+  //     // 🔴 Token verify
+  //     if (!token) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Login required",
+  //         text: "Please login again.",
+  //       });
+  //       return;
+  //     }
+
+  //     // 🔴 Duplicate transaction
+  //     if (res.status === 409) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Duplicate Payment",
+  //         text: "This Transaction ID was already submitted.",
+  //       });
+  //       return;
+  //     }
+
+  //     // 🔴 Other server error
+  //     if (!res.ok) {
+  //       const errorData = await res.json();
+  //       throw new Error(errorData.message || "Payment submission failed");
+  //     }
+
+  //     // ✅ Success
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Payment Submitted",
+  //       text: "Verification may take up to 24 hours.",
+  //     });
+  //   } catch (error: any) {
+  //     console.error("Bkash error:", error);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: error.message || "Something went wrong. Please try again.",
+  //     });
+  //   }
+  // };
+
   const handleBkashSubmit = async ({
     sender,
     trxId,
     plan: selectedPlan,
     amount,
-  }: BkashPaymentData) => {
+  }: BkashPaymentData): Promise<void> => {
     if (!selectedPlan || !amount) return;
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Authentication Required",
+        text: "Please login again.",
+      });
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -81,7 +165,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
           body: JSON.stringify({
             tutorId,
             plan: selectedPlan,
-            amount, // ✅ dynamic amount (300 / 500)
+            amount,
             sender,
             trxId,
             method: "bkash",
@@ -99,9 +183,10 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
         return;
       }
 
-      // 🔴 Other server error
+      // 🔴 Other server errors
       if (!res.ok) {
-        throw new Error("Payment submission failed");
+        const errorData: ApiErrorResponse = await res.json();
+        throw new Error(errorData.message || "Payment submission failed");
       }
 
       // ✅ Success
@@ -111,11 +196,18 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
         text: "Verification may take up to 24 hours.",
       });
     } catch (error) {
-      console.error(error);
+      let message = "Something went wrong. Please try again.";
+
+      if (error instanceof Error) {
+        message = error.message;
+      }
+
+      console.error("bKash submission error:", error);
+
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Something went wrong. Please try again.",
+        text: message,
       });
     }
   };
@@ -539,7 +631,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   </div>
 
                   {/*Normal Price Plans */}
-                  {/* <div className="flex gap-4 mb-6">
+                  <div className="flex gap-4 mb-6">
                     <button
                       onClick={() => {
                         setSelectedPlan("1 year");
@@ -568,15 +660,12 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     >
                       <div className="text-md font-bold">2 Years</div>
                       <div className="text-lg font-bold">৳ 500.00</div>
-                      <div className="text-lg font-bold">Offer Price: ৳ 270.00</div>
                     </button>
-                  </div> */}
+                  </div>
 
                   {/* Offer Price Plans*/}
-                  <div className="flex flex-col md:flex-row gap-4 mb-6">
-                    {/* 2-Year Plan Offer */}
+                  {/* <div className="flex flex-col md:flex-row gap-4 mb-6">
                     <div className="relative flex-1">
-                      {/** Set original and offer prices */}
                       {(() => {
                         const originalPrice = 500;
                         const offerPrice = 270;
@@ -608,12 +697,11 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                         );
                       })()}
 
-                      {/* Countdown Timer */}
                       <div className="mt-2 text-center">
                         <CountdownTimer endTime="2026-02-05T23:59:59" />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Pay Now Button */}
                   <button
