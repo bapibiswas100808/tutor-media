@@ -9,6 +9,49 @@ export default function TutorLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
+const [forgotEmail, setForgotEmail] = useState("");
+const [success, setSuccess] = useState("");
+
+async function handleForgotPassword(e: React.FormEvent) {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+
+  if (!forgotEmail) {
+    setError("Please enter your email.");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/forgot-password`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data?.message || "Failed to send reset link.");
+      return;
+    }
+
+    setSuccess("Password reset link sent. Check your email.");
+    setForgotEmail("");
+  } catch (err) {
+    console.error(err);
+    setError("Network error. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+}
+
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -129,6 +172,47 @@ export default function TutorLoginForm() {
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
+
+        <div className="text-right mb-4">
+  <button
+    type="button"
+    onClick={() => setShowForgot(!showForgot)}
+    className="text-sm text-blue-600 hover:underline"
+    disabled={loading}
+  >
+    Forgot password?
+  </button>
+</div>
+{showForgot && (
+  <form onSubmit={handleForgotPassword} className="mt-6">
+    {success && (
+      <div className="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+        {success}
+      </div>
+    )}
+
+    <label className="block mb-2 text-sm font-medium">
+      Enter your email
+    </label>
+    <input
+      type="email"
+      value={forgotEmail}
+      onChange={(e) => setForgotEmail(e.target.value)}
+      className="w-full border px-4 py-2 rounded-lg mb-3"
+      placeholder="your@email.com"
+      disabled={loading}
+    />
+
+    <button
+      type="submit"
+      className="w-full bg-gray-800 text-white py-2 rounded-lg"
+      disabled={loading}
+    >
+      {loading ? "Sending..." : "Send reset link"}
+    </button>
+  </form>
+)}
+
       </div>
 
       <button
