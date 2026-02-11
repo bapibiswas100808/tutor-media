@@ -356,48 +356,91 @@ export default function BecomeTutorForm() {
 
             {/* OTP Input Section */}
             {showOtpInput && !emailVerified && (
+              // <div className="mt-4 p-4 bg-blue-50 rounded-md border border-blue-200">
+              //   <div className="flex gap-2">
+              //     <input
+              //       type="text"
+              //       maxLength={6}
+              //       placeholder="Enter 6-digit OTP"
+              //       value={otp}
+              //       onChange={(e) => {
+              //         setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+              //         setOtpError("");
+              //       }}
+              //       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-lg tracking-widest"
+              //     />
+              //     <button
+              //       type="button"
+              //       onClick={handleVerifyOtp}
+              //       disabled={otpVerifying || otp.length < 6}
+              //       className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
+              //     >
+              //       {otpVerifying ? "Verifying..." : "Verify"}
+              //     </button>
+              //   </div>
+
+              //   {otpError && (
+              //     <p className="mt-2 text-sm text-red-600">{otpError}</p>
+              //   )}
+
+              //   {resendTimer > 0 ? (
+              //     <p className="mt-2 text-sm text-gray-600">
+              //       Resend OTP in {resendTimer}s
+              //     </p>
+              //   ) : (
+              //     <button
+              //       type="button"
+              //       onClick={handleSendOtp}
+              //       disabled={otpSending}
+              //       className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium"
+              //     >
+              //       {otpSending ? "Sending..." : "Resend OTP"}
+              //     </button>
+              //   )}
+              // </div>
               <div className="mt-4 p-4 bg-blue-50 rounded-md border border-blue-200">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    maxLength={6}
-                    placeholder="Enter 6-digit OTP"
-                    value={otp}
-                    onChange={(e) => {
-                      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
-                      setOtpError("");
-                    }}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-lg tracking-widest"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleVerifyOtp}
-                    disabled={otpVerifying || otp.length < 6}
-                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
-                  >
-                    {otpVerifying ? "Verifying..." : "Verify"}
-                  </button>
-                </div>
+  <div className="flex flex-col sm:flex-row gap-2">
+    <input
+      type="text"
+      maxLength={6}
+      placeholder="Enter 6-digit OTP"
+      value={otp}
+      onChange={(e) => {
+        setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+        setOtpError("");
+      }}
+      className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-base sm:text-lg tracking-widest"
+    />
+    <button
+      type="button"
+      onClick={handleVerifyOtp}
+      disabled={otpVerifying || otp.length < 6}
+      className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
+    >
+      {otpVerifying ? "Verifying..." : "Verify"}
+    </button>
+  </div>
 
-                {otpError && (
-                  <p className="mt-2 text-sm text-red-600">{otpError}</p>
-                )}
+  {otpError && (
+    <p className="mt-2 text-sm text-red-600 break-words">{otpError}</p>
+  )}
 
-                {resendTimer > 0 ? (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Resend OTP in {resendTimer}s
-                  </p>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    disabled={otpSending}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium"
-                  >
-                    {otpSending ? "Sending..." : "Resend OTP"}
-                  </button>
-                )}
-              </div>
+  {resendTimer > 0 ? (
+    <p className="mt-2 text-sm text-gray-600 text-center sm:text-left">
+      Resend OTP in {resendTimer}s
+    </p>
+  ) : (
+    <button
+      type="button"
+      onClick={handleSendOtp}
+      disabled={otpSending}
+      className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium w-full sm:w-auto text-center sm:text-left"
+    >
+      {otpSending ? "Sending..." : "Resend OTP"}
+    </button>
+  )}
+</div>
+
             )}
           </div>
         </div>
@@ -718,7 +761,7 @@ export default function BecomeTutorForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
+        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
       >
         {isSubmitting ? (
           <>
