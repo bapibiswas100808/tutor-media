@@ -608,7 +608,7 @@ export default function AdminDashboard({
                 </table>
               </div>
               {/* Pagination */}
-              <div className="flex justify-center gap-2 mt-4">
+              {/* <div className="flex justify-center gap-2 mt-4">
                 <button
                   disabled={paymentsPage === 1}
                   onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
@@ -619,6 +619,85 @@ export default function AdminDashboard({
                 <span className="px-3 py-2 text-sm">
                   Page {paymentsPage} of {paymentsTotalPages}
                 </span>
+                <button
+                  disabled={paymentsPage === paymentsTotalPages}
+                  onClick={() =>
+                    setPaymentsPage((p) => Math.min(paymentsTotalPages, p + 1))
+                  }
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div> */}
+              <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
+                {/* Previous Button */}
+                <button
+                  disabled={paymentsPage === 1}
+                  onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+
+                {/* Page Numbers */}
+                {(() => {
+                  const pages = [];
+                  const start = Math.max(1, paymentsPage - 2);
+                  const end = Math.min(paymentsTotalPages, paymentsPage + 2);
+
+                  // First Page
+                  if (start > 1) {
+                    pages.push(
+                      <button
+                        key={1}
+                        onClick={() => setPaymentsPage(1)}
+                        className="px-3 py-2 bg-gray-100 rounded"
+                      >
+                        1
+                      </button>,
+                    );
+                    if (start > 2) {
+                      pages.push(<span key="start-ellipsis">...</span>);
+                    }
+                  }
+
+                  // Middle Pages
+                  for (let i = start; i <= end; i++) {
+                    pages.push(
+                      <button
+                        key={i}
+                        onClick={() => setPaymentsPage(i)}
+                        className={`px-3 py-2 rounded ${
+                          i === paymentsPage
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100"
+                        }`}
+                      >
+                        {i}
+                      </button>,
+                    );
+                  }
+
+                  // Last Page
+                  if (end < paymentsTotalPages) {
+                    if (end < paymentsTotalPages - 1) {
+                      pages.push(<span key="end-ellipsis">...</span>);
+                    }
+                    pages.push(
+                      <button
+                        key={paymentsTotalPages}
+                        onClick={() => setPaymentsPage(paymentsTotalPages)}
+                        className="px-3 py-2 bg-gray-100 rounded"
+                      >
+                        {paymentsTotalPages}
+                      </button>,
+                    );
+                  }
+
+                  return pages;
+                })()}
+
+                {/* Next Button */}
                 <button
                   disabled={paymentsPage === paymentsTotalPages}
                   onClick={() =>
@@ -886,7 +965,7 @@ export default function AdminDashboard({
                   >
                     Prev
                   </button>
-                  {Array.from({ length: tutorTotalPages }).map((_, i) => (
+                  {/* {Array.from({ length: tutorTotalPages }).map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setTutorPage(i + 1)}
@@ -898,7 +977,65 @@ export default function AdminDashboard({
                     >
                       {i + 1}
                     </button>
-                  ))}
+                  ))} */}
+                  {(() => {
+                    const pages = [];
+                    // const maxVisible = 5;
+                    const start = Math.max(1, tutorPage - 2);
+                    const end = Math.min(tutorTotalPages, tutorPage + 2);
+
+                    // First page
+                    if (start > 1) {
+                      pages.push(
+                        <button
+                          key={1}
+                          onClick={() => setTutorPage(1)}
+                          className="px-2 py-1 rounded bg-gray-100"
+                        >
+                          1
+                        </button>,
+                      );
+                      if (start > 2) {
+                        pages.push(<span key="start-ellipsis">...</span>);
+                      }
+                    }
+
+                    // Middle pages
+                    for (let i = start; i <= end; i++) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => setTutorPage(i)}
+                          className={`px-2 py-1 rounded ${
+                            i === tutorPage
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100"
+                          }`}
+                        >
+                          {i}
+                        </button>,
+                      );
+                    }
+
+                    // Last page
+                    if (end < tutorTotalPages) {
+                      if (end < tutorTotalPages - 1) {
+                        pages.push(<span key="end-ellipsis">...</span>);
+                      }
+                      pages.push(
+                        <button
+                          key={tutorTotalPages}
+                          onClick={() => setTutorPage(tutorTotalPages)}
+                          className="px-2 py-1 rounded bg-gray-100"
+                        >
+                          {tutorTotalPages}
+                        </button>,
+                      );
+                    }
+
+                    return pages;
+                  })()}
+
                   <button
                     className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
                     onClick={() =>
@@ -1301,70 +1438,6 @@ export default function AdminDashboard({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
             <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
-
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Title</label>
-                <input
-                  type="text"
-                  value={editJobFormData.title || ""}
-                  onChange={(e) =>
-                    setEditJobFormData({
-                      ...editJobFormData,
-                      title: e.target.value,
-                    })
-                  }
-                  className="w-full border px-3 py-2 rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  value={editJobFormData.subject || ""}
-                  onChange={(e) =>
-                    setEditJobFormData({
-                      ...editJobFormData,
-                      subject: e.target.value,
-                    })
-                  }
-                  className="w-full border px-3 py-2 rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={editJobFormData.location || ""}
-                  onChange={(e) =>
-                    setEditJobFormData({
-                      ...editJobFormData,
-                      location: e.target.value,
-                    })
-                  }
-                  className="w-full border px-3 py-2 rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Budget</label>
-                <input
-                  type="text"
-                  value={editJobFormData.budget || ""}
-                  onChange={(e) =>
-                    setEditJobFormData({
-                      ...editJobFormData,
-                      budget: e.target.value,
-                    })
-                  }
-                  className="w-full border px-3 py-2 rounded-md"
-                />
-              </div>
-            </div> */}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {editableJobFields.map(({ label, key, type }) => (
                 <div key={key}>
