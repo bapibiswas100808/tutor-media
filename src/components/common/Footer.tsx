@@ -68,7 +68,7 @@ export default function Footer() {
     <footer className="bg-[#081a76] text-white">
       <div className="container mx-auto px-4 pt-12 pb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Brand Section */}
+          {/* Brand Section Here*/}
           <div className="lg:col-span-2">
             {/* Logo */}
             <Link href="/" className="flex items-center">
