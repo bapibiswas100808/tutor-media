@@ -120,7 +120,7 @@ export default function BecomeTutorForm() {
       }, 1000);
     } catch (error) {
       setOtpError(
-        error instanceof Error ? error.message : "Failed to send OTP"
+        error instanceof Error ? error.message : "Failed to send OTP",
       );
     } finally {
       setOtpSending(false);
@@ -157,7 +157,7 @@ export default function BecomeTutorForm() {
       setTimeout(() => setOtpSuccessMessage(""), 3000);
     } catch (error) {
       setOtpError(
-        error instanceof Error ? error.message : "Failed to verify OTP"
+        error instanceof Error ? error.message : "Failed to verify OTP",
       );
     } finally {
       setOtpVerifying(false);
@@ -199,8 +199,6 @@ export default function BecomeTutorForm() {
     return Array.from(new Set(allLocations)).sort();
   };
 
- 
-
   const onSubmit = async (data: BecomeTutorFormData) => {
     // Check if email is verified
     if (!emailVerified) {
@@ -235,7 +233,7 @@ export default function BecomeTutorForm() {
             isApproved: false,
             isPremium: false,
           }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -279,15 +277,15 @@ export default function BecomeTutorForm() {
     }
   };
 
- 
-
   return (
     <motion.form
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8 px-6"
+      // className="space-y-8 px-6"
+      className="space-y-6 px-2 md:px-4 lg:px-6"
+
     >
       {/* Personal Information */}
       <div className="rounded-lg">
@@ -326,7 +324,7 @@ export default function BecomeTutorForm() {
                 <span className="text-green-600">(Verified)</span>
               )}
             </label>
-            <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col lg:flex-row gap-2">
               <input
                 {...register("email")}
                 type="email"
@@ -399,48 +397,49 @@ export default function BecomeTutorForm() {
               //   )}
               // </div>
               <div className="mt-4 p-4 bg-blue-50 rounded-md border border-blue-200">
-  <div className="flex flex-col sm:flex-row gap-2">
-    <input
-      type="text"
-      maxLength={6}
-      placeholder="Enter 6-digit OTP"
-      value={otp}
-      onChange={(e) => {
-        setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
-        setOtpError("");
-      }}
-      className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-base sm:text-lg tracking-widest"
-    />
-    <button
-      type="button"
-      onClick={handleVerifyOtp}
-      disabled={otpVerifying || otp.length < 6}
-      className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
-    >
-      {otpVerifying ? "Verifying..." : "Verify"}
-    </button>
-  </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="Enter 6-digit OTP"
+                    value={otp}
+                    onChange={(e) => {
+                      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                      setOtpError("");
+                    }}
+                    className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-center text-base sm:text-lg tracking-widest"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={otpVerifying || otp.length < 6}
+                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors duration-200 whitespace-nowrap font-medium"
+                  >
+                    {otpVerifying ? "Verifying..." : "Verify"}
+                  </button>
+                </div>
 
-  {otpError && (
-    <p className="mt-2 text-sm text-red-600 break-words">{otpError}</p>
-  )}
+                {otpError && (
+                  <p className="mt-2 text-sm text-red-600 break-words">
+                    {otpError}
+                  </p>
+                )}
 
-  {resendTimer > 0 ? (
-    <p className="mt-2 text-sm text-gray-600 text-center sm:text-left">
-      Resend OTP in {resendTimer}s
-    </p>
-  ) : (
-    <button
-      type="button"
-      onClick={handleSendOtp}
-      disabled={otpSending}
-      className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium w-full sm:w-auto text-center sm:text-left"
-    >
-      {otpSending ? "Sending..." : "Resend OTP"}
-    </button>
-  )}
-</div>
-
+                {resendTimer > 0 ? (
+                  <p className="mt-2 text-sm text-gray-600 text-center sm:text-left">
+                    Resend OTP in {resendTimer}s
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpSending}
+                    className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-medium w-full sm:w-auto text-center sm:text-left"
+                  >
+                    {otpSending ? "Sending..." : "Resend OTP"}
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -666,29 +665,6 @@ export default function BecomeTutorForm() {
           </div>
         </div>
       </div>
-
-      {/* About You */}
-      {/* <div className="rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">About You</h3>
-
-        <div>
-          <label
-            htmlFor="bio"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Short Bio (optional)
-          </label>
-          <textarea
-            {...register("bio")}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
-            placeholder="Tell us about your teaching philosophy, approach, and what makes you a great tutor..."
-          />
-          {errors.bio && (
-            <p className="mt-1 text-sm text-red-600">{errors.bio.message}</p>
-          )}
-        </div>
-      </div> */}
 
       {/* Security */}
       <div className="rounded-lg">
