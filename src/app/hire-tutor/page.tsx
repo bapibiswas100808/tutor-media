@@ -21,7 +21,7 @@ export default function HireTutorPage() {
               with qualified tutors.
             </p>
           </div>
-          <div className="bg-white rounded-xl shadow-md p-2">
+          <div className="bg-white rounded-xl shadow-md">
             <HireTutorForm />
           </div>
         </div>

@@ -640,19 +640,19 @@ const schema = z.object({
       message: "Enter a valid phone number",
     }),
   class: z.string().min(1, "Select class"),
-  medium: z.string().min(1),
+  medium: z.string().min(1, "Select medium"),
 
   studentGender: z.enum(["male", "female"]).optional(),
   tutorGender: z.enum(["male", "female", "any"]).optional(),
 
-  salary: z.string().min(1),
-  days: z.string().min(1),
-  duration: z.string().min(1),
+  salary: z.string().min(1, "Select salary"),
+  days: z.string().min(1, "Select days"),
+  duration: z.string().min(1, "Select duration"),
 
-  division: z.string().min(1),
-  district: z.string().min(1),
-  location: z.string().min(1),
-  preferredArea: z.string().min(1),
+  division: z.string().min(1, "Select division"),
+  district: z.string().min(1, "Select district"),
+  location: z.string().min(1, "Select location"),
+  preferredArea: z.string().min(1, "Select preferred area"),
 
   tutorDescription: z.string().min(10).optional(),
   locationDescription: z.string().min(10).optional(),
@@ -867,26 +867,40 @@ export default function HireTutorForm() {
                 <label>Class*</label>
                 <select
                   {...register("class")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.class ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Class</option>
                   {classes.map((c) => (
                     <option key={c}>{c}</option>
                   ))}
                 </select>
+                {errors.class && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.class.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label>Medium*</label>
                 <select
                   {...register("medium")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.medium ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Medium</option>
                   {media.map((m) => (
                     <option key={m}>{m}</option>
                   ))}
                 </select>
+                {errors.medium && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.medium.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -894,8 +908,15 @@ export default function HireTutorForm() {
                 <input
                   {...register("phone")}
                   placeholder="01XXXXXXXXX"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.phone ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.phone.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -947,7 +968,9 @@ export default function HireTutorForm() {
                 <label>Salary*</label>
                 <select
                   {...register("salary")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.salary ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Salary</option>
                   <option>2000</option>
@@ -969,26 +992,40 @@ export default function HireTutorForm() {
                   <option>10000</option>
                   <option>Negotiable</option>
                 </select>
+                {errors.salary && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.salary.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label>Days per Week*</label>
                 <select
                   {...register("days")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.days ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Days</option>
                   {[1, 2, 3, 4, 5, 6, 7].map((d) => (
                     <option key={d}>{d}</option>
                   ))}
                 </select>
+                {errors.days && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.days.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label>Duration*</label>
                 <select
                   {...register("duration")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.duration ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Duration</option>
                   <option>1 Hour</option>
@@ -997,6 +1034,11 @@ export default function HireTutorForm() {
                   <option>2.5 Hours</option>
                   <option>3 Hours</option>
                 </select>
+                {errors.duration && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.duration.message}
+                  </p>
+                )}
               </div>
               <div className="md:col-span-2">
                 <label>Tutor Description (Optional)</label>
@@ -1011,7 +1053,7 @@ export default function HireTutorForm() {
             {/* SUBJECTS */}
 
             <div className="mt-6">
-              <label className="block mb-2">Subjects</label>
+              <label className="block mb-2">Subjects *</label>
 
               <div className="flex flex-wrap gap-2">
                 {subjectsList.map((sub) => (
@@ -1030,6 +1072,11 @@ export default function HireTutorForm() {
                   </button>
                 ))}
               </div>
+              {errors.subjects && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.subjects.message}
+                </p>
+              )}
             </div>
 
             <div className="flex justify-between mt-6">
@@ -1063,7 +1110,9 @@ export default function HireTutorForm() {
                 <label>Division*</label>
                 <select
                   {...register("division")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                    errors.division ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Division</option>
                   {Object.entries(locationData).map(([key, value]) => (
@@ -1072,6 +1121,11 @@ export default function HireTutorForm() {
                     </option>
                   ))}
                 </select>
+                {errors.division && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.division.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -1079,7 +1133,9 @@ export default function HireTutorForm() {
                 <select
                   {...register("district")}
                   disabled={!divisionValue}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed ${
+                    errors.district ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select District</option>
                   {getDistricts().map((d) => (
@@ -1088,6 +1144,11 @@ export default function HireTutorForm() {
                     </option>
                   ))}
                 </select>
+                {errors.district && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.district.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -1095,13 +1156,20 @@ export default function HireTutorForm() {
                 <select
                   {...register("location")}
                   disabled={!districtValue}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed ${
+                    errors.location ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Location</option>
                   {getLocalities().map((loc) => (
                     <option key={loc}>{loc}</option>
                   ))}
                 </select>
+                {errors.location && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.location.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -1109,13 +1177,20 @@ export default function HireTutorForm() {
                 <select
                   {...register("preferredArea")}
                   disabled={!districtValue}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed ${
+                    errors.preferredArea ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Area</option>
                   {getLocalities().map((loc) => (
                     <option key={loc}>{loc}</option>
                   ))}
                 </select>
+                {errors.preferredArea && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.preferredArea.message}
+                  </p>
+                )}
               </div>
             </div>
 
