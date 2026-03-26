@@ -7,7 +7,7 @@ import {
   Filter,
   MapPin,
   BookOpen,
-  DoorOpen,
+  // DoorOpen,
   School,
   RotateCcw,
 } from "lucide-react";
@@ -65,9 +65,9 @@ export default function TuitionJobClient({
         selectedClass === "all" ||
         normalize(job.class) === normalize(selectedClass);
 
-      const matchesMode =
-        selectedMode === "all" ||
-        normalize(job.mode) === normalize(selectedMode);
+      // const matchesMode =
+      //   selectedMode === "all" ||
+      //   normalize(job.mode) === normalize(selectedMode);
 
       const matchesMedium =
         selectedMedium === "all" ||
@@ -77,13 +77,11 @@ export default function TuitionJobClient({
         selectedDivision === "all" ||
         normalize(job.division) === normalize(selectedDivision);
 
-      return matchesClass && matchesMode && matchesMedium && matchesDivision;
+      return matchesClass && matchesMedium && matchesDivision;
     });
 
   // Approved Jobs
-  const approvedJobs = tuitionJobs.filter(
-    (job) => job.isApproved && normalize(job.status) === "active"
-  );
+  const approvedJobs = tuitionJobs.filter((job) => job.isApproved);
 
   // handleResetFilters
   const handleResetFilters = () => {
@@ -154,7 +152,7 @@ export default function TuitionJobClient({
           transition={{ delay: 0.2 }}
           className="mb-8 bg-white rounded-xl shadow-sm p-6 border border-gray-100 mt-10"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-2">
             {/* filter */}
             <div className="flex items-center gap-2">
               <Filter className="w-5 h-5 text-gray-600" />
@@ -167,12 +165,12 @@ export default function TuitionJobClient({
              px-3 py-2 rounded-lg border border-gray-300
              hover:bg-gray-100 active:scale-95 transition"
             >
-              <RotateCcw className="w-5 h-5 text-gray-600" />
+              <RotateCcw className="w-4 h-4 text-gray-600" />
               <h3 className="font-semibold text-gray-800">Reset</h3>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Class Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -182,7 +180,7 @@ export default function TuitionJobClient({
               <select
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Classes</option>
                 {classes.map((subject, idx) => (
@@ -202,7 +200,7 @@ export default function TuitionJobClient({
               <select
                 value={selectedDivision}
                 onChange={(e) => setSelectedDivision(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Divisions</option>
                 <option value="Dhaka">Dhaka</option>
@@ -217,7 +215,7 @@ export default function TuitionJobClient({
             </div>
 
             {/* Mode Filter */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <DoorOpen className="w-4 h-4 inline mr-1" />
                 Teaching Mode
@@ -232,7 +230,7 @@ export default function TuitionJobClient({
                 <option value="onlinetutoring">Online Tutoring</option>
                 <option value="groupclasses">Group Classes</option>
               </select>
-            </div>
+            </div> */}
 
             {/* Medium Filter */}
             <div>
@@ -243,7 +241,7 @@ export default function TuitionJobClient({
               <select
                 value={selectedMedium}
                 onChange={(e) => setSelectedMedium(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
               >
                 <option value="all">All Mediums</option>
                 <option value="banglamedium">Bangla Medium</option>
@@ -299,9 +297,9 @@ export default function TuitionJobClient({
 
         {/* Jobs Grid */}
         {filteredJobs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredJobs.map((job) => (
-              <TuitionJobCard key={job.id} job={job} onApply={handleApply} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredJobs.map((job, idx) => (
+              <TuitionJobCard key={idx} job={job} onApply={handleApply} />
             ))}
           </div>
         ) : (
