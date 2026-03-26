@@ -1,34 +1,61 @@
 export interface TuitionJob {
-  _id?: string | number;
-  id: number;
-  title: string;
-  subject: string;
+  _id: string;
+  phone: string;
   class: string;
-  location: string;
-  budget: string;
-  mode: string;
-  studentName: string;
-  description: string;
-  requirements: string[];
-  schedule: string;
-  createdAt: string;
-  applicants: number;
-  status: "active" | "closed" | "filled";
-  urgency?: "urgent" | "normal";
-  gender?: "male" | "female" | "any";
-  studentGender?: "male" | "female";
-  days: string[];
+  medium: string;
+  studentGender: "male" | "female";
+  tutorGender: "male" | "female";
+  salary: string;
+  days: string;
   duration: string;
-  startDate?: string;
   division: string;
-  medium:
-    | "banglaMedium"
-    | "englishMedium"
-    | "englishVersion"
-    | "madrasahBackground";
-  area?: string;
-  isApproved?: boolean;
+  district: string;
+  location: string;
+  preferredArea: string;
+  tutorDescription: string;
+  locationDescription: string;
+  subjects: string[];
+  isVerified: boolean;
+  isApproved: boolean;
+  isPremium: boolean;
+  jobId: string;
+  createdAt: string; // or Date
+  approvedAt: string; // or Date
 }
+
+
+
+// export interface TuitionJob {
+//   _id?: string | number;
+//   id: number;
+//   title: string;
+//   subject: string;
+//   class: string;
+//   location: string;
+//   budget: string;
+//   mode: string;
+//   studentName: string;
+//   description: string;
+//   requirements: string[];
+//   schedule: string;
+//   createdAt: string;
+//   applicants: number;
+//   status: "active" | "closed" | "filled";
+//   urgency?: "urgent" | "normal";
+//   gender?: "male" | "female" | "any";
+//   studentGender?: "male" | "female";
+//   days: string[];
+//   duration: string;
+//   startDate?: string;
+//   division: string;
+//   medium:
+//     | "banglaMedium"
+//     | "englishMedium"
+//     | "englishVersion"
+//     | "madrasahBackground";
+//   area?: string;
+//   isApproved?: boolean;
+// }
 
 // export const tuitionJobsList: TuitionJob[] = [
 //   {

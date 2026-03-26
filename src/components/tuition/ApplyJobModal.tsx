@@ -250,6 +250,11 @@ ApplyJobModalProps) {
     );
   }
 
+  const subjectText = job.subjects?.length
+  ? job.subjects.join(", ")
+  : "Teacher";
+  const className = job.class?.toLowerCase();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -281,7 +286,7 @@ ApplyJobModalProps) {
               </button>
 
               <h2 className="text-2xl font-bold mb-2">Apply for This Job</h2>
-              <p className="text-blue-100 text-sm">{job.title}</p>
+              <p className="text-blue-100 text-sm">{`${subjectText} teacher needed for class ${className}`}</p>
             </div>
 
             {/* Body */}
@@ -302,7 +307,7 @@ ApplyJobModalProps) {
                       <div>
                         <p className="text-gray-600 font-medium">Subject</p>
                         <p className="text-gray-800 font-semibold">
-                          {job.subject}
+                          {job.subjects?.length ? job.subjects.join(", ") : "N/A"}
                         </p>
                       </div>
                       <div>
@@ -320,7 +325,7 @@ ApplyJobModalProps) {
                       <div>
                         <p className="text-gray-600 font-medium">Budget</p>
                         <p className="text-gray-800 font-semibold">
-                          {job.budget}
+                          {job.salary}
                         </p>
                       </div>
                     </div>
