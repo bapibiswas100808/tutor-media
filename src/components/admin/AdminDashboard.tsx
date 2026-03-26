@@ -37,9 +37,15 @@ export interface TuitionJob {
   budget?: string;
   mode?: string;
   subject?: string;
+  subjects?: string[];
   class?: string;
   medium?: string;
   description?: string;
+  jobId?: string | number;
+  salary?: string | number;
+  tutorDescription?: string;
+  locationDescription?: string;
+  
 
   isVerified?: boolean;
   isApproved?: boolean;
@@ -51,21 +57,21 @@ export interface TuitionJob {
 // type EditableJobKey = keyof TuitionJob;
 
 type EditableJob = {
-  name?: string;
-  title?: string;
   phone?: string;
-  email?: string;
-  gender?: string;
+  class?: string;
+  medium?: string;
+  studentGender?: "male" | "female";
+  tutorGender?: "male" | "female";
+  salary?: string; // budget
+  days?: string;
+  duration?: string;
   division?: string;
   district?: string;
   location?: string;
   preferredArea?: string;
-  budget?: string;
-  mode?: string;
-  subject?: string;
-  class?: string;
-  medium?: string;
-  description?: string;
+  tutorDescription?: string;
+  locationDescription?: string;
+  subjects?: string[]; // array
 };
 
 type EditableField = {
@@ -75,21 +81,21 @@ type EditableField = {
 };
 
 const editableJobFields = [
-  { label: "Name", key: "name" },
-  { label: "Title", key: "title" },
   { label: "Phone", key: "phone" },
-  { label: "Email", key: "email" },
-  { label: "Gender", key: "gender" },
+  { label: "Class", key: "class" },
+  { label: "Medium", key: "medium" },
+  { label: "Student Gender", key: "studentGender" },
+  { label: "Tutor Gender", key: "tutorGender" },
+  { label: "Salary", key: "salary" },
+  { label: "Days", key: "days" },
+  { label: "Duration", key: "duration" },
   { label: "Division", key: "division" },
   { label: "District", key: "district" },
   { label: "Location", key: "location" },
   { label: "Preferred Area", key: "preferredArea" },
-  { label: "Budget", key: "budget" },
-  { label: "Mode", key: "mode" },
-  { label: "Subject", key: "subject" },
-  { label: "Class", key: "class" },
-  { label: "Medium", key: "medium" },
-  { label: "Description", key: "description", type: "textarea" },
+  { label: "Tutor Description", key: "tutorDescription", type: "textarea" },
+  { label: "Location Description", key: "locationDescription", type: "textarea" },
+  { label: "Subjects", key: "subjects" }, // array
 ] satisfies readonly EditableField[];
 
 /* ================= COMPONENT ================= */
@@ -130,17 +136,43 @@ export default function AdminDashboard({
   // );
   const [editJobFormData, setEditJobFormData] = useState<EditableJob>({});
 
-  useEffect(() => {
-    if (!editingJob) return;
+useEffect(() => {
+  if (!editingJob) return;
 
-    setEditJobFormData(
-      editableJobFields.reduce((acc, { key }) => {
-        const value = editingJob[key];
-        if (typeof value === "string") acc[key] = value;
-        return acc;
-      }, {} as EditableJob),
-    );
-  }, [editingJob]);
+  const formData: EditableJob = {};
+
+  editableJobFields.forEach(({ key }) => {
+    // subjects special case
+    if (key === "subjects") {
+      formData[key] = editingJob.subjects || [];
+    }
+    // tutorDescription & locationDescription
+    else if (key === "tutorDescription") {
+      formData[key] = editingJob.tutorDescription || "";
+    } else if (key === "locationDescription") {
+      formData[key] = editingJob.locationDescription || "";
+    }
+    // normal string fields
+    else if (key in editingJob) {
+      // @ts-expect-error safe check for known string fields
+      const value = editingJob[key];
+      if (typeof value === "string") {
+        // Only assign valid gender values for gender fields
+        if (key === "studentGender" || key === "tutorGender") {
+          if (["male", "female"].includes(value)) {
+            formData[key] = value as "male" | "female";
+          }
+        } else {
+          formData[key] = value;
+        }
+      } else if (typeof value === "number" && key !== "studentGender" && key !== "tutorGender") {
+        formData[key] = String(value);
+      }
+    }
+  });
+
+  setEditJobFormData(formData);
+}, [editingJob]);
 
   // Sync initial data props
   useEffect(() => {
@@ -1075,157 +1107,163 @@ export default function AdminDashboard({
                 </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left">
-                      <th className="px-3 py-2">Title</th>
-                      <th className="px-3 py-2">Subject</th>
-                      <th className="px-3 py-2">Location</th>
-                      <th className="px-3 py-2">Budget</th>
-                      <th className="px-3 py-2">Approved</th>
-                      <th className="px-3 py-2">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentJobItems.length === 0 ? (
-                      <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={5}>
-                          No jobs found
-                        </td>
-                      </tr>
-                    ) : (
-                      currentJobItems.map((j) => (
-                        <tr key={j.id} className="border-t">
-                          <td className="px-3 py-2">{j.title}</td>
-                          <td className="px-3 py-2">{j.subject}</td>
-                          <td className="px-3 py-2">{j.location}</td>
-                          <td className="px-3 py-2">{j.budget}</td>
+  <table className="min-w-full text-sm">
+    <thead>
+      <tr className="text-left">
+        <th className="px-3 py-2">Title</th>
+        <th className="px-3 py-2">Subject</th>
+        <th className="px-3 py-2">Location</th>
+        <th className="px-3 py-2">Budget</th>
+        <th className="px-3 py-2">Approved</th>
+        <th className="px-3 py-2">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {currentJobItems.length === 0 ? (
+        <tr className="border-t">
+          <td className="px-3 py-2" colSpan={6}>
+            No jobs found
+          </td>
+        </tr>
+      ) : (
+        currentJobItems.map((j) => {
+          // Dynamic Title
+          const jobTitle = j.subjects?.length
+            ? `${j.subjects.slice(0, 2).join(", ")} teacher needed for class ${j.class}`
+            : `Job (${j.jobId})`;
 
-                          <td className="px-3 py-2">
-                            <input
-                              type="checkbox"
-                              checked={!!j.isApproved}
-                              disabled={!!loadingMap[`job-${j.id}`]}
-                              onChange={(e) =>
-                                toggleField(
-                                  "job",
-                                  j.id,
-                                  String(j._id),
-                                  "isApproved",
-                                  e.target.checked,
-                                )
-                              }
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <div className="flex gap-2">
-                              <button
-                                onClick={async () => {
-                                  const result = await Swal.fire({
-                                    title: "Edit Job?",
-                                    text: "You are about to edit this job's details.",
-                                    icon: "question",
-                                    showCancelButton: true,
-                                    confirmButtonText: "Yes, Edit",
-                                    cancelButtonText: "Cancel",
-                                    confirmButtonColor: "#2563eb",
-                                    cancelButtonColor: "#6b7280",
-                                  });
+          // Subjects for table
+          const jobSubjects = j.subjects?.join(", ") || "-";
 
-                                  if (!result.isConfirmed) return;
+          // Full Location
+          const jobLocation = j.preferredArea
+            ? `${j.location}, ${j.preferredArea}`
+            : j.location;
 
-                                  setEditingJob(j);
-                                  setEditJobFormData(j);
-                                }}
-                                className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                              >
-                                Update
-                              </button>
+          return (
+            <tr key={j.id || j._id} className="border-t">
+              <td className="px-3 py-2">{jobTitle}</td>
+              <td className="px-3 py-2">{jobSubjects}</td>
+              <td className="px-3 py-2">{jobLocation}</td>
+              <td className="px-3 py-2">{j.salary} ৳</td>
 
-                              <button
-                                onClick={async () => {
-                                  try {
-                                    const result = await Swal.fire({
-                                      title: j.isDeleted
-                                        ? "Restore Job?"
-                                        : "Delete Job?",
-                                      text: j.isDeleted
-                                        ? "This job will be restored."
-                                        : "This job will be deleted.",
-                                      icon: "warning",
-                                      showCancelButton: true,
-                                      confirmButtonColor: j.isDeleted
-                                        ? "#16a34a"
-                                        : "#dc2626",
-                                      cancelButtonColor: "#6b7280",
-                                      confirmButtonText: j.isDeleted
-                                        ? "Yes, Restore"
-                                        : "Yes, Delete",
-                                    });
+              <td className="px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={!!j.isApproved}
+                  disabled={!!loadingMap[`job-${j.id || j._id}`]}
+                  onChange={(e) =>
+                    toggleField(
+                      "job",
+                      j.id || j._id,
+                      String(j._id),
+                      "isApproved",
+                      e.target.checked,
+                    )
+                  }
+                />
+              </td>
 
-                                    if (!result.isConfirmed) return;
+              <td className="px-3 py-2">
+                <div className="flex gap-2">
+                  <button
+                    onClick={async () => {
+                      const result = await Swal.fire({
+                        title: "Edit Job?",
+                        text: "You are about to edit this job's details.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, Edit",
+                        cancelButtonText: "Cancel",
+                        confirmButtonColor: "#2563eb",
+                        cancelButtonColor: "#6b7280",
+                      });
 
-                                    const endpoint = j.isDeleted
-                                      ? `${BACKEND_BASE}/allJobs/restore/${j.id}`
-                                      : `${BACKEND_BASE}/allJobs/delete/${j.id}`;
+                      if (!result.isConfirmed) return;
 
-                                    const res = await fetch(endpoint, {
-                                      method: "PATCH",
-                                    });
+                      setEditingJob(j);
+                    }}
+                    className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Update
+                  </button>
 
-                                    if (!res.ok) {
-                                      const text = await res.text();
-                                      throw new Error(text || "Request failed");
-                                    }
+                  <button
+                    onClick={async () => {
+                      try {
+                        const result = await Swal.fire({
+                          title: j.isDeleted ? "Restore Job?" : "Delete Job?",
+                          text: j.isDeleted
+                            ? "This job will be restored."
+                            : "This job will be deleted.",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: j.isDeleted
+                            ? "#16a34a"
+                            : "#dc2626",
+                          cancelButtonColor: "#6b7280",
+                          confirmButtonText: j.isDeleted
+                            ? "Yes, Restore"
+                            : "Yes, Delete",
+                        });
 
-                                    // ✅ Update UI immediately
-                                    setJobs((prev) =>
-                                      prev.map((job) =>
-                                        job.id === j.id || job._id === j._id
-                                          ? { ...job, isDeleted: !j.isDeleted }
-                                          : job,
-                                      ),
-                                    );
+                        if (!result.isConfirmed) return;
 
-                                    // ✅ Success toast
-                                    Swal.fire({
-                                      toast: true,
-                                      position: "top-end",
-                                      icon: "success",
-                                      title: j.isDeleted
-                                        ? "Restored successfully"
-                                        : "Deleted successfully",
-                                      showConfirmButton: false,
-                                      timer: 2500,
-                                      timerProgressBar: true,
-                                    });
-                                  } catch (err) {
-                                    Swal.fire({
-                                      icon: "error",
-                                      title: "Action failed",
-                                      text:
-                                        err instanceof Error
-                                          ? err.message
-                                          : "Something went wrong",
-                                    });
-                                  }
-                                }}
-                                className={`px-2 py-1 text-xs rounded ${
-                                  j.isDeleted
-                                    ? "bg-green-600 hover:bg-green-700 text-white"
-                                    : "bg-red-600 hover:bg-red-700 text-white"
-                                }`}
-                              >
-                                {j.isDeleted ? "Restore" : "Delete"}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                        const endpoint = j.isDeleted
+                          ? `${BACKEND_BASE}/allJobs/restore/${j.id || j._id}`
+                          : `${BACKEND_BASE}/allJobs/delete/${j.id || j._id}`;
+
+                        const res = await fetch(endpoint, { method: "PATCH" });
+
+                        if (!res.ok) {
+                          const text = await res.text();
+                          throw new Error(text || "Request failed");
+                        }
+
+                        setJobs((prev) =>
+                          prev.map((job) =>
+                            job.id === j.id || job._id === j._id
+                              ? { ...job, isDeleted: !j.isDeleted }
+                              : job,
+                          ),
+                        );
+
+                        Swal.fire({
+                          toast: true,
+                          position: "top-end",
+                          icon: "success",
+                          title: j.isDeleted
+                            ? "Restored successfully"
+                            : "Deleted successfully",
+                          showConfirmButton: false,
+                          timer: 2500,
+                          timerProgressBar: true,
+                        });
+                      } catch (err) {
+                        Swal.fire({
+                          icon: "error",
+                          title: "Action failed",
+                          text: err instanceof Error ? err.message : "Something went wrong",
+                        });
+                      }
+                    }}
+                    className={`px-2 py-1 text-xs rounded ${
+                      j.isDeleted
+                        ? "bg-green-600 hover:bg-green-700 text-white"
+                        : "bg-red-600 hover:bg-red-700 text-white"
+                    }`}
+                  >
+                    {j.isDeleted ? "Restore" : "Delete"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          );
+        })
+      )}
+    </tbody>
+  </table>
+</div>
 
               <div className="flex items-center justify-between mt-3">
                 <div className="text-sm text-gray-500">
@@ -1437,141 +1475,160 @@ export default function AdminDashboard({
 
       {/* Edit Job Modal */}
       {editingJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {editableJobFields.map(({ label, key, type }) => (
-                <div key={key}>
-                  <label className="block text-sm font-medium mb-1">
-                    {label}
-                  </label>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full overflow-y-auto p-6">
+      <h2 className="text-2xl font-bold mb-4">Edit Job</h2>
 
-                  {type === "textarea" ? (
-                    <textarea
-                      value={editJobFormData[key] || ""}
-                      onChange={(e) =>
-                        setEditJobFormData({
-                          ...editJobFormData,
-                          [key]: e.target.value,
-                        })
-                      }
-                      className="w-full border px-3 py-2 rounded-md"
-                      rows={3}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      value={editJobFormData[key] || ""}
-                      onChange={(e) =>
-                        setEditJobFormData({
-                          ...editJobFormData,
-                          [key]: e.target.value,
-                        })
-                      }
-                      className="w-full border px-3 py-2 rounded-md"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={async () => {
-                  try {
-                    // 🔔 Step 1: Show confirmation
-                    const result = await Swal.fire({
-                      title: "Save changes?",
-                      text: "Are you sure you want to update this job?",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonColor: "#16a34a", // green
-                      cancelButtonColor: "#6b7280", // gray
-                      confirmButtonText: "Yes, Save",
-                      cancelButtonText: "Cancel",
-                    });
-
-                    if (!result.isConfirmed) return; // ❌ Stop if cancelled
-
-                    // 🔔 Step 2: Proceed with update
-                    const token = localStorage.getItem("token");
-
-                    // Only include defined fields
-                    const updateData = Object.fromEntries(
-                      Object.entries(editJobFormData).filter(
-                        ([, v]) => v !== undefined,
-                      ),
-                    );
-
-                    const res = await fetch(
-                      `${BACKEND_BASE}/allJobs/update/${editingJob.id}`,
-                      {
-                        method: "PATCH",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(updateData),
-                      },
-                    );
-
-                    if (!res.ok) {
-                      const errData = await res.json().catch(() => null);
-                      throw new Error(
-                        errData?.message || "Failed to update job",
-                      );
-                    }
-
-                    // const data = await res.json();
-
-                    // ✅ Update local state
-                    setJobs((prev) =>
-                      prev.map((j) =>
-                        j.id === editingJob.id || j._id === editingJob._id
-                          ? { ...j, ...editJobFormData }
-                          : j,
-                      ),
-                    );
-
-                    setEditingJob(null);
-
-                    // ✅ Success toast
-                    Swal.fire({
-                      toast: true,
-                      position: "top-end",
-                      icon: "success",
-                      title: "Job updated successfully",
-                      showConfirmButton: false,
-                      timer: 2500,
-                      timerProgressBar: true,
-                    });
-                  } catch (err) {
-                    Swal.fire({
-                      icon: "error",
-                      title: "Update failed",
-                      text:
-                        err instanceof Error
-                          ? err.message
-                          : "Something went wrong",
-                    });
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {editableJobFields.map(({ label, key, type }) => {
+          // Special handling for subjects (array)
+          if (key === "subjects") {
+            return (
+              <div key={key}>
+                <label className="block text-sm font-medium mb-1">{label}</label>
+                <textarea
+                  value={Array.isArray(editJobFormData[key])
+                    ? editJobFormData[key].join(", ")
+                    : editJobFormData[key] || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      [key]: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter((s) => s.length > 0),
+                    })
                   }
-                }}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-              >
-                Save Changes
-              </button>
+                  className="w-full border px-3 py-2 rounded-md"
+                  rows={3}
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Enter subjects separated by comma
+                </p>
+              </div>
+            );
+          }
 
-              <button
-                onClick={() => setEditingJob(null)}
-                className="flex-1 px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
-              >
-                Cancel
-              </button>
+          // Normal input / textarea
+          return (
+            <div key={key}>
+              <label className="block text-sm font-medium mb-1">{label}</label>
+              {type === "textarea" ? (
+                <textarea
+                  value={editJobFormData[key] || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      [key]: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                  rows={3}
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={editJobFormData[key] || ""}
+                  onChange={(e) =>
+                    setEditJobFormData({
+                      ...editJobFormData,
+                      [key]: e.target.value,
+                    })
+                  }
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              )}
             </div>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
+
+      <div className="flex gap-2 mt-4">
+        <button
+          onClick={async () => {
+            try {
+              const result = await Swal.fire({
+                title: "Save changes?",
+                text: "Are you sure you want to update this job?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#16a34a",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Yes, Save",
+                cancelButtonText: "Cancel",
+              });
+
+              if (!result.isConfirmed) return;
+
+              const token = localStorage.getItem("token");
+
+              // Only include defined fields
+              const updateData = Object.fromEntries(
+                Object.entries(editJobFormData).filter(
+                  ([, v]) => v !== undefined
+                )
+              );
+
+              const res = await fetch(
+                `${BACKEND_BASE}/allJobs/update/${editingJob.id || editingJob._id}`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify(updateData),
+                }
+              );
+
+              if (!res.ok) {
+                const errData = await res.json().catch(() => null);
+                throw new Error(errData?.message || "Failed to update job");
+              }
+
+              // ✅ Update local state
+              setJobs((prev) =>
+                prev.map((j) =>
+                  j.id === editingJob.id || j._id === editingJob._id
+                    ? { ...j, ...editJobFormData }
+                    : j
+                )
+              );
+
+              setEditingJob(null);
+
+              Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: "Job updated successfully",
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+              });
+            } catch (err) {
+              Swal.fire({
+                icon: "error",
+                title: "Update failed",
+                text: err instanceof Error ? err.message : "Something went wrong",
+              });
+            }
+          }}
+          className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+        >
+          Save Changes
+        </button>
+
+        <button
+          onClick={() => setEditingJob(null)}
+          className="flex-1 px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
