@@ -1292,7 +1292,7 @@ export default function AdminDashboard({
                   <thead>
                     <tr className="text-left bg-gray-50">
                       <th className="px-3 py-2">ID</th>
-                      <th className="px-3 py-2">Job Title</th>
+                      {/* <th className="px-3 py-2">Job Title</th> */}
                       <th className="px-3 py-2">Subject</th>
                       <th className="px-3 py-2">Tutor Name</th>
                       <th className="px-3 py-2">Email</th>
@@ -1313,9 +1313,11 @@ export default function AdminDashboard({
                     ) : (
                       currentApplicationItems.map((a) => {
                         // Use aggregated job from response
-                        const jobTitle =
-                          a.job?.title || `Job (${a.tuitionJobId})`;
-                        const jobSubject = a.job?.subject || "-";
+                        // const jobTitle =
+                        //   a.job?.title || `Job (${a.tuitionJobId})`;
+                        const jobSubject = a.job?.subjects?.length
+                          ? a.job.subjects.join(", ")
+                          : "-";
                         const tutorName =
                           a.tutor?.fullName || `Tutor (${a.tutorId})`;
                         const tutorEmail = a.tutor?.email || "-";
@@ -1331,9 +1333,9 @@ export default function AdminDashboard({
                             <td className="px-3 py-2 text-xs font-mono">
                               {String(a._id).slice(-8)}
                             </td>
-                            <td className="px-3 py-2 font-medium">
+                            {/* <td className="px-3 py-2 font-medium">
                               {jobTitle}
-                            </td>
+                            </td> */}
                             <td className="px-3 py-2">{jobSubject}</td>
                             <td className="px-3 py-2 font-medium">
                               {tutorName}
