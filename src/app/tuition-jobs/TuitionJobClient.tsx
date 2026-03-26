@@ -65,9 +65,9 @@ export default function TuitionJobClient({
         selectedClass === "all" ||
         normalize(job.class) === normalize(selectedClass);
 
-      const matchesMode =
-        selectedMode === "all" ||
-        normalize(job.mode) === normalize(selectedMode);
+      // const matchesMode =
+      //   selectedMode === "all" ||
+      //   normalize(job.mode) === normalize(selectedMode);
 
       const matchesMedium =
         selectedMedium === "all" ||
@@ -77,12 +77,12 @@ export default function TuitionJobClient({
         selectedDivision === "all" ||
         normalize(job.division) === normalize(selectedDivision);
 
-      return matchesClass && matchesMode && matchesMedium && matchesDivision;
+      return matchesClass && matchesMedium && matchesDivision;
     });
 
   // Approved Jobs
   const approvedJobs = tuitionJobs.filter(
-    (job) => job.isApproved && normalize(job.status) === "active"
+    (job) => job.isApproved
   );
 
   // handleResetFilters
@@ -301,7 +301,7 @@ export default function TuitionJobClient({
         {filteredJobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredJobs.map((job) => (
-              <TuitionJobCard key={job.id} job={job} onApply={handleApply} />
+              <TuitionJobCard key={job.jobId} job={job} onApply={handleApply} />
             ))}
           </div>
         ) : (
