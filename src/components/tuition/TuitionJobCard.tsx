@@ -6,9 +6,6 @@ import {
   MapPin,
   DollarSign,
   Calendar,
-  BookOpen,
-  Home,
-  Video,
 } from "lucide-react";
 
 interface TuitionJobCardProps {
