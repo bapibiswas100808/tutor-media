@@ -68,10 +68,13 @@ export default async function AdminDashboardPage() {
       <main className="min-h-screen bg-gray-50 p-6">
         <div className="container mx-auto">
           <AdminDashboard
-            tutors={tutorHubs}
-            jobs={tuitionJobs.map((job) => ({ ...job, _id: String(job._id) }))}
-            applications={applications}
-          />
+  tutors={tutorHubs}
+  jobs={tuitionJobs.map((job, index) => ({
+    ...job,
+    id: Number(job._id) || index, // যদি _id numeric না হয়, fallback index
+  }))}
+  applications={applications}
+/>
         </div>
       </main>
     </AdminProtected>
