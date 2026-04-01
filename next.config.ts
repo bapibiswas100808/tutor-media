@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true, // Disable sharp for Linux VPS compatibility
     remotePatterns: [
       {
         protocol: "http",
