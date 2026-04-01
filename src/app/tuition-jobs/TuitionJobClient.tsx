@@ -7,7 +7,7 @@ import {
   Filter,
   MapPin,
   BookOpen,
-  DoorOpen,
+  // DoorOpen,
   School,
   RotateCcw,
 } from "lucide-react";
@@ -81,9 +81,7 @@ export default function TuitionJobClient({
     });
 
   // Approved Jobs
-  const approvedJobs = tuitionJobs.filter(
-    (job) => job.isApproved
-  );
+  const approvedJobs = tuitionJobs.filter((job) => job.isApproved);
 
   // handleResetFilters
   const handleResetFilters = () => {
@@ -299,9 +297,9 @@ export default function TuitionJobClient({
 
         {/* Jobs Grid */}
         {filteredJobs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredJobs.map((job) => (
-              <TuitionJobCard key={job.jobId} job={job} onApply={handleApply} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredJobs.map((job, idx) => (
+              <TuitionJobCard key={idx} job={job} onApply={handleApply} />
             ))}
           </div>
         ) : (
