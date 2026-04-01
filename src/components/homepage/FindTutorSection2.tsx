@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import img from "/public/images/findTutor.png";
+import img from "/public/images/admissionTest/cadetCollegeAdmission.png";
 
 export default function FindTutorSection2() {
   return (
@@ -45,12 +45,7 @@ export default function FindTutorSection2() {
           >
             <div className="h-80">
               <div className="relative w-full h-full border-2 border-blue-200 shadow-2xl shadow-blue-500 rounded-full overflow-hidden">
-                <Image
-                  src={img}
-                  alt="Tutor 1"
-                  fill
-                  className="object-cover"
-                />
+                <Image src={img} alt="Tutor 1" fill className="object-cover" />
               </div>
               {/* <div className="relative w-full h-full">
                 <Image
