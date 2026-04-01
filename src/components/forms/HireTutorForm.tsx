@@ -654,8 +654,8 @@ const schema = z.object({
   location: z.string().min(1),
   preferredArea: z.string().min(1),
 
-  tutorDescription: z.string().min(10).optional(),
-  locationDescription: z.string().min(10).optional(),
+  tutorDescription: z.string().optional(),
+  locationDescription: z.string().optional(),
 
   subjects: z.array(z.string()).min(1, "Select at least one subject"),
 });
@@ -950,6 +950,8 @@ export default function HireTutorForm() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
                 >
                   <option value="">Select Salary</option>
+                  <option>Negotiable</option>
+                  <option>1500</option>
                   <option>2000</option>
                   <option>2500</option>
                   <option>3000</option>
@@ -967,7 +969,6 @@ export default function HireTutorForm() {
                   <option>9000</option>
                   <option>9500</option>
                   <option>10000</option>
-                  <option>Negotiable</option>
                 </select>
               </div>
 

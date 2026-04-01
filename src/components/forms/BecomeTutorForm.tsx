@@ -64,7 +64,6 @@ export default function BecomeTutorForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     watch,
   } = useForm<BecomeTutorFormData>({
     resolver: zodResolver(becomeTutorSchema),
@@ -199,83 +198,223 @@ export default function BecomeTutorForm() {
     return Array.from(new Set(allLocations)).sort();
   };
 
-  const onSubmit = async (data: BecomeTutorFormData) => {
-    // Check if email is verified
-    if (!emailVerified) {
-      Swal.fire({
-        icon: "warning",
-        title: "Email Not Verified",
-        text: "Please verify your email address before submitting the application.",
-      });
-      return;
+  // const onSubmit = async (data: BecomeTutorFormData) => {
+  //   // Check if email is verified
+  //   if (!emailVerified) {
+  //     Swal.fire({
+  //       icon: "warning",
+  //       title: "Email Not Verified",
+  //       text: "Please verify your email address before submitting the application.",
+  //     });
+  //     return;
+  //   }
+
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           fullName: data.fullName,
+  //           email: data.email,
+  //           phone: data.phone,
+  //           gender: data.gender,
+  //           division: data.division,
+  //           location: data.location,
+  //           locality: data.locality,
+  //           qualification: data.qualification,
+  //           experience: data.experience,
+  //           password: data.password,
+  //           isVerified: false,
+  //           isApproved: false,
+  //           isPremium: false,
+  //         }),
+  //       },
+  //     );
+
+  //     const result = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(result.message || "Failed to submit application");
+  //     }
+
+  //     // If ID exists → redirect
+  //     const tutorId = result.id || result._id || result.data?._id;
+
+  //     if (tutorId) {
+  //       const res = await Swal.fire({
+  //         icon: "success",
+  //         title: "Application Submitted Successfully!",
+  //         text: "Please complete your profile to continue.",
+  //         confirmButtonText: "Continue",
+  //       });
+
+  //       if (res.isConfirmed) {
+  //         router.push(`/complete-profile/${tutorId}`);
+  //       }
+  //     }
+  //     // if (result.id || result._id) {
+  //     //   await Swal.fire({
+  //     //     icon: "success",
+  //     //     title: "Application Submitted Successfully!",
+  //     //     text: "Please complete your profile to continue.",
+  //     //     confirmButtonText: "Continue",
+  //     //   });
+
+  //     //   router.push(`/complete-profile/${result.id || result._id}`);
+  //     // }
+
+  //     // If no ID → just success message
+  //     else {
+  //       await Swal.fire({
+  //         icon: "success",
+  //         title: "Application Submitted Successfully!",
+  //         text: "We'll review your application and get back to you within 2–3 business days.",
+  //         confirmButtonText: "Submit Another Application",
+  //       });
+
+  //       reset();
+  //     }
+  //   } catch (error) {
+  //     console.error("Submission error:", error);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error submitting application",
+  //       text: error instanceof Error ? error.message : "Something went wrong",
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+const onSubmit = async (data: BecomeTutorFormData) => {
+  if (!emailVerified) {
+    Swal.fire({
+      icon: "warning",
+      title: "Email Not Verified",
+      text: "Please verify your email address before submitting the application.",
+    });
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    // ✅ 1. SIGNUP
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          gender: data.gender,
+          division: data.division,
+          location: data.location,
+          locality: data.locality,
+          qualification: data.qualification,
+          experience: data.experience,
+          password: data.password,
+          isVerified: false,
+          isApproved: false,
+          isPremium: false,
+        }),
+      }
+    );
+
+    const result = await response.json();
+    console.log("✅ Signup response:", result);
+
+    if (!response.ok) {
+      throw new Error(result.message || "Signup failed");
     }
 
-    setIsSubmitting(true);
+    // Extract tutor ID from response - try multiple locations
+    const tutorId =
+      result.tutor?.id ||
+      result.insertedId ||
+      result.tutor?._id ||
+      result.id ||
+      result._id;
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fullName: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            gender: data.gender,
-            division: data.division,
-            location: data.location,
-            locality: data.locality,
-            qualification: data.qualification,
-            experience: data.experience,
-            password: data.password,
-            isVerified: false,
-            isApproved: false,
-            isPremium: false,
-          }),
-        },
+    console.log("✅ Extracted Tutor ID:", tutorId);
+
+    if (!tutorId) {
+      throw new Error(
+        `No tutor ID returned. Response: ${JSON.stringify(result)}`
       );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to submit application");
-      }
-
-      // If ID exists → redirect
-      if (result.id || result._id) {
-        await Swal.fire({
-          icon: "success",
-          title: "Application Submitted Successfully!",
-          text: "Please complete your profile to continue.",
-          confirmButtonText: "Continue",
-        });
-
-        router.push(`/complete-profile/${result.id || result._id}`);
-      }
-      // If no ID → just success message
-      else {
-        await Swal.fire({
-          icon: "success",
-          title: "Application Submitted Successfully!",
-          text: "We'll review your application and get back to you within 2–3 business days.",
-          confirmButtonText: "Submit Another Application",
-        });
-
-        reset();
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error submitting application",
-        text: error instanceof Error ? error.message : "Something went wrong",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    // ✅ 2. AUTO LOGIN (call login API)
+    console.log("🔵 Attempting login with email:", data.email);
+    const loginRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/login`, // <-- your login route
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      }
+    );
+
+    const loginData = await loginRes.json();
+    console.log("✅ Login response:", loginData);
+    console.log("✅ Login response status:", loginRes.status);
+
+    if (!loginRes.ok) {
+      console.error(
+        "⚠️ Login failed:",
+        loginData.message || "Unknown error"
+      );
+      throw new Error(loginData.message || "Login failed");
+    }
+
+    // ✅ 3. SAVE TOKEN & USER DATA
+    const token = loginData.token || loginData.data?.token;
+    const user = loginData.user || loginData.data?.user || loginData.tutor;
+
+    console.log("🔵 Saving token:", token ? "Yes" : "No");
+    console.log("🔵 Saving user:", user ? "Yes" : "No");
+
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
+    if (user) {
+      localStorage.setItem("user", JSON.stringify({ ...user, role: "tutor" }));
+    }
+
+    // ✅ 4. SUCCESS + REDIRECT
+    const resSwal = await Swal.fire({
+      icon: "success",
+      title: "Signup & Login Successful!",
+      text: "Redirecting to your dashboard...",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    // ✅ redirect
+    router.push(`/tutor-hub/${tutorId}`);
+  } catch (error) {
+    console.error("Error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Something went wrong",
+      text: error instanceof Error ? error.message : "Error occurred",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <motion.form
@@ -285,7 +424,6 @@ export default function BecomeTutorForm() {
       onSubmit={handleSubmit(onSubmit)}
       // className="space-y-8 px-6"
       className="space-y-6 px-2 md:px-4 lg:px-6"
-
     >
       {/* Personal Information */}
       <div className="rounded-lg">
