@@ -2,7 +2,16 @@
 
 import { motion } from "framer-motion";
 import { TuitionJob } from "@/data/tuitionJobsList";
-import { MapPin, DollarSign, Calendar } from "lucide-react";
+import {
+  MapPin,
+  DollarSign,
+  Calendar,
+  BookOpen,
+  Clock,
+  User,
+  BadgeCheck,
+  Star,
+} from "lucide-react";
 
 interface TuitionJobCardProps {
   job: TuitionJob;
@@ -223,179 +232,120 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ y: -5 }}
-      className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 "
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(37,99,235,0.13)" }}
+      className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
     >
-      {/* Title */}
-      <h3 className="text-xl font-bold text-gray-800 mb-2 leading-tight p-5">
-        {`${subjectText} teacher needed for ${className}`}
-      </h3>
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        {/* Header */}
-        <div className="relative bg-linear-to-r from-blue-50 to-purple-50 p-5 pb-3 border-b border-gray-100">
-          {/* Class */}
-          <p className="text-sm font-medium text-gray-600">{job.class}</p>
+      {/* Accent top bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
 
-          {/* Tutor Gender */}
-          <p className="text-sm font-medium text-gray-600 capitalize">
-            Preferred Tutor:{" "}
-            <span className="font-bold">{job.tutorGender}</span>
-          </p>
-
-          {/* Job ID */}
-          <p className="text-sm font-medium text-gray-600 capitalize">
-            Job id: <span className="font-bold">{job.jobId}</span>
-          </p>
-
-          {/* Posted */}
-          <p className="text-sm font-medium text-gray-600 capitalize">
-            Posted: <span className="font-bold">{timeAgo(job.createdAt)}</span>
-          </p>
-          {/* Key Info */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Location */}
-            {/* <div className="flex items-start gap-2">
-        <MapPin className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-        <div>
-          <p className="text-xs text-gray-500 font-medium">Location</p>
-          <p className="text-sm text-gray-700 font-semibold capitalize">
-            {job.division}
-          </p>
-        </div>
-      </div> */}
-            {/* Full Location */}
-            <div className="flex items-start gap-2 mt-5">
-              <MapPin className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-xs text-gray-500 font-medium">
-                  Full Location
-                </p>
-                <p className="text-sm text-gray-700 font-semibold">
-                  {job.location}, {job.district}
-                </p>
-              </div>
-            </div>
-
-            {/* Budget */}
-            <div className="flex items-start gap-2 mt-5">
-              <DollarSign className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Budget</p>
-                <p className="text-sm text-gray-700 font-semibold">
-                  {job.salary} ৳
-                </p>
-              </div>
-            </div>
+      <div className="p-4">
+        {/* Top row: title + badges */}
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base font-bold text-gray-900 leading-snug">
+              Teacher needed for{" "}
+              {subjectText === "All" ? "All Subjects" : subjectText}{" "}
+              <span className="text-blue-600">{className}</span>
+            </h3>
+            <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+              <span className="font-mono tracking-wide">{job.jobId}</span>
+              <span className="mx-1 text-gray-200">·</span>
+              <Calendar className="w-3 h-3 inline" />
+              <span>{timeAgo(job.createdAt)}</span>
+            </p>
           </div>
-
-          {/* Medium + Days + Duration */}
-          <div className="grid grid-cols-3 gap-3 border-t pt-3">
-            <div>
-              <p className="text-xs text-gray-500">Medium</p>
-              <p className="text-sm font-semibold text-gray-700">
-                {job.medium}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-xs text-gray-500">Days</p>
-              <p className="text-sm font-semibold text-gray-700">
-                {job.days} days
-              </p>
-            </div>
-
-            <div>
-              <p className="text-xs text-gray-500">Duration</p>
-              <p className="text-sm font-semibold text-gray-700">
-                {job.duration}
-              </p>
-            </div>
-          </div>
-          {/* Status Badge */}
-          <div className="flex gap-2 mt-2">
-            {job.isVerified && (
-              <span className="bg-green-100 text-green-700 px-2 py-1 text-xs rounded-md">
-                Verified
-              </span>
-            )}
+          <div className="flex flex-col items-end gap-1 shrink-0">
             {job.isPremium && (
-              <span className="bg-yellow-100 text-yellow-700 px-2 py-1 text-xs rounded-md">
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full text-xs font-semibold">
+                <Star className="w-3 h-3 fill-amber-400 stroke-amber-400" />
                 Premium
               </span>
             )}
+            {job.isVerified && (
+              <span className="inline-flex items-center gap-1 bg-green-50 text-green-600 border border-green-200 px-2 py-0.5 rounded-full text-xs font-semibold">
+                <BadgeCheck className="w-3 h-3" />
+                Verified
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Body */}
-        <div className="p-5 space-y-4">
-          {/* Subjects */}
-          <div className="">
-            <p className="text-xs text-gray-500 font-medium mb-1">Subjects</p>
-            <div className="flex flex-wrap gap-2">
-              {job.subjects?.slice(0, 3).map((sub, i) => (
-                <span
-                  key={i}
-                  className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-semibold"
-                >
-                  {sub}
-                </span>
-              ))}
-              {job.subjects?.length > 3 && (
-                <span className="text-xs text-gray-500">
-                  +{job.subjects.length - 3} more
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Preferred Area */}
-          {/* <div className="border-t pt-3">
-      <p className="text-xs text-gray-500 font-medium">Preferred Area</p>
-      <p className="text-sm text-gray-700 font-semibold">
-        {job.location}, {job.preferredArea}
-      </p>
-    </div> */}
-
-          {/* Tutor Description */}
-          <div className="border-t pt-3">
-            <p className="text-sm text-gray-600 line-clamp-2  ">
-              <span className="text-md text-gray-800 font-semibold">
-                Prefer Tutor :{" "}
-              </span>
-              {job.tutorDescription}
-            </p>
-          </div>
-
-          {/* Location Description */}
-          {/* <div className="border-t pt-3">
-      <p className="text-xs text-gray-500 font-medium">Location Details</p>
-      <p className="text-sm text-gray-600 line-clamp-2">
-        {job.locationDescription}
-      </p>
-    </div> */}
-
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-3 border-t">
-            <div className="flex items-center gap-4 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                <span>
-                  {new Date(job.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => onApply(job)}
-              className="bg-blue-600 text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer"
+        {/* Subjects pills */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {job.subjects?.slice(0, 4).map((sub, i) => (
+            <span
+              key={i}
+              className="bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-0.5 rounded-full text-xs font-semibold"
             >
-              Apply Now
-            </button>
+              {sub}
+            </span>
+          ))}
+          {job.subjects?.length > 4 && (
+            <span className="text-xs text-gray-400 self-center">
+              +{job.subjects.length - 4}
+            </span>
+          )}
+        </div>
+
+        {/* Key info grid */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-2 bg-gray-50 rounded-xl p-3 mb-3 text-sm">
+          <div className="flex items-center gap-1.5 text-gray-600 min-w-0">
+            <MapPin className="w-3.5 h-3.5 text-red-400 shrink-0" />
+            <span className="truncate font-medium">
+              {job.location}, {job.district}
+            </span>
           </div>
+          <div className="flex items-center gap-1.5 text-gray-600 min-w-0">
+            <DollarSign className="w-3.5 h-3.5 text-green-500 shrink-0" />
+            <span className="font-semibold text-green-700">
+              {job.salary} ৳/mo
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 text-gray-600 min-w-0">
+            <BookOpen className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <span className="truncate">{job.medium}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-gray-600 min-w-0">
+            <Clock className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+            <span>
+              {job.days}d/wk · {job.duration}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 text-gray-600 col-span-2 min-w-0">
+            <User className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+            <span className="capitalize">
+              Tutor preferred:{" "}
+              <span className="font-semibold text-gray-800">
+                {job.tutorGender}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        {/* Tutor description */}
+        {job.tutorDescription && (
+          <p className="text-xs text-gray-500 line-clamp-2 mb-3 leading-relaxed">
+            <span className="font-semibold text-gray-700">Requirement: </span>
+            {job.tutorDescription}
+          </p>
+        )}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+          <span className="text-xs text-gray-400">
+            {new Date(job.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
+          <button
+            onClick={() => onApply(job)}
+            className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2 rounded-full font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+          >
+            Apply Now
+          </button>
         </div>
       </div>
     </motion.div>

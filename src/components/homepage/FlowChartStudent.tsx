@@ -6,185 +6,204 @@ import Image from "next/image";
 const steps = [
   {
     number: 1,
-    title: "Search for Tutors or Post your tuition requirements",
-    description: "Post Tuition by creating Account or without Account.",
+    title: "Search for Tutors or Post Your Tuition Requirements",
+    description:
+      "Post a tuition request in seconds — with or without an account. Browse hundreds of verified tutors instantly.",
     image: "/images/workForStudents/search-tutor.png",
-    bgColor: "from-orange-400 to-yellow-400",
-    iconBg: "bg-green-500",
+    accent: "from-orange-400 to-amber-400",
+    lightBg: "bg-amber-50",
+    border: "border-amber-200",
+    textAccent: "text-amber-600",
   },
   {
     number: 2,
-    title: "Get one to one demo session for free",
+    title: "Get a One-to-One Demo Session for Free",
     description:
-      "Get free one day demo session with the tutor at your preferred location.",
+      "Try before you commit — enjoy a free demo class with your chosen tutor at your preferred location.",
     image: "/images/workForStudents/demo-session.png",
-    bgColor: "from-pink-300 to-red-300",
-    iconBg: "bg-blue-400",
+    accent: "from-pink-400 to-rose-400",
+    lightBg: "bg-pink-50",
+    border: "border-pink-200",
+    textAccent: "text-rose-500",
   },
   {
     number: 3,
-    title: "Hire your tutor",
-    description: "If you like the demo session, confirm the teacher.",
+    title: "Hire Your Tutor",
+    description:
+      "Loved the demo? Confirm your tutor and start your learning journey with full confidence.",
     image: "/images/workForStudents/hire-tutor.png",
-    bgColor: "from-yellow-200 to-orange-200",
-    iconBg: "bg-green-400",
+    accent: "from-blue-400 to-indigo-500",
+    lightBg: "bg-blue-50",
+    border: "border-blue-200",
+    textAccent: "text-blue-600",
   },
   {
     number: 4,
-    title: "Get results",
+    title: "Get Results",
     description:
-      "Gain knowledge, boost confidence and improve overall academic performance.",
+      "Gain knowledge, boost confidence, and see real improvements in academic performance.",
     image: "/images/workForStudents/get-results.png",
-    bgColor: "from-teal-300 to-green-400",
-    iconBg: "bg-teal-600",
+    accent: "from-teal-400 to-green-500",
+    lightBg: "bg-teal-50",
+    border: "border-teal-200",
+    textAccent: "text-teal-600",
   },
 ];
 
 export default function FlowChartStudent() {
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-14 md:mb-20"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            How It Works for Students / Guardian
+          <span className="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+            For Students &amp; Guardians
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+            How It Works
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-3 text-base sm:text-lg text-gray-500 max-w-xl mx-auto">
             Getting started with your perfect tutor is simple and
             straightforward
           </p>
         </motion.div>
 
-        {/* Desktop & Tablet Zigzag Layout */}
-        <div className="hidden md:block max-w-5xl mx-auto relative">
+        {/* Steps — Desktop zigzag */}
+        <div className="hidden md:block max-w-5xl mx-auto">
           {steps.map((step, index) => (
-            <motion.div
-              key={step.number}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              viewport={{ once: true }}
-              className={`flex items-center mb-16 last:mb-0 ${
-                index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-              }`}
-            >
-              {/* Card */}
-              <div className="w-9/12">
-                <div className="bg-white rounded-2xl shadow-xl p-4 hover:shadow-2xl transition-shadow duration-300 grid grid-cols-2 items-center gap-3">
-                  <div
-                    className={`w-full h-[170px] rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center`}
-                  >
-                    <div className="w-full h-full overflow-hidden relative rounded-lg ">
-                      <Image
-                        src={step.image}
-                        alt={step.title}
-                        fill
-                        className="object-cover rounded-xl p-0.5"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-600 text-lg leading-5">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Connector Line */}
-              <div className="w-2/12 flex items-center justify-center relative">
-                {/* Horizontal line */}
-                {index < steps.length - 1 && (
-                  <div
-                    className={`absolute ${
-                      index % 2 === 0 ? "left-0" : "right-0"
-                    } w-1/2 h-0.5 bg-gradient-to-r from-gray-300 via-blue-400 to-gray-300`}
-                  />
-                )}
-                {/* Vertical dashed line */}
-                {index < steps.length - 1 && (
-                  <svg
-                    className="absolute top-0"
-                    width="4"
-                    height="180"
-                    viewBox="0 200 2 20"
-                  >
-                    <line
-                      x1="2"
-                      y1="0"
-                      x2="2"
-                      y2="1280"
-                      stroke="#93C5FD"
-                      strokeWidth="2"
-                      strokeDasharray="4 4"
-                    />
-                  </svg>
-                )}
-                {/* Dot (hide for last item) */}
-                {index < steps.length - 1 && (
-                  <div className="absolute w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-md" />
-                )}
-                \
-              </div>
-
-              {/* Empty Space */}
-              <div className="w-5/12"></div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Mobile Layout - Vertical */}
-        <div className="md:hidden max-w-md mx-auto">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.number}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="bg-white rounded-2xl shadow-xl p-6">
+            <div key={step.number}>
+              <motion.div
+                initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.55, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className={`flex items-center gap-6 lg:gap-10 ${index % 2 !== 0 ? "flex-row-reverse" : ""}`}
+              >
+                {/* Image card */}
                 <div
-                  className={`w-full h-40 rounded-xl bg-gradient-to-br ${step.bgColor} flex items-center justify-center mb-4`}
+                  className={`flex-1 ${step.lightBg} ${step.border} border rounded-3xl p-5 shadow-md`}
                 >
-                  <div className="w-full h-full overflow-hidden relative rounded-lg">
+                  <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
                     <Image
                       src={step.image}
                       alt={step.title}
                       fill
-                      className="object-cover rounded-xl p-0.25"
+                      sizes="(max-width: 1024px) 45vw, 400px"
+                      className="object-contain p-3"
+                      priority={index < 2}
                     />
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {step.description}
-                </p>
+
+                {/* Centre step indicator */}
+                <div className="flex flex-col items-center shrink-0 gap-2">
+                  <div
+                    className={`w-14 h-14 rounded-full bg-gradient-to-br ${step.accent} flex items-center justify-center shadow-lg`}
+                  >
+                    <span className="text-white font-extrabold text-xl">
+                      {step.number}
+                    </span>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className="w-0.5 h-20 bg-gradient-to-b from-gray-300 to-transparent" />
+                  )}
+                </div>
+
+                {/* Text card */}
+                <div className="flex-1 space-y-3">
+                  <span
+                    className={`text-xs font-bold uppercase tracking-widest ${step.textAccent}`}
+                  >
+                    Step {step.number}
+                  </span>
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-500 leading-relaxed text-sm lg:text-base">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Connector between steps */}
+              {index < steps.length - 1 && (
+                <div
+                  className={`flex ${index % 2 === 0 ? "justify-end pr-[calc(50%-28px)]" : "justify-start pl-[calc(50%-28px)]"} my-1`}
+                >
+                  <div className="w-0.5 h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile / tablet layout */}
+        <div className="md:hidden max-w-sm mx-auto space-y-4">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div
+                className={`bg-white border ${step.border} rounded-2xl shadow-md overflow-hidden`}
+              >
+                {/* Image */}
+                <div className={`${step.lightBg} w-full`}>
+                  <div className="relative w-full aspect-[16/9]">
+                    <Image
+                      src={step.image}
+                      alt={step.title}
+                      fill
+                      sizes="90vw"
+                      className="object-contain p-4"
+                    />
+                  </div>
+                </div>
+                {/* Text */}
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className={`w-8 h-8 rounded-full bg-gradient-to-br ${step.accent} flex items-center justify-center shrink-0 shadow`}
+                    >
+                      <span className="text-white font-bold text-sm">
+                        {step.number}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-xs font-bold uppercase tracking-wider ${step.textAccent}`}
+                    >
+                      Step {step.number}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 leading-snug mb-1">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
               </div>
 
-              {/* Connector for mobile */}
+              {/* Connector arrow */}
               {index < steps.length - 1 && (
-                <div className="flex justify-center">
-                  <svg width="2" height="40" viewBox="0 0 2 40">
-                    <line
-                      x1="1"
-                      y1="0"
-                      x2="1"
-                      y2="40"
-                      stroke="#86EFAC"
+                <div className="flex justify-center py-2">
+                  <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+                    <path
+                      d="M8 0 L8 20 M2 14 L8 20 L14 14"
+                      stroke="#CBD5E1"
                       strokeWidth="2"
-                      strokeDasharray="4 4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </div>
