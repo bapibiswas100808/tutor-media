@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -30,6 +30,10 @@ export default function TuitionJobClient({
   const [selectedMedium, setSelectedMedium] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
+
+  // Load More
+  const ITEMS_PER_LOAD = 20;
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
   // Extract unique subjects for filter
   const classes = [
@@ -83,6 +87,11 @@ export default function TuitionJobClient({
   // Approved Jobs
   const approvedJobs = tuitionJobs.filter((job) => job.isApproved);
 
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_LOAD);
+  }, [selectedClass, selectedDivision, selectedMode, selectedMedium]);
+
   // handleResetFilters
   const handleResetFilters = () => {
     setSelectedClass("all");
@@ -91,6 +100,7 @@ export default function TuitionJobClient({
     setSelectedMedium("all");
     setSelectedJob(null);
     setIsModalOpen(false);
+    setVisibleCount(ITEMS_PER_LOAD);
   };
 
   // handleApply
@@ -297,11 +307,31 @@ export default function TuitionJobClient({
 
         {/* Jobs Grid */}
         {filteredJobs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredJobs.map((job, idx) => (
-              <TuitionJobCard key={idx} job={job} onApply={handleApply} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredJobs.slice(0, visibleCount).map((job, idx) => (
+                <TuitionJobCard
+                  key={job.jobId ?? idx}
+                  job={job}
+                  onApply={handleApply}
+                />
+              ))}
+            </div>
+
+            {/* Load More */}
+            {visibleCount < filteredJobs.length && (
+              <div className="flex justify-center mt-10">
+                <button
+                  onClick={() =>
+                    setVisibleCount((prev) => prev + ITEMS_PER_LOAD)
+                  }
+                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+                >
+                  Load More ({filteredJobs.length - visibleCount} remaining)
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}

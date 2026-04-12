@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import TuitionJobClient from "./TuitionJobClient";
 import { TuitionJob } from "@/data/tuitionJobsList";
-export const dynamic = "force-dynamic";
+
+// Revalidate every 5 minutes — serves cached page instantly, refreshes in background
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Tuition Jobs - Tutor Media",
@@ -14,7 +16,7 @@ export default async function TuitionJobsPage() {
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allJobs`, {
-      cache: "no-store",
+      next: { revalidate: 300 },
     });
 
     if (res.ok) {

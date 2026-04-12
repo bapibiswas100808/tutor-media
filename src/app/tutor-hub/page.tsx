@@ -8,14 +8,15 @@ export const metadata: Metadata = {
     "Explore our expert tutors and find the perfect match for your learning needs.",
 };
 
-export const dynamic = "force-dynamic";
+// Revalidate every 5 minutes — serves cached page instantly, refreshes in background
+export const revalidate = 300;
 
 export default async function TutorHubsPage() {
   let tutorHubs: Tutor[] = [];
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allTutors`, {
-      cache: "no-store",
+      next: { revalidate: 300 },
     });
 
     if (res.ok) {

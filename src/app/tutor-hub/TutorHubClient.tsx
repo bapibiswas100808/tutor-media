@@ -145,7 +145,11 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
           <>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {visibleTutors.map((tutor, index) => (
-                <TutorCard key={tutor.id} tutor={tutor} index={index} />
+                <TutorCard
+                  key={tutor.id}
+                  tutor={tutor}
+                  index={index % ITEMS_PER_LOAD}
+                />
               ))}
             </div>
 
@@ -158,8 +162,7 @@ export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
                   }
                   className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
-                  See More (
-                  {filteredTutors.length - visibleCount} remaining)
+                  See More ({filteredTutors.length - visibleCount} remaining)
                 </button>
               </div>
             )}
