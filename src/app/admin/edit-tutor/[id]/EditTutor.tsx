@@ -96,6 +96,8 @@ export default function EditTutor({ id }: Props) {
     studyType: "",
     department: "",
     cgpa: "",
+    session: "",
+    degreeTitle: "",
   });
 
   const [sscData, setSscData] = useState<EducationEntry[]>([

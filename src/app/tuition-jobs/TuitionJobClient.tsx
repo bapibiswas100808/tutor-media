@@ -3,39 +3,35 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  Search,
   Filter,
-  MapPin,
-  BookOpen,
-  // DoorOpen,
-  School,
   RotateCcw,
 } from "lucide-react";
-// import { tuitionJobsList, TuitionJob } from "@/data/tuitionJobsList";
+
 import TuitionJobCard from "@/components/tuition/TuitionJobCard";
 import ApplyJobModal from "@/components/tuition/ApplyJobModal";
 import { TuitionJob } from "@/data/tuitionJobsList";
+import Info from "@/components/info/info";
 
 interface TuitionJobClientProps {
   tuitionJobs: TuitionJob[];
 }
 
+type ModalType = "details" | "apply" | null;
+
 export default function TuitionJobClient({
   tuitionJobs,
 }: TuitionJobClientProps) {
-  // const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("all");
   const [selectedDivision, setSelectedDivision] = useState("all");
-  const [selectedMode, setSelectedMode] = useState("all");
   const [selectedMedium, setSelectedMedium] = useState("all");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
 
-  // Load More
+  const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
+
+  // Load more
   const ITEMS_PER_LOAD = 20;
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
-  // Extract unique subjects for filter
   const classes = [
     "Play",
     "Nursery",
@@ -56,306 +52,263 @@ export default function TuitionJobClient({
     "O Level",
   ];
 
-  // Filter jobs
   const normalize = (value?: string) =>
     value?.toLowerCase().replace(/\s+/g, "");
 
-  const filteredJobs = tuitionJobs
-    // ✅ 1. Only approved jobs
-    .filter((job) => job.isApproved)
-    // ✅ 2. Apply filters
-    .filter((job) => {
-      const matchesClass =
-        selectedClass === "all" ||
-        normalize(job.class) === normalize(selectedClass);
+  const filteredJobs = tuitionJobs.filter((job) => {
+    const matchesClass =
+      selectedClass === "all" ||
+      normalize(job.class) === normalize(selectedClass);
 
-      // const matchesMode =
-      //   selectedMode === "all" ||
-      //   normalize(job.mode) === normalize(selectedMode);
+    const matchesMedium =
+      selectedMedium === "all" ||
+      normalize(job.medium) === normalize(selectedMedium);
 
-      const matchesMedium =
-        selectedMedium === "all" ||
-        normalize(job.medium) === normalize(selectedMedium);
+    const matchesDivision =
+      selectedDivision === "all" ||
+      normalize(job.division) === normalize(selectedDivision);
 
-      const matchesDivision =
-        selectedDivision === "all" ||
-        normalize(job.division) === normalize(selectedDivision);
+    return job.isApproved && matchesClass && matchesMedium && matchesDivision;
+  });
 
-      return matchesClass && matchesMedium && matchesDivision;
-    });
-
-  // Approved Jobs
-  const approvedJobs = tuitionJobs.filter((job) => job.isApproved);
-
-  // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(ITEMS_PER_LOAD);
-  }, [selectedClass, selectedDivision, selectedMode, selectedMedium]);
+  }, [selectedClass, selectedDivision, selectedMedium]);
 
-  // handleResetFilters
   const handleResetFilters = () => {
     setSelectedClass("all");
     setSelectedDivision("all");
-    setSelectedMode("all");
     setSelectedMedium("all");
     setSelectedJob(null);
-    setIsModalOpen(false);
+    setActiveModal(null);
     setVisibleCount(ITEMS_PER_LOAD);
   };
 
-  // handleApply
+  // OPEN APPLY MODAL
   const handleApply = (job: TuitionJob) => {
     setSelectedJob(job);
-    setIsModalOpen(true);
-  };
-  // formatting functions
-  const formatDivision = (d: string) => d.charAt(0).toUpperCase() + d.slice(1);
-  const formatMode = (m: string) => {
-    switch (m.toLowerCase()) {
-      case "hometutoring":
-        return "Home Tutoring";
-      case "onlinetutoring":
-        return "Online Tutoring";
-      case "groupclasses":
-        return "Group Classes";
-      default:
-        return m;
-    }
-  };
-  const formatMedium = (m: string) => {
-    switch (m.toLowerCase()) {
-      case "banglamedium":
-        return "Bangla Medium";
-      case "englishmedium":
-        return "English Medium";
-      case "englishversion":
-        return "English Version";
-      case "madrasahbackground":
-        return "Madrasah Background";
-      default:
-        return m;
-    }
+    setActiveModal("apply");
   };
 
   return (
     <div className="min-h-screen bg-linear-to-b from-blue-50 via-white to-purple-50 py-20">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto px-4 max-w-7xl text-gray-800">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-1 bg-gradient-to-r from-blue-900 to-purple-900 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl font-bold ">
             Find Your Perfect Tuition Job
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Browse through {approvedJobs.length}+ available tuition
-            opportunities and apply directly with your proposal
-          </p>
         </motion.div>
 
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8 bg-white rounded-xl shadow-sm p-6 border border-gray-100 mt-10"
-        >
-          <div className="flex items-center justify-between mb-2">
-            {/* filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-gray-600" />
-              <h3 className="font-semibold text-gray-800">Filters</h3>
-            </div>
-            {/* reset button*/}
-            <div
-              onClick={handleResetFilters}
-              className="flex items-center gap-2 cursor-pointer select-none
-             px-3 py-2 rounded-lg border border-gray-300
-             hover:bg-gray-100 active:scale-95 transition"
-            >
-              <RotateCcw className="w-4 h-4 text-gray-600" />
-              <h3 className="font-semibold text-gray-800">Reset</h3>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Class Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <BookOpen className="w-4 h-4 inline mr-1" />
-                Class
-              </label>
-              <select
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
-              >
-                <option value="all">All Classes</option>
-                {classes.map((subject, idx) => (
-                  <option key={idx} value={subject}>
-                    {subject}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Division Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <MapPin className="w-4 h-4 inline mr-1" />
-                Division
-              </label>
-              <select
-                value={selectedDivision}
-                onChange={(e) => setSelectedDivision(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
-              >
-                <option value="all">All Divisions</option>
-                <option value="Dhaka">Dhaka</option>
-                <option value="khulna">Khulna</option>
-                <option value="rajshahi">Rajshahi</option>
-                <option value="rangpur">Rangpur</option>
-                <option value="mymensingh">Mymensingh</option>
-                <option value="chattogram">Chattogram</option>
-                <option value="sylhet">Sylhet</option>
-                <option value="barishal">Barishal</option>
-              </select>
-            </div>
-
-            {/* Mode Filter */}
-            {/* <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <DoorOpen className="w-4 h-4 inline mr-1" />
-                Teaching Mode
-              </label>
-              <select
-                value={selectedMode}
-                onChange={(e) => setSelectedMode(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
-              >
-                <option value="all">All Modes</option>
-                <option value="hometutoring">Home Tutoring</option>
-                <option value="onlinetutoring">Online Tutoring</option>
-                <option value="groupclasses">Group Classes</option>
-              </select>
-            </div> */}
-
-            {/* Medium Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <School className="w-4 h-4 inline mr-1" />
-                Medium
-              </label>
-              <select
-                value={selectedMedium}
-                onChange={(e) => setSelectedMedium(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-700"
-              >
-                <option value="all">All Mediums</option>
-                <option value="banglamedium">Bangla Medium</option>
-                <option value="englishmedium">English Medium</option>
-                <option value="englishversion">English Version</option>
-                <option value="madrasahbackground">Madrasah Background</option>
-              </select>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Results Count */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mb-6 flex items-center justify-between"
-        >
-          <p className="text-gray-600">
-            Showing{" "}
-            <span className="font-semibold text-gray-800">
-              {filteredJobs.length}
-            </span>{" "}
-            {filteredJobs.length === 1 ? "job" : "jobs"}
-          </p>
-
-          {/* Quick Filter Badges */}
-          <div className="flex gap-2">
-            {selectedClass !== "all" && (
-              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                {selectedClass}
-              </span>
-            )}
-            {selectedMode !== "all" && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                {formatMode(selectedMode)}
-              </span>
-            )}
-
-            {selectedMedium !== "all" && (
-              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
-                {formatMedium(selectedMedium)}
-              </span>
-            )}
-
-            {selectedDivision !== "all" && (
-              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                {formatDivision(selectedDivision)}
-              </span>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Jobs Grid */}
-        {filteredJobs.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredJobs.slice(0, visibleCount).map((job, idx) => (
-                <TuitionJobCard
-                  key={job.jobId ?? idx}
-                  job={job}
-                  onApply={handleApply}
-                />
-              ))}
-            </div>
-
-            {/* Load More */}
-            {visibleCount < filteredJobs.length && (
-              <div className="flex justify-center mt-10">
-                <button
-                  onClick={() =>
-                    setVisibleCount((prev) => prev + ITEMS_PER_LOAD)
-                  }
-                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
-                >
-                  Load More ({filteredJobs.length - visibleCount} remaining)
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
-          >
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No Jobs Found
+        {/* FILTERS */}
+        <div className="bg-white p-6 rounded-xl shadow mb-6">
+          <div className="flex justify-between mb-4">
+            <h3 className="font-bold flex items-center gap-2">
+              <Filter /> Filters
             </h3>
-            <p className="text-gray-600 max-w-md mx-auto">
-              Try adjusting your filters or search query to find more tuition
-              opportunities
-            </p>
-          </motion.div>
+
+            <button
+              onClick={handleResetFilters}
+              className="flex items-center gap-2 text-sm border px-3 py-1 rounded"
+            >
+              <RotateCcw size={14} /> Reset
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Class */}
+            <select
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              className="border p-2 rounded"
+            >
+              <option value="all">All Classes</option>
+              {classes.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+
+            {/* Division */}
+            <select
+              value={selectedDivision}
+              onChange={(e) => setSelectedDivision(e.target.value)}
+              className="border p-2 rounded"
+            >
+              <option value="all">All Divisions</option>
+              <option value="dhaka">Dhaka</option>
+              <option value="khulna">Khulna</option>
+              <option value="chattogram">Chattogram</option>
+              <option value="rajshahi">Rajshahi</option>
+              <option value="barishal">Barishal</option>
+              <option value="sylhet">Sylhet</option>
+              <option value="rangpur">Rangpur</option>
+              <option value="mymensingh">Mymensingh</option>
+            </select>
+
+            {/* Medium */}
+            <select
+              value={selectedMedium}
+              onChange={(e) => setSelectedMedium(e.target.value)}
+              className="border p-2 rounded"
+            >
+              <option value="all">All Mediums</option>
+              <option value="banglamedium">Bangla Medium</option>
+              <option value="englishmedium">English Medium</option>
+              <option value="englishversion">English Version</option>
+              <option value="madrasahbackground">Madrasah Background</option>
+              
+            </select>
+          </div>
+        </div>
+
+        {/* JOB LIST */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {filteredJobs.slice(0, visibleCount).map((job) => (
+            <TuitionJobCard
+              key={job.jobId}
+              job={job}
+              onApply={handleApply}
+              onViewDetails={(job: TuitionJob) => {
+                setSelectedJob(job);
+                setActiveModal("details");
+              }}
+            />
+          ))}
+        </div>
+
+        {/* LOAD MORE */}
+        {visibleCount < filteredJobs.length && (
+          <div className="text-center mt-10">
+            <button
+              onClick={() => setVisibleCount((p) => p + ITEMS_PER_LOAD)}
+              className="px-6 py-2 bg-blue-600 text-white rounded"
+            >
+              Load More
+            </button>
+          </div>
         )}
       </div>
 
-      {/* Apply Modal */}
+      {/* ================= DETAILS MODAL ================= */}
+  {activeModal === "details" && selectedJob && (
+  <div
+    className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+    onClick={() => {
+      setActiveModal(null);
+      setSelectedJob(null);
+    }}
+  >
+    <div
+      className="bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl border border-gray-100"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Header */}
+      <div className="sticky top-0 bg-white/90 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">
+            {selectedJob.class}
+          </h2>
+          <p className="text-xs text-gray-500">
+            Job ID: {selectedJob.jobId}
+          </p>
+        </div>
+
+        <button
+          onClick={() => setActiveModal(null)}
+          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 text-lg"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="p-6 space-y-6">
+        {/* Subjects */}
+        <div className="flex flex-wrap gap-2">
+          {selectedJob.subjects?.map((sub: string, i: number) => (
+            <span
+              key={i}
+              className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100"
+            >
+              {sub}
+            </span>
+          ))}
+        </div>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Info
+            label="📍 Location"
+            value={`${selectedJob.location}, ${selectedJob.district}`}
+          />
+          <Info label="🏙 Division" value={selectedJob.division} />
+          <Info label="💰 Salary" value={selectedJob.salary} />
+          <Info label="📅 Days" value={`${selectedJob.days} days/week`} />
+          <Info label="⏰ Duration" value={selectedJob.duration} />
+          <Info label="📘 Medium" value={selectedJob.medium} />
+          <Info label="👩‍🎓 Student Gender" value={selectedJob.studentGender} />
+          <Info label="👨‍🏫 Tutor Gender" value={selectedJob.tutorGender} />
+          <Info label="📌 Preferred Area" value={selectedJob.preferredArea} />
+        </div>
+
+        {/* Description */}
+        {selectedJob.tutorDescription && (
+          <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
+            <h4 className="font-semibold text-gray-900 mb-2">
+              📌 Requirement
+            </h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {selectedJob.tutorDescription}
+            </p>
+          </div>
+        )}
+
+        {/* Location Description */}
+        {selectedJob.locationDescription && (
+          <div className="text-sm text-gray-500 bg-blue-50 border border-blue-100 rounded-xl p-3">
+            📍 {selectedJob.locationDescription}
+          </div>
+        )}
+
+        {/* Status */}
+        {/* <div className="flex flex-wrap gap-2">
+          <span
+            className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+              selectedJob.isApproved
+                ? "bg-green-50 text-green-700 border-green-200"
+                : "bg-red-50 text-red-600 border-red-200"
+            }`}
+          >
+            {selectedJob.isApproved ? "Approved" : "Pending"}
+          </span>
+
+          {selectedJob.isPremium && (
+            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200">
+              Premium Job
+            </span>
+          )}
+
+          {selectedJob.isVerified && (
+            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+              Verified
+            </span>
+          )}
+        </div> */}
+      </div>
+    </div>
+  </div>
+)}
+
+      {/* ================= APPLY MODAL ================= */}
       <ApplyJobModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={activeModal === "apply"}
+        onClose={() => {
+          setActiveModal(null);
+          setSelectedJob(null);
+        }}
         job={selectedJob}
       />
     </div>
