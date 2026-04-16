@@ -11,19 +11,14 @@ import {
   User,
   BadgeCheck,
   Star,
+  Eye,
 } from "lucide-react";
 
 interface TuitionJobCardProps {
   job: TuitionJob;
   onApply: (job: TuitionJob) => void;
+  onViewDetails?: (job: TuitionJob) => void;
 }
-
-// const getModeIcon = (mode: string) => {
-//   if (mode.toLowerCase().includes("online"))
-//     return <Video className="w-4 h-4" />;
-//   if (mode.toLowerCase().includes("home")) return <Home className="w-4 h-4" />;
-//   return <BookOpen className="w-4 h-4" />;
-// };
 
 interface TimeInterval {
   label: string;
@@ -55,11 +50,8 @@ function timeAgo(dateString: string): string {
   return "just now";
 }
 
-export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
-  // const subjectText = job.subjects?.length
-  //   ? job.subjects.join(", ")
-  //   : "Teacher";
-  // const className = job.class?.toLowerCase();
+export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJobCardProps) {
+  // const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
 
   const subjectText =
     job.subjects?.length > 2
@@ -69,165 +61,6 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
   const className = job.class;
 
   return (
-    //     <motion.div
-    //       initial={{ opacity: 0, y: 20 }}
-    //       whileInView={{ opacity: 1, y: 0 }}
-    //       viewport={{ once: true }}
-    //       transition={{ duration: 0.5 }}
-    //       whileHover={{ y: -5 }}
-    //       className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
-    //     >
-    //       {/* Header with Subject Badge */}
-    //       <div className="relative bg-linear-to-r from-blue-50 to-purple-50 p-5 border-b border-gray-100">
-    //         {/* Urgency Badge */}
-    //         {/* {job.urgency === "urgent" && (
-    //           <div className="absolute top-3 right-3 flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-    //             <AlertCircle className="w-3 h-3" />
-    //             URGENT
-    //           </div>
-    //         )} */}
-    //         {/* Subject Badge */}
-    //         {/* <div
-    //           className={`inline-flex items-center gap-2 ${subjectColor} text-white px-4 py-2 rounded-full text-sm font-semibold mb-3`}
-    //         >
-    //           <BookOpen className="w-4 h-4" />
-    //           {job.subject}
-    //         </div> */}
-    //         {/* Title */}
-
-    //         <h3 className="text-xl font-bold text-gray-800 mb-2 leading-tight">
-    //           {`${subjectText} teacher needed for class ${className}`}
-    //         </h3>
-    //         {/* <h3 className="text-xl font-bold text-gray-800 mb-2 leading-tight">
-    //           {job.title}
-    //         </h3> */}
-
-    //         {/* Class Level */}
-    //         <p className="text-sm font-medium text-gray-600">{job.class}</p>
-    //         {/* Tutor Gender */}
-    //         <p className="text-sm font-medium text-gray-600 capitalize">
-    //           Tutor Gender Preferred:{" "}
-    //           <span className="font-bold">{job.tutorGender}</span>
-    //         </p>
-    //         {/* Job id */}
-    //         <p className="text-sm font-medium text-gray-600 capitalize">
-    //           Job id: <span className="font-bold">{job.jobId}</span>
-    //         </p>
-    //         {/* Posted Date */}
-    //         {/* <p className="text-sm font-medium text-gray-600 capitalize">
-    //           Posted Date: <span className="font-bold">{job.postedDate}</span>
-    //         </p> */}
-    //         <p className="text-sm font-medium text-gray-600 capitalize pb-3">
-    //           Posted: <span className="font-bold">{timeAgo(job.createdAt)}</span>
-    //         </p>
-
-    //         <div className="border-t pt-3">
-    //           <p className="text-xs text-gray-500 font-medium mb-1">Subjects</p>
-    //           <div className="flex flex-wrap gap-2">
-    //             {job.subjects?.map((sub, i) => (
-    //               <span
-    //                 key={i}
-    //                 className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-semibold"
-    //               >
-    //                 {sub}
-    //               </span>
-    //             ))}
-    //           </div>
-    //         </div>
-    //       </div>
-
-    //       {/* Body */}
-    //       <div className="p-5 space-y-4">
-    //         {/* Key Info Grid */}
-    //         <div className="grid grid-cols-2 gap-3">
-    //           {/* Location */}
-    //           {/* <div className="flex items-start gap-2">
-    //             <MapPin className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-    //             <div>
-    //               <p className="text-xs text-gray-500 font-medium">Location</p>
-    //               <p className="text-sm text-gray-700 font-semibold capitalize">
-    //                 {job.division}
-    //               </p>
-    //             </div>
-    //           </div> */}
-    //           <div className="flex items-start gap-2">
-    //   <MapPin className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-    //   <div>
-    //     <p className="text-xs text-gray-500 font-medium">Full Location</p>
-    //     <p className="text-sm text-gray-700 font-semibold">
-    //       {job.location}, {job.district}
-    //     </p>
-    //   </div>
-    // </div>
-
-    //           {/* Budget */}
-    //           <div className="flex items-start gap-2">
-    //             <DollarSign className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-    //             <div>
-    //               <p className="text-xs text-gray-500 font-medium">Budget</p>
-    //               <p className="text-sm text-gray-700 font-semibold">
-    //                 {job.salary}
-    //               </p>
-    //             </div>
-    //           </div>
-
-    //           {/* Mode */}
-    //           {/* <div className="flex items-start gap-2 text-gray-600">
-    //             {getModeIcon(job.mode)}
-    //             <div>
-    //               <p className="text-xs text-gray-500 font-medium">Mode</p>
-    //               <p className="text-sm text-gray-700 font-semibold">{job.mode}</p>
-    //             </div>
-    //           </div> */}
-
-    //           {/* Schedule */}
-    //           {/* <div className="flex items-start gap-2">
-    //             <Clock className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
-    //             <div>
-    //               <p className="text-xs text-gray-500 font-medium">Schedule</p>
-    //               <p className="text-sm text-gray-700 font-semibold">
-    //                 {job.schedule}
-    //               </p>
-    //             </div>
-    //           </div> */}
-    //         </div>
-
-    //         {/* Description */}
-    //         <div className="border-t pt-3">
-    //           <p className="text-sm text-gray-600 line-clamp-3">
-    //             <span className="text-xs text-gray-500 font-medium">
-    //               Tutor Description--
-    //             </span>
-    //             {job.tutorDescription}
-    //           </p>
-    //         </div>
-
-    //         {/* Footer */}
-    //         <div className="flex items-center justify-between pt-3 border-t">
-    //           {/* Posted Date & Applicants */}
-    //           <div className="flex items-center gap-4 text-xs text-gray-500">
-    //             <div className="flex items-center gap-1">
-    //               <Calendar className="w-3.5 h-3.5" />
-    //               <span>
-    //                 {new Date(job.createdAt).toLocaleDateString("en-US", {
-    //                   month: "short",
-    //                   day: "numeric",
-    //                 })}
-    //               </span>
-    //             </div>
-    //           </div>
-
-    //           {/* Apply Button */}
-    //           <button
-    //             onClick={() => onApply(job)}
-    //             className="bg-blue-600 text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer"
-    //           >
-    //             Apply Now
-    //           </button>
-    //         </div>
-    //       </div>
-    //     </motion.div>
-
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -332,14 +165,28 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-          <span className="text-xs text-gray-400">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
+          {/* Left side */}
+          <div className="flex items-center gap-2">
+            <button
+  onClick={() => onViewDetails?.(job)}
+  className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-xs font-semibold"
+>
+  <Eye className="w-4 h-4" />
+  View Details
+</button>
+          </div>
+
+          {/* Middle */}
+          <span className="text-xs text-gray-400 whitespace-nowrap">
             {new Date(job.createdAt).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
             })}
           </span>
+
+          {/* Right */}
           <button
             onClick={() => onApply(job)}
             className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2 rounded-full font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
@@ -348,6 +195,8 @@ export default function TuitionJobCard({ job, onApply }: TuitionJobCardProps) {
           </button>
         </div>
       </div>
+
+  
     </motion.div>
   );
 }

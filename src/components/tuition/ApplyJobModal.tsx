@@ -55,62 +55,7 @@ ApplyJobModalProps) {
     resolver: zodResolver(proposalSchema),
   });
 
-  // const onSubmit = async (data: ProposalFormData) => {
-  //   try {
-  //     setSubmitError(null);
-
-  //     // Determine which tutor ID to use - from prop or from form
-  //     const tutorIdFromForm = data.id && data.id.trim() ? parseInt(data.id) : null;
-  //     const finalTutorId: number | null = tutorId ? parseInt(String(tutorId)) : tutorIdFromForm;
-
-  //     // Build application payload with tuition_job relation
-  //     const applicationPayload: any = {
-  //       rate: parseInt(data.rate),
-  //       schedule: data.schedule,
-  //       proposal: data.proposal,
-  //       tuition_job: job?.id, // Pass job ID for oneToOne relation (inversedBy format)
-  //       publishedAt: new Date().toISOString(), // Publish immediately
-  //     };
-
-  //     // Only add tutor_hubs if we have a valid tutor ID from form or prop
-  //     if (finalTutorId && finalTutorId > 0) {
-  //       applicationPayload.tutor_hubs = [finalTutorId];
-  //     }
-
-  //     console.log("Submitting application payload:", applicationPayload);
-  //     console.log("Job ID being linked:", job?.id, "Type:", typeof job?.id);
-
-  //     // Create application record linked to the tuition job and tutor
-  //     const response = await createPublic("applications", applicationPayload);
-
-  //     console.log("Strapi response:", response);
-
-  //     if (response.error) {
-  //       setSubmitError(`${response.error} - Check console for details`);
-  //       return;
-  //     }
-
-  //     // Verify the relation was created
-  //     const appData = response.data;
-  //     console.log("Created application:", appData);
-  //     console.log("Tuition job relation:", appData?.tuition_job);
-  //     console.log("Tutor hubs relation:", appData?.tutor_hubs);
-  //     setIsSubmitted(true);
-
-  //     // Reset form and close modal after 2 seconds
-  //     setTimeout(() => {
-  //       setIsSubmitted(false);
-  //       reset();
-  //       onClose();
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error("Application submission error:", error);
-  //     setSubmitError(
-  //       error instanceof Error ? error.message : "Failed to submit application"
-  //     );
-  //   }
-  // };
-
+  
   const onSubmit = async (data: ProposalFormData) => {
     try {
       setSubmitError(null);
@@ -341,11 +286,11 @@ ApplyJobModalProps) {
                       {...register("rate")}
                       type="number"
                       placeholder="e.g., 10000"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      className="w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
                     {errors.rate && (
                       <p className="mt-1 text-sm text-red-600">
-                        {errors.rate.message}
+                        {errors.rate.message}\
                       </p>
                     )}
                   </div>
@@ -360,7 +305,7 @@ ApplyJobModalProps) {
                       {...register("schedule")}
                       type="text"
                       placeholder="e.g., Sunday to Thursday, 4-6 PM"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      className="w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
                     {errors.schedule && (
                       <p className="mt-1 text-sm text-red-600">
@@ -379,7 +324,7 @@ ApplyJobModalProps) {
                       {...register("proposal")}
                       rows={6}
                       placeholder="Write a compelling proposal explaining why you're the best fit for this job. Include your qualifications, experience, and teaching approach..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
+                      className="w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                     />
                     <div className="flex items-center justify-between mt-1">
                       {errors.proposal && (

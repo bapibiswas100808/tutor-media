@@ -35,6 +35,7 @@ type EducationEntry = {
   studyType?: string;
   department?: string;
   cgpa?: string;
+  degreeTitle?: string;
 };
 
 type BkashPaymentData = {
@@ -50,7 +51,6 @@ interface ApiErrorResponse {
   message?: string;
 }
 
-
 export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const { user, isLoading } = useAuth();
   const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -64,78 +64,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const tutorId = user?.id;
 
-  //  Handle bKash Payment Submission
-  // const handleBkashSubmit = async ({
-  //   sender,
-  //   trxId,
-  //   plan: selectedPlan,
-  //   amount,
-  // }: BkashPaymentData) => {
-  //   if (!selectedPlan || !amount) return;
-
-  //   try {
-  //     const res = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/manual-bkash-payment`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           authorization: `Bearer ${token}`,
-  //         },
-  //         body: JSON.stringify({
-  //           tutorId,
-  //           plan: selectedPlan,
-  //           amount, // ✅ dynamic amount (300 / 500)
-  //           sender,
-  //           trxId,
-  //           method: "bkash",
-  //         }),
-  //       },
-  //     );
-
-  //     // 🔴 Token verify
-  //     if (!token) {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Login required",
-  //         text: "Please login again.",
-  //       });
-  //       return;
-  //     }
-
-  //     // 🔴 Duplicate transaction
-  //     if (res.status === 409) {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Duplicate Payment",
-  //         text: "This Transaction ID was already submitted.",
-  //       });
-  //       return;
-  //     }
-
-  //     // 🔴 Other server error
-  //     if (!res.ok) {
-  //       const errorData = await res.json();
-  //       throw new Error(errorData.message || "Payment submission failed");
-  //     }
-
-  //     // ✅ Success
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Payment Submitted",
-  //       text: "Verification may take up to 24 hours.",
-  //     });
-  //   } catch (error: any) {
-  //     console.error("Bkash error:", error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: error.message || "Something went wrong. Please try again.",
-  //     });
-  //   }
-  // };
-
+  // Handle bKash Payment Submission
   const handleBkashSubmit = async ({
     sender,
     trxId,
@@ -338,10 +267,20 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                     </h1>
 
                     {tutor.isPremium && (
-                      <span className="bg-linear-to-r from-orange-400 to-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow">
+                      <span className="bg-linear-to-r from-orange-400 to-yellow-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-1 shadow">
                         <StarIcon className="w-4 h-4" />
                         Premium
                       </span>
+                    )}
+
+                    {/* ✅ Hire Mentor Button with Link */}
+                    {!isOwnProfile && (
+                      <Link
+                        href={`/hire-tutor`}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold shadow transition"
+                      >
+                        Hire a Mentor
+                      </Link>
                     )}
                   </div>
 
@@ -366,17 +305,16 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
                   {/* Quick Stats */}
                   <div className="space-y-2 text-sm text-gray-600">
-                    {tutor.experience && (
-                      <div className="flex items-center">
-                        <NotebookText className="w-4 h-4 mr-2 text-gray-400" />
-                        {tutor.experience}
-                      </div>
-                    )}
-
                     {tutor.qualification && (
                       <div className="flex items-center">
                         <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
                         {tutor.qualification}
+                      </div>
+                    )}
+                    {tutor.experience && (
+                      <div className="flex items-center capitalize">
+                        <NotebookText className="w-4 h-4 mr-2 text-gray-400 " />
+                        {tutor.experience} teaching experience
                       </div>
                     )}
                   </div>
@@ -577,6 +515,8 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                           `${edu.academy || "N/A"}${
                             edu.passingYear ? ` (${edu.passingYear})` : ""
                           }` +
+                          (edu.group ? ` - ${edu.group}` : "") +
+                          (edu.degreeTitle ? ` - ${edu.degreeTitle}` : "") + // ✅ ADD HERE
                           (edu.cgpa
                             ? ` - CGPA: ${edu.cgpa}`
                             : edu.result
