@@ -90,6 +90,8 @@ export default function CompleteProfileClient({ tutorId }: Props) {
     studyType: "",
     department: "",
     cgpa: "",
+    session: "",
+    degreeTitle: "",
   });
 
   const [sscData, setSscData] = useState<EducationEntry[]>([

@@ -9,11 +9,13 @@ export interface EducationEntry {
   curriculum: string;
   group: string;
   passingYear: string;
+  session: string;
   result: string;
   instituteType: string;
   studyType: string;
   department: string;
   cgpa: string;
+  degreeTitle: string;
 }
 
 interface Props {
@@ -25,10 +27,26 @@ interface Props {
   setGradData: React.Dispatch<React.SetStateAction<EducationEntry[]>>;
 }
 
+// Generate years from 1950 to current year
 const years = Array.from(
   { length: new Date().getFullYear() - 1950 + 1 },
   (_, i) => `${new Date().getFullYear() - i}`,
 );
+
+// Generate sessions like "2023-24", "2022-23", etc.
+const generateSessions = (startYear = 2000) => {
+  const currentYear = new Date().getFullYear();
+  const sessions = [];
+
+  for (let y = currentYear; y >= startYear; y--) {
+    const next = (y + 1).toString().slice(-2);
+    sessions.push(`${y}-${next}`);
+  }
+
+  return sessions;
+};
+
+const sessions = generateSessions();
 
 /* ===========================
    SAFE CHANGE HANDLER
@@ -55,11 +73,13 @@ const EducationSection = ({
   showCurriculum,
   showGroup,
   showPassingYear,
+  showSession,
   showResult,
   showInstituteType,
   showStudyType,
   showDepartment,
   showCGPA,
+  showDegreeTitle,
 }: {
   title: string;
   data: EducationEntry[];
@@ -67,11 +87,13 @@ const EducationSection = ({
   showCurriculum?: boolean;
   showGroup?: boolean;
   showPassingYear?: boolean;
+  showSession?: boolean;
   showResult?: boolean;
   showInstituteType?: boolean;
   showStudyType?: boolean;
   showDepartment?: boolean;
   showCGPA?: boolean;
+  showDegreeTitle?: boolean;
 }) => (
   <div className="p-6 bg-white rounded-lg shadow space-y-4">
     <h3 className="font-bold">{title}</h3>
@@ -84,7 +106,7 @@ const EducationSection = ({
             <label>Institute</label>
             <input
               name="academy"
-              value={entry.academy}
+              value={entry.academy || ""}
               onChange={(e) => handleChange(index, e, setData)}
               className="border rounded-lg px-3 py-2 w-full"
             />
@@ -96,7 +118,7 @@ const EducationSection = ({
               <label>Curriculum</label>
               <select
                 name="curriculum"
-                value={entry.curriculum}
+                value={entry.curriculum || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
@@ -113,7 +135,7 @@ const EducationSection = ({
               <label>Group</label>
               <select
                 name="group"
-                value={entry.group}
+                value={entry.group || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
@@ -131,7 +153,7 @@ const EducationSection = ({
               <label>Passing Year</label>
               <select
                 name="passingYear"
-                value={entry.passingYear}
+                value={entry.passingYear || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
@@ -145,13 +167,33 @@ const EducationSection = ({
             </div>
           )}
 
+          {/* Session */}
+          {showSession && (
+            <div>
+              <label>Session</label>
+              <select
+                name="session"
+                value={entry.session || ""}
+                onChange={(e) => handleChange(index, e, setData)}
+                className="border rounded-lg px-3 py-2.5 w-full"
+              >
+                <option value="">Select Session</option>
+                {sessions.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Result */}
           {showResult && (
             <div>
               <label>Result</label>
               <input
                 name="result"
-                value={entry.result}
+                value={entry.result || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
@@ -164,7 +206,7 @@ const EducationSection = ({
               <label>Institute Type</label>
               <select
                 name="instituteType"
-                value={entry.instituteType}
+                value={entry.instituteType || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
@@ -181,7 +223,7 @@ const EducationSection = ({
               <label>Study Type</label>
               <select
                 name="studyType"
-                value={entry.studyType}
+                value={entry.studyType || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2.5 w-full"
               >
@@ -198,7 +240,7 @@ const EducationSection = ({
               <label>Department</label>
               <input
                 name="department"
-                value={entry.department}
+                value={entry.department || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
@@ -211,10 +253,31 @@ const EducationSection = ({
               <label>CGPA</label>
               <input
                 name="cgpa"
-                value={entry.cgpa}
+                value={entry.cgpa || ""}
                 onChange={(e) => handleChange(index, e, setData)}
                 className="border rounded-lg px-3 py-2 w-full"
               />
+            </div>
+          )}
+
+          {/* Degree Title */}
+          {showDegreeTitle && (
+            <div>
+              <label>Degree Title</label>
+              <select
+                name="degreeTitle"
+                value={entry.degreeTitle || ""}
+                onChange={(e) => handleChange(index, e, setData)}
+                className="border rounded-lg px-3 py-2.5 w-full"
+              >
+                <option value="">Select Degree</option>
+                <option value="BA">BA (Bachelor of Arts)</option>
+                <option value="BSc">BSc (Bachelor of Science)</option>
+                <option value="BCom">BCom (Bachelor of Commerce)</option>
+                <option value="BBA">
+                  BBA (Bachelor of Business Administration)
+                </option>
+              </select>
             </div>
           )}
 
@@ -272,15 +335,16 @@ export default function Education({
       />
 
       <EducationSection
-        title="Graduation"
+        title="Bachelor / Honours"
         data={gradData}
         setData={setGradData}
         showInstituteType
         showStudyType
         showDepartment
         showCurriculum
-        showPassingYear
+        showSession
         showCGPA
+        showDegreeTitle
       />
     </div>
   );

@@ -38,8 +38,10 @@ const countFilled = (values: (string | string[] | undefined)[]) => {
 export function calculateProfileCompletion(tutor: Tutor | null): number {
   if (!tutor) return 0;
 
-  // Premium tutor = full profile
-  if (tutor.isPremium) return 100;
+  // ⭐ PREMIUM = ALWAYS 10%
+  if (tutor.isPremium) {
+    return 10;
+  }
 
   let total = 0;
   let completed = 0;
@@ -68,7 +70,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
     completed += r.completed;
   }
 
-  // ================= EDUCATION INFO =================
+  // ================= EDUCATION =================
   const hasValidEducation = (list?: EducationEntry[]) =>
     list?.some(
       (e) => isFilled(e.academy) && (isFilled(e.result) || isFilled(e.cgpa)),
@@ -84,7 +86,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
     ).length;
   }
 
-  // ================= PERSONAL INFO =================
+  // ================= PERSONAL =================
   const personal = tutor.personalInfo;
   if (personal) {
     const personalFields = [
@@ -113,7 +115,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
     completed += r.completed;
   }
 
-  // ================= DOCUMENT INFO =================
+  // ================= DOCUMENT =================
   const docs = tutor.documentsInfo;
   if (docs) {
     const docFields = [
@@ -130,11 +132,11 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
   }
 
   // ================= FINAL =================
-  if (total === 0) return 0; // NEW PROFILE SAFE GUARD
+  if (total === 0) return 0;
 
   const percentage = Math.round((completed / total) * 100);
 
-  // Non-premium max cap
+  // ❌ NON-PREMIUM = max 90%
   return Math.min(percentage, 90);
 }
 
