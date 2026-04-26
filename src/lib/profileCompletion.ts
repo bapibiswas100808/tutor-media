@@ -31,17 +31,12 @@ const countFilled = (values: (string | string[] | undefined)[]) => {
  *
  * Logic:
  * - Calculates based on filled fields across basic info, education, personal info, and documents
- * - Premium tutors automatically get 100%
+ * - Premium tutors get +10% bonus added to their calculated percentage (capped at 100%)
  * - Non-premium tutors capped at 90%
  * - Profile visible to students when >= 80%
  */
 export function calculateProfileCompletion(tutor: Tutor | null): number {
   if (!tutor) return 0;
-
-  // ⭐ PREMIUM = ALWAYS 10%
-  if (tutor.isPremium) {
-    return 10;
-  }
 
   let total = 0;
   let completed = 0;
@@ -135,6 +130,11 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
   if (total === 0) return 0;
 
   const percentage = Math.round((completed / total) * 100);
+
+  // ⭐ PREMIUM = +10% bonus, capped at 100%
+  if (tutor.isPremium) {
+    return Math.min(percentage + 10, 100);
+  }
 
   // ❌ NON-PREMIUM = max 90%
   return Math.min(percentage, 90);
