@@ -8,7 +8,6 @@ import {
   Calendar,
   BookOpen,
   Clock,
-  User,
   BadgeCheck,
   Star,
   Eye,
@@ -50,9 +49,11 @@ function timeAgo(dateString: string): string {
   return "just now";
 }
 
-export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJobCardProps) {
-  // const [selectedJob, setSelectedJob] = useState<TuitionJob | null>(null);
-
+export default function TuitionJobCard({
+  job,
+  onApply,
+  onViewDetails,
+}: TuitionJobCardProps) {
   const subjectText =
     job.subjects?.length > 2
       ? `${job.subjects} `
@@ -76,8 +77,24 @@ export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJ
         {/* Top row: title + badges */}
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-bold text-gray-900 leading-snug">
+            {/* <h3 className="text-base font-bold text-gray-900 leading-snug">
               Teacher needed for{" "}
+              {subjectText === "All" ? "All Subjects" : subjectText}{" "}
+              <span className="text-blue-600">{className}</span>
+            </h3> */}
+            <h3 className="text-base font-bold text-gray-900 leading-snug">
+              <span
+                className={
+                  job.tutorGender?.toLowerCase() === "male"
+                    ? "text-blue-600"
+                    : "text-pink-600"
+                }
+              >
+                {job.tutorGender?.toLowerCase() === "male"
+                  ? "Male"
+                  : "Female"}{" "}
+              </span>
+              Tutor Needed for{" "}
               {subjectText === "All" ? "All Subjects" : subjectText}{" "}
               <span className="text-blue-600">{className}</span>
             </h3>
@@ -145,7 +162,7 @@ export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJ
               {job.days}d/wk · {job.duration}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-gray-600 col-span-2 min-w-0">
+          {/* <div className="flex items-center gap-1.5 text-gray-600 col-span-2 min-w-0">
             <User className="w-3.5 h-3.5 text-blue-400 shrink-0" />
             <span className="capitalize">
               Tutor preferred:{" "}
@@ -153,7 +170,7 @@ export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJ
                 {job.tutorGender}
               </span>
             </span>
-          </div>
+          </div> */}
         </div>
 
         {/* Tutor description */}
@@ -169,12 +186,12 @@ export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJ
           {/* Left side */}
           <div className="flex items-center gap-2">
             <button
-  onClick={() => onViewDetails?.(job)}
-  className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-xs font-semibold"
->
-  <Eye className="w-4 h-4" />
-  View Details
-</button>
+              onClick={() => onViewDetails?.(job)}
+              className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-xs font-semibold"
+            >
+              <Eye className="w-4 h-4" />
+              View Details
+            </button>
           </div>
 
           {/* Middle */}
@@ -195,8 +212,6 @@ export default function TuitionJobCard({ job, onApply, onViewDetails }: TuitionJ
           </button>
         </div>
       </div>
-
-  
     </motion.div>
   );
 }

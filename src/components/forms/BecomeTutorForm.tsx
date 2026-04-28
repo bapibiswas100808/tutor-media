@@ -329,7 +329,7 @@ const onSubmit = async (data: BecomeTutorFormData) => {
     );
 
     const result = await response.json();
-    console.log("✅ Signup response:", result);
+    // console.log("✅ Signup response:", result);
 
     if (!response.ok) {
       throw new Error(result.message || "Signup failed");
@@ -343,7 +343,7 @@ const onSubmit = async (data: BecomeTutorFormData) => {
       result.id ||
       result._id;
 
-    console.log("✅ Extracted Tutor ID:", tutorId);
+    // console.log("✅ Extracted Tutor ID:", tutorId);
 
     if (!tutorId) {
       throw new Error(
@@ -352,7 +352,7 @@ const onSubmit = async (data: BecomeTutorFormData) => {
     }
 
     // ✅ 2. AUTO LOGIN (call login API)
-    console.log("🔵 Attempting login with email:", data.email);
+    // console.log("🔵 Attempting login with email:", data.email);
     const loginRes = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/login`, // <-- your login route
       {

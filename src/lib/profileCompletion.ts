@@ -27,29 +27,20 @@ const countFilled = (values: (string | string[] | undefined)[]) => {
 };
 
 /**
- * Calculate tutor profile completion percentage
- *
- * Logic:
- * - Calculates based on filled fields across basic info, education, personal info, and documents
- * - Premium tutors automatically get 100%
- * - Non-premium tutors capped at 90%
- * - Profile visible to students when >= 80%
+ * Final Logic:
+ * - Premium → fixed 10%
+ * - Remaining 90% → data based
  */
 export function calculateProfileCompletion(tutor: Tutor | null): number {
   if (!tutor) return 0;
 
-  // ⭐ PREMIUM = ALWAYS 10%
-  if (tutor.isPremium) {
-    return 10;
-  }
-
   let total = 0;
   let completed = 0;
 
-  // ================= BASIC INFO =================
+  // ================= BASIC =================
   const basic = tutor.basicInfo;
   if (basic) {
-    const basicFields = [
+    const fields = [
       basic.expectedSalary,
       basic.currentTuitionStatus,
       basic.daysPerWeek,
@@ -64,8 +55,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
       basic.days,
       basic.image,
     ];
-
-    const r = countFilled(basicFields);
+    const r = countFilled(fields);
     total += r.total;
     completed += r.completed;
   }
@@ -79,7 +69,6 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
   const education = tutor.education;
   if (education) {
     const levels: (keyof Education)[] = ["ssc", "hsc", "grad"];
-
     total += levels.length;
     completed += levels.filter((lvl) =>
       hasValidEducation(education[lvl]),
@@ -89,7 +78,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
   // ================= PERSONAL =================
   const personal = tutor.personalInfo;
   if (personal) {
-    const personalFields = [
+    const fields = [
       personal.fatherName,
       personal.motherName,
       personal.gender,
@@ -109,8 +98,7 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
       personal.emergencyNumber,
       personal.emergencyAddress,
     ];
-
-    const r = countFilled(personalFields);
+    const r = countFilled(fields);
     total += r.total;
     completed += r.completed;
   }
@@ -118,34 +106,36 @@ export function calculateProfileCompletion(tutor: Tutor | null): number {
   // ================= DOCUMENT =================
   const docs = tutor.documentsInfo;
   if (docs) {
-    const docFields = [
+    const fields = [
       docs.nidFront,
       docs.nidBack,
       docs.universityId,
       docs.sscCertificate,
       docs.hscCertificate,
     ];
-
-    const r = countFilled(docFields);
+    const r = countFilled(fields);
     total += r.total;
     completed += r.completed;
   }
 
-  // ================= FINAL =================
-  if (total === 0) return 0;
+  if (total === 0) return tutor.isPremium ? 10 : 0;
 
-  const percentage = Math.round((completed / total) * 100);
+  const dataPercentage = Math.round((completed / total) * 90);
 
-  // ❌ NON-PREMIUM = max 90%
-  return Math.min(percentage, 90);
+  // ⭐ FINAL
+  if (tutor.isPremium) {
+    return 10 + dataPercentage;
+  }
+
+  return dataPercentage;
 }
 
 /**
- * Check if tutor profile is visible in tutor hub
- * Requires: isApproved && profileCompletion >= 80%
+ * Visibility
  */
 export function isTutorProfileVisible(tutor: Tutor): boolean {
   if (!tutor.isApproved) return false;
+
   const completion = calculateProfileCompletion(tutor);
   return completion >= 80;
 }
