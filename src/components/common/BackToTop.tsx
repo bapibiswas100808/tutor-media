@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronUp, MoveUp } from "lucide-react";
+import { MoveUp } from "lucide-react";
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
