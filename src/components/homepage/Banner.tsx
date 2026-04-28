@@ -3,11 +3,35 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Users, Briefcase, Smile, Star } from "lucide-react";
 
 interface BannerData {
   heading: string;
   subHeading: string;
 }
+
+const stats = [
+  {
+    icon: Users,
+    value: "100k",
+    label: "Active Tutors",
+  },
+  {
+    icon: Briefcase,
+    value: "3k",
+    label: "Live Tuition Jobs",
+  },
+  {
+    icon: Smile,
+    value: "20k",
+    label: "Happy Students",
+  },
+  {
+    icon: Star,
+    value: "4.8/5",
+    label: "Average Rating",
+  },
+];
 
 const IMAGES = [
   { src: "/images/banner/1.png", corner: "rounded-tl-none", delay: 0 },
@@ -78,7 +102,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-8 pt-4 border-t border-white/10 w-full justify-center lg:justify-start">
+            {/* <div className="flex gap-8 pt-4 border-t border-white/10 w-full justify-center lg:justify-start">
               {[
                 { value: "500+", label: "Tutors" },
                 { value: "1000+", label: "Students" },
@@ -89,7 +113,41 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                   <p className="text-xs text-blue-200/60 mt-0.5">{s.label}</p>
                 </div>
               ))}
-            </div>
+            </div> */}
+
+             <div className="w-full flex justify-center mt-4">
+      <div className="w-full max-w-6xl bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-xl p-4 md:p-6 text-white relative overflow-hidden">
+
+        {/* Glow effect */}
+        <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl" />
+
+        {/* Content */}
+        <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 text-center">
+          {stats.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div key={index} className="flex flex-col items-center gap-2">
+                
+                {/* Icon circle */}
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+
+                {/* Value */}
+                <h2 className="text-xl md:text-2xl font-bold">
+                  {item.value}
+                </h2>
+
+                {/* Label */}
+                <p className="text-sm text-blue-100/80">
+                  {item.label}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
           </motion.div>
 
           {/* Right: Compact image grid — desktop only */}
