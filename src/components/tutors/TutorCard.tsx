@@ -39,7 +39,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all border border-gray-100 overflow-hidden flex flex-col h-full relative">
         {/* Premium */}
         {isPremiumProfile && (
-          <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+          <div className="absolute top-4 right-4 z-10 bg-linear-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
             <Star className="w-3 h-3" /> PREMIUM
           </div>
         )}
@@ -58,7 +58,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
         )}
 
         {/* Image */}
-        <div className="h-48 flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+        <div className="h-48 flex items-center justify-center bg-linear-to-br from-blue-100 to-purple-100">
           <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-xl">
             {imageUrl ? (
               <Image
@@ -69,7 +69,7 @@ export default function TutorCard({ tutor, index }: TutorCardProps) {
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+              <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
                 {tutor.fullName?.charAt(0)}
               </div>
             )}
