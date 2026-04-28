@@ -815,6 +815,7 @@ export default function AdminDashboard({
                     <tr className="text-left">
                       <th className="px-3 py-2">Name</th>
                       <th className="px-3 py-2">Email</th>
+                      <th className="px-3 py-2">Phone</th>
                       <th className="px-3 py-2">Id</th>
                       <th className="px-3 py-2">Location</th>
                       <th className="px-3 py-2">Profile %</th>
@@ -839,6 +840,7 @@ export default function AdminDashboard({
                           <tr key={t.id} className="border-t">
                             <td className="px-3 py-2">{t.fullName}</td>
                             <td className="px-3 py-2">{t.email}</td>
+                            <td className="px-3 py-2">{t.phone}</td>
                             <td className="px-3 py-2">{t.id}</td>
                             <td className="px-3 py-2">{t.location}</td>
                             <td className="px-3 py-2">
@@ -1353,6 +1355,7 @@ export default function AdminDashboard({
                       <th className="px-3 py-2">Subject</th>
                       <th className="px-3 py-2">Tutor Name</th>
                       <th className="px-3 py-2">Email</th>
+                      <th className="px-3 py-2">Phone</th>
                       <th className="px-3 py-2">Rate</th>
                       <th className="px-3 py-2">Schedule</th>
                       <th className="px-3 py-2">Created</th>
@@ -1378,6 +1381,7 @@ export default function AdminDashboard({
                         const tutorName =
                           a.tutor?.fullName || `Tutor (${a.tutorId})`;
                         const tutorEmail = a.tutor?.email || "-";
+                        const tutorPhone = a.tutor?.phone || "-";
                         const isDeleted = a.isDeleted || false;
 
                         return (
@@ -1398,6 +1402,7 @@ export default function AdminDashboard({
                               {tutorName}
                             </td>
                             <td className="px-3 py-2 text-xs">{tutorEmail}</td>
+                            <td className="px-3 py-2 text-xs">{tutorPhone}</td>
                             <td className="px-3 py-2 font-semibold">
                               {a.rate} Tk
                             </td>

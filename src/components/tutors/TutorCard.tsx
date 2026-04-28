@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import {
   BadgeCheck,
   BookA,
@@ -11,7 +10,6 @@ import {
   Star,
   University,
 } from "lucide-react";
-import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import { useAuth } from "@/context/AuthContext";
 import { Tutor } from "@/data/tutorsList";
 import { useRouter } from "next/navigation";
@@ -24,16 +22,10 @@ interface TutorCardProps {
 export default function TutorCard({ tutor, index }: TutorCardProps) {
   const imageUrl = tutor?.basicInfo?.image?.trim();
   const { user, isAuthenticated } = useAuth();
-  const [profileCompletion, setProfileCompletion] = useState(0);
   const router = useRouter();
 
-  useEffect(() => {
-    setProfileCompletion(calculateProfileCompletion(tutor));
-  }, [tutor]);
-
   const isOwnProfile = isAuthenticated && user && user.id === tutor.id;
-  // const isProfileComplete = profileCompletion >= 80; // Used in commented code
-  const isPremiumProfile = profileCompletion === 100;
+  const isPremiumProfile = tutor.isPremium === true;
 
   return (
     <motion.div
