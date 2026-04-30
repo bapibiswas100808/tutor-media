@@ -6,9 +6,9 @@ import Image from "next/image";
 const steps = [
   {
     number: 1,
-    title: "Search for Tutors or Post Your Tuition Requirements",
+    title: "Submit Your Requirements",
     description:
-      "Post a tuition request in seconds — with or without an account. Browse hundreds of verified tutors instantly.",
+      "Submit your requirements and we will match you with the best tutor within your budget.",
     image: "/images/workForStudents/search-tutor.png",
     accent: "from-orange-400 to-amber-400",
     lightBg: "bg-amber-50",
@@ -17,9 +17,9 @@ const steps = [
   },
   {
     number: 2,
-    title: "Get a One-to-One Demo Session for Free",
+    title: "Free Demo Session",
     description:
-      "Try before you commit — enjoy a free demo class with your chosen tutor at your preferred location.",
+      "Get a free two-day demo session with the tutor at your preferred location.",
     image: "/images/workForStudents/demo-session.png",
     accent: "from-pink-400 to-rose-400",
     lightBg: "bg-pink-50",
@@ -28,9 +28,8 @@ const steps = [
   },
   {
     number: 3,
-    title: "Hire Your Tutor",
-    description:
-      "Loved the demo? Confirm your tutor and start your learning journey with full confidence.",
+    title: "Select Your Tutor",
+    description: "Evaluate tutors & start learning with your preferred tutor.",
     image: "/images/workForStudents/hire-tutor.png",
     accent: "from-blue-400 to-indigo-500",
     lightBg: "bg-blue-50",
@@ -39,9 +38,9 @@ const steps = [
   },
   {
     number: 4,
-    title: "Get Results",
+    title: "Start Learning",
     description:
-      "Gain knowledge, boost confidence, and see real improvements in academic performance.",
+      "Gain knowledge, boost confidence and improve overall performance.",
     image: "/images/workForStudents/get-results.png",
     accent: "from-teal-400 to-green-500",
     lightBg: "bg-teal-50",
@@ -52,7 +51,7 @@ const steps = [
 
 export default function FlowChartStudent() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+    <section className="py-16 md:py-24 bg-linear-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
@@ -66,7 +65,7 @@ export default function FlowChartStudent() {
             For Students &amp; Guardians
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-            How It Works
+            How It Works For Guardians/Students
           </h2>
           <p className="mt-3 text-base sm:text-lg text-gray-500 max-w-xl mx-auto">
             Getting started with your perfect tutor is simple and
@@ -89,7 +88,7 @@ export default function FlowChartStudent() {
                 <div
                   className={`flex-1 ${step.lightBg} ${step.border} border rounded-3xl p-5 shadow-md`}
                 >
-                  <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
+                  <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden">
                     <Image
                       src={step.image}
                       alt={step.title}
@@ -104,14 +103,14 @@ export default function FlowChartStudent() {
                 {/* Centre step indicator */}
                 <div className="flex flex-col items-center shrink-0 gap-2">
                   <div
-                    className={`w-14 h-14 rounded-full bg-gradient-to-br ${step.accent} flex items-center justify-center shadow-lg`}
+                    className={`w-14 h-14 rounded-full bg-linear-to-br ${step.accent} flex items-center justify-center shadow-lg`}
                   >
                     <span className="text-white font-extrabold text-xl">
                       {step.number}
                     </span>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className="w-0.5 h-20 bg-gradient-to-b from-gray-300 to-transparent" />
+                    <div className="w-0.5 h-20 bg-linear-to-b from-gray-300 to-transparent" />
                   )}
                 </div>
 
@@ -136,7 +135,7 @@ export default function FlowChartStudent() {
                 <div
                   className={`flex ${index % 2 === 0 ? "justify-end pr-[calc(50%-28px)]" : "justify-start pl-[calc(50%-28px)]"} my-1`}
                 >
-                  <div className="w-0.5 h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
+                  <div className="w-0.5 h-8 bg-linear-to-b from-gray-200 to-gray-300" />
                 </div>
               )}
             </div>
@@ -159,7 +158,10 @@ export default function FlowChartStudent() {
               >
                 {/* Image */}
                 <div className={`${step.lightBg} w-full`}>
-                  <div className="relative w-full aspect-[16/9]">
+                  <div
+                    className="relative w-full aspect-16
+                  \/9"
+                  >
                     <Image
                       src={step.image}
                       alt={step.title}
@@ -173,7 +175,7 @@ export default function FlowChartStudent() {
                 <div className="p-5">
                   <div className="flex items-center gap-3 mb-2">
                     <div
-                      className={`w-8 h-8 rounded-full bg-gradient-to-br ${step.accent} flex items-center justify-center shrink-0 shadow`}
+                      className={`w-8 h-8 rounded-full bg-linear-to-br ${step.accent} flex items-center justify-center shrink-0 shadow`}
                     >
                       <span className="text-white font-bold text-sm">
                         {step.number}

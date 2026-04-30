@@ -95,7 +95,7 @@ export default function TuitionJobCard({
       </h3>
 
       {/* Info grid: 3 cols × 2 rows */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
         <InfoCell
           icon={<LayoutGrid className="w-4 h-4" />}
           label="Category"
