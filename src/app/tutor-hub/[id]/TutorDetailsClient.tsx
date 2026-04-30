@@ -59,6 +59,13 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
   const [submitting, setSubmitting] = useState(false);
+  const [appStats, setAppStats] = useState({
+    applied: 0,
+    shortlisted: 0,
+    appointed: 0,
+    confirmed: 0,
+    cancelled: 0,
+  });
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -147,6 +154,28 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
       setIsOwnProfile(true);
     }
   }, [user, tutor, isLoading]);
+
+  // Fetch application stats for own profile
+  useEffect(() => {
+    if (!isOwnProfile || !tutor?.id || !token) return;
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/applications?tutorId=${tutor.id}`,
+      { headers: { authorization: `Bearer ${token}` } },
+    )
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: { status?: string; isDeleted?: boolean }[]) => {
+        const list = Array.isArray(data) ? data : [];
+        setAppStats({
+          applied: list.length,
+          shortlisted: list.filter((a) => a.status === "shortlisted").length,
+          appointed: list.filter((a) => a.status === "appointed").length,
+          confirmed: list.filter((a) => a.status === "confirmed").length,
+          cancelled: list.filter((a) => a.status === "cancelled" || a.isDeleted)
+            .length,
+        });
+      })
+      .catch(() => {});
+  }, [isOwnProfile, tutor?.id, token]);
 
   const completionPercentage = calculateProfileCompletion(tutor);
   const isProfileIncomplete = completionPercentage < 80;
@@ -322,6 +351,69 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
               </div>
             </div>
           </motion.div>
+
+          {/* Application Stats — only shown to own profile */}
+          {isOwnProfile && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+            >
+              {[
+                {
+                  label: "Applied Jobs",
+                  value: appStats.applied,
+                  color: "text-blue-600",
+                  bg: "bg-blue-50",
+                  icon: "📋",
+                },
+                {
+                  label: "Shortlisted Jobs",
+                  value: appStats.shortlisted,
+                  color: "text-indigo-600",
+                  bg: "bg-indigo-50",
+                  icon: "📌",
+                },
+                {
+                  label: "Appointed Jobs",
+                  value: appStats.appointed,
+                  color: "text-violet-600",
+                  bg: "bg-violet-50",
+                  icon: "🔒",
+                },
+                {
+                  label: "Confirmed Jobs",
+                  value: appStats.confirmed,
+                  color: "text-green-600",
+                  bg: "bg-green-50",
+                  icon: "✅",
+                },
+                {
+                  label: "Cancelled Jobs",
+                  value: appStats.cancelled,
+                  color: "text-red-500",
+                  bg: "bg-red-50",
+                  icon: "❌",
+                },
+              ].map(({ label, value, color, bg, icon }) => (
+                <div
+                  key={label}
+                  className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col items-start gap-1"
+                >
+                  <div
+                    className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center text-xl mb-1`}
+                  >
+                    {icon}
+                  </div>
+                  <span className={`text-2xl font-bold ${color}`}>{value}</span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+          )}
 
           {/* Profile Completion & Premium Request Section - Only visible to the tutor viewing their own profile */}
           {isOwnProfile && (

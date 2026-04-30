@@ -55,7 +55,7 @@ export default async function AdminDashboardPage() {
       console.error(
         "Failed to fetch applications - Status:",
         res.status,
-        res.statusText
+        res.statusText,
       );
     }
   } catch (error) {
@@ -65,18 +65,14 @@ export default async function AdminDashboardPage() {
 
   return (
     <AdminProtected>
-      <main className="min-h-screen bg-gray-50 p-6">
-        <div className="container mx-auto">
-          <AdminDashboard
-  tutors={tutorHubs}
-  jobs={tuitionJobs.map((job, index) => ({
-    ...job,
-    id: Number(job._id) || index, // যদি _id numeric না হয়, fallback index
-  }))}
-  applications={applications}
-/>
-        </div>
-      </main>
+      <AdminDashboard
+        tutors={tutorHubs}
+        jobs={tuitionJobs.map((job, index) => ({
+          ...job,
+          id: Number(job._id) || index,
+        }))}
+        applications={applications}
+      />
     </AdminProtected>
   );
 }

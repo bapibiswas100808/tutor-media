@@ -7,6 +7,18 @@ import { Application } from "@/lib/applications";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  FileText,
+  CreditCard,
+  CheckCircle,
+  TrendingUp,
+  Star,
+  Menu,
+  X,
+} from "lucide-react";
 export interface BkashPayment {
   _id?: string;
   studentId?: string;
@@ -112,8 +124,9 @@ export default function AdminDashboard({
   applications?: Application[];
 }) {
   const [view, setView] = useState<
-    "tutors" | "jobs" | "applications" | "payments"
-  >("tutors");
+    "home" | "tutors" | "jobs" | "applications" | "payments"
+  >("home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tutors, setTutors] = useState<Tutor[]>(initialTutors || []);
   const [jobs, setJobs] = useState<TuitionJob[]>(initialJobs || []);
   const [applications, setApplications] = useState<Application[]>(
@@ -495,134 +508,475 @@ export default function AdminDashboard({
   };
 
   return (
-    <div className="p-6 bg-white text-gray-600">
-      <h1 className="text-2xl font-semibold mb-6">Admin Dashboard</h1>
-      {error && <div className="mb-4 text-red-600">{error}</div>}
-      <div className="flex gap-6">
-        <aside className="w-64 bg-white border rounded p-4">
-          <nav className="space-y-2">
-            <button
-              className={`w-full text-left px-3 py-2 rounded ${
-                view === "tutors"
-                  ? "bg-blue-50 border-l-4 border-blue-600"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => setView("tutors")}
-            >
-              Tutors ({counts.tutors})
-            </button>
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      {/* Top Header */}
+      <header className="bg-white border-b shadow-sm sticky top-0 z-30">
+        <div className="flex items-center gap-3 px-4 sm:px-6 py-3 pt-5">
+          {/* Mobile hamburger */}
+          <button
+            className="sm:hidden p-1.5 rounded-lg hover:bg-gray-100 transition text-gray-600"
+            onClick={() => setSidebarOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0">
+            <LayoutDashboard size={16} className="text-white" />
+          </div>
+          <span className="font-bold text-gray-800 text-lg">
+            Tutor Media Admin
+          </span>
+          <span className="ml-auto text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200 font-medium hidden sm:inline-flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>{" "}
+            Live
+          </span>
+        </div>
+      </header>
 
-            <button
-              className={`w-full text-left px-3 py-2 rounded ${
-                view === "jobs"
-                  ? "bg-blue-50 border-l-4 border-blue-600"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => setView("jobs")}
-            >
-              Tuition Jobs ({counts.jobs})
-            </button>
+      {error && (
+        <div className="mx-4 sm:mx-6 mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
 
-            <button
-              className={`w-full text-left px-3 py-2 rounded ${
-                view === "applications"
-                  ? "bg-blue-50 border-l-4 border-blue-600"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => setView("applications")}
-            >
-              Applications ({counts.applications})
-            </button>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-20 sm:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
+      <div className="flex relative">
+        {/* Sidebar — desktop always visible, mobile slide-in */}
+        <aside
+          className={`
+            fixed sm:static top-14 sm:top-auto left-0
+            h-[calc(100vh-56px)] sm:h-auto
+            z-20 sm:z-auto
+            w-64 bg-white border-r sm:min-h-[calc(100vh-57px)] shrink-0 p-4 pt-3
+            transform transition-transform duration-300 overflow-y-auto
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            sm:translate-x-0
+          `}
+        >
+          {/* Mobile close row */}
+          <div className="flex items-center justify-between mb-3 pb-3 border-b sm:hidden">
+            <span className="font-semibold text-gray-700 text-sm">
+              Navigation
+            </span>
             <button
-              className={`w-full text-left px-3 py-2 rounded ${
-                view === "payments"
-                  ? "bg-blue-50 border-l-4 border-blue-600"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => setView("payments")}
+              onClick={() => setSidebarOpen(false)}
+              className="p-1 rounded hover:bg-gray-100"
             >
-              Payments ({counts.payments})
+              <X size={18} className="text-gray-500" />
             </button>
+          </div>
+          <nav className="space-y-1">
+            {[
+              {
+                id: "home",
+                label: "Overview",
+                icon: LayoutDashboard,
+                count: undefined,
+              },
+              {
+                id: "tutors",
+                label: "Tutors",
+                icon: Users,
+                count: counts.tutors,
+              },
+              {
+                id: "jobs",
+                label: "Tuition Jobs",
+                icon: Briefcase,
+                count: counts.jobs,
+              },
+              {
+                id: "applications",
+                label: "Applications",
+                icon: FileText,
+                count: counts.applications,
+              },
+              {
+                id: "payments",
+                label: "Payments",
+                icon: CreditCard,
+                count: counts.payments,
+              },
+            ].map(({ id, label, icon: Icon, count }) => (
+              <button
+                key={id}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  view === id
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setView(id as typeof view);
+                  setSidebarOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-3">
+                  <Icon size={16} />
+                  {label}
+                </span>
+                {count !== undefined && (
+                  <span
+                    className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${view === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"}`}
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            ))}
           </nav>
         </aside>
 
-        <section className="flex-1">
-          {view === "payments" ? (
-            // Payments
-            <div className="bg-white border rounded p-4">
-              <h2 className="text-lg font-medium mb-2">Payments</h2>
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-sm text-gray-500">
-                  {filteredPayments.length === 0 ? (
-                    <>Showing 0 of 0</>
-                  ) : (
-                    <>
-                      Showing {(paymentsPage - 1) * PAGE_SIZE + 1} -{" "}
-                      {Math.min(
-                        paymentsPage * PAGE_SIZE,
-                        filteredPayments.length,
-                      )}{" "}
-                      of {filteredPayments.length}
-                    </>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 border rounded px-2 py-1">
-                  <input
-                    type="search"
-                    value={paymentTutorIdQuery}
-                    onChange={(e) =>
-                      setPaymentTutorIdQuery(e.target.value.replace(/\D/g, ""))
-                    }
-                    placeholder="Search by Tutor ID"
-                    className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
-                  />
-                  {paymentTutorIdQuery && (
+        <section className="flex-1 p-4 sm:p-6 min-w-0 min-h-[calc(100vh-57px)] bg-gray-50">
+          {/* HOME / OVERVIEW */}
+          {view === "home" && (
+            <div>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Dashboard Overview
+                </h1>
+                <p className="text-gray-500 text-sm mt-1">
+                  Welcome back! Here&apos;s a summary of your platform.
+                </p>
+              </div>
+              {/* Stat Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+                {[
+                  {
+                    label: "Total Tutors",
+                    value: counts.tutors,
+                    icon: Users,
+                    gradient: "from-blue-500 to-blue-700",
+                    bg: "bg-blue-50",
+                    text: "text-blue-600",
+                    sub: `${tutors.filter((t) => t.isVerified).length} verified`,
+                    subIcon: CheckCircle,
+                    onClick: () => setView("tutors"),
+                  },
+                  {
+                    label: "Tuition Jobs",
+                    value: counts.jobs,
+                    icon: Briefcase,
+                    gradient: "from-emerald-500 to-green-700",
+                    bg: "bg-emerald-50",
+                    text: "text-emerald-600",
+                    sub: `${jobs.filter((j) => j.isApproved).length} approved`,
+                    subIcon: CheckCircle,
+                    onClick: () => setView("jobs"),
+                  },
+                  {
+                    label: "Applications",
+                    value: counts.applications,
+                    icon: FileText,
+                    gradient: "from-violet-500 to-purple-700",
+                    bg: "bg-violet-50",
+                    text: "text-violet-600",
+                    sub: `${applications.filter((a) => !a.isDeleted).length} active`,
+                    subIcon: TrendingUp,
+                    onClick: () => setView("applications"),
+                  },
+                  {
+                    label: "Payments",
+                    value: counts.payments,
+                    icon: CreditCard,
+                    gradient: "from-orange-500 to-amber-600",
+                    bg: "bg-orange-50",
+                    text: "text-orange-600",
+                    sub: `৳${payments.reduce((s, p) => s + (Number(p.amount) || 0), 0).toLocaleString()} total`,
+                    subIcon: Star,
+                    onClick: () => setView("payments"),
+                  },
+                ].map(
+                  ({
+                    label,
+                    value,
+                    icon: Icon,
+                    gradient,
+                    bg,
+                    text,
+                    sub,
+                    subIcon: SubIcon,
+                    onClick,
+                  }) => (
                     <button
-                      type="button"
-                      onClick={() => setPaymentTutorIdQuery("")}
-                      className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                      key={label}
+                      onClick={onClick}
+                      className="text-left bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all group"
                     >
-                      Clear
+                      <div className="flex items-start justify-between mb-4">
+                        <div
+                          className={`w-12 h-12 rounded-xl bg-linear-to-br ${gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}
+                        >
+                          <Icon size={22} className="text-white" />
+                        </div>
+                        <span
+                          className={`text-xs font-semibold ${bg} ${text} px-2 py-1 rounded-full`}
+                        >
+                          View All
+                        </span>
+                      </div>
+                      <div className="text-3xl font-bold text-gray-800 mb-1">
+                        {value}
+                      </div>
+                      <div className="text-sm font-medium text-gray-500 mb-2">
+                        {label}
+                      </div>
+                      <div
+                        className={`flex items-center gap-1 text-xs font-medium ${text}`}
+                      >
+                        <SubIcon size={12} />
+                        {sub}
+                      </div>
                     </button>
-                  )}
+                  ),
+                )}
+              </div>
+              {/* Bottom row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Recent Tutors */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-semibold text-gray-700 flex items-center gap-2">
+                      <Users size={16} className="text-blue-500" />
+                      Recent Tutors
+                    </h2>
+                    <button
+                      onClick={() => setView("tutors")}
+                      className="text-xs text-blue-600 hover:underline font-medium"
+                    >
+                      See all
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {tutors.slice(0, 5).map((t) => (
+                      <div
+                        key={t.id}
+                        className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                      >
+                        <div>
+                          <div className="text-sm font-medium text-gray-800">
+                            {t.fullName || "—"}
+                          </div>
+                          <div className="text-xs text-gray-400">{t.email}</div>
+                        </div>
+                        <div className="flex gap-1">
+                          {t.isVerified && (
+                            <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+                              Verified
+                            </span>
+                          )}
+                          {t.isPremium && (
+                            <span className="text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">
+                              Premium
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {tutors.length === 0 && (
+                      <p className="text-sm text-gray-400">No tutors yet.</p>
+                    )}
+                  </div>
+                </div>
+                {/* Recent Payments */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-semibold text-gray-700 flex items-center gap-2">
+                      <CreditCard size={16} className="text-orange-500" />
+                      Recent Payments
+                    </h2>
+                    <button
+                      onClick={() => setView("payments")}
+                      className="text-xs text-blue-600 hover:underline font-medium"
+                    >
+                      See all
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {payments.slice(0, 5).map((p, i) => (
+                      <div
+                        key={p._id || i}
+                        className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                      >
+                        <div>
+                          <div className="text-sm font-medium text-gray-800 font-mono">
+                            {p.trxId || p.transactionId || "—"}
+                          </div>
+                          <div className="text-xs text-gray-400 capitalize">
+                            {p.plan || "—"} · {p.sender || "—"}
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-green-600">
+                          ৳{p.amount || 0}
+                        </span>
+                      </div>
+                    ))}
+                    {payments.length === 0 && (
+                      <p className="text-sm text-gray-400">No payments yet.</p>
+                    )}
+                  </div>
+                </div>
+                {/* Status Breakdown */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:col-span-2">
+                  <h2 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                    <TrendingUp size={16} className="text-violet-500" />
+                    Quick Status Breakdown
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                    {[
+                      {
+                        label: "Verified Tutors",
+                        value: tutors.filter((t) => t.isVerified).length,
+                        total: Math.max(counts.tutors, 1),
+                        color: "bg-blue-500",
+                      },
+                      {
+                        label: "Approved Jobs",
+                        value: jobs.filter((j) => j.isApproved).length,
+                        total: Math.max(counts.jobs, 1),
+                        color: "bg-emerald-500",
+                      },
+                      {
+                        label: "Active Applications",
+                        value: applications.filter((a) => !a.isDeleted).length,
+                        total: Math.max(counts.applications, 1),
+                        color: "bg-violet-500",
+                      },
+                      {
+                        label: "Premium Tutors",
+                        value: tutors.filter((t) => t.isPremium).length,
+                        total: Math.max(counts.tutors, 1),
+                        color: "bg-amber-500",
+                      },
+                    ].map(({ label, value, total, color }) => (
+                      <div key={label}>
+                        <div className="flex justify-between text-sm text-gray-500 mb-1.5">
+                          <span>{label}</span>
+                          <span className="font-bold text-gray-800">
+                            {value}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full ${color} transition-all`}
+                            style={{
+                              width: `${Math.min(100, Math.round((value / total) * 100))}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left">
-                      {/* <th className="px-3 py-2">Student ID</th> */}
-                      <th className="px-3 py-2">Tutor ID</th>
-                      <th className="px-3 py-2">Transaction ID</th>
-                      <th className="px-3 py-2">Plan</th>
-                      <th className="px-3 py-2">Amount</th>
-                      <th className="px-3 py-2">Phone</th>
-                      {/* <th className="px-3 py-2">Status</th> */}
-                      <th className="px-3 py-2">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentPaymentItems.length === 0 ? (
-                      <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={8}>
-                          No payments found
-                        </td>
-                      </tr>
+            </div>
+          )}
+
+          {view !== "home" &&
+            (view === "payments" ? (
+              // Payments
+              <div className="rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <CreditCard size={20} className="text-orange-500" />
+                  Payments
+                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-gray-500">
+                    {filteredPayments.length === 0 ? (
+                      <>Showing 0 of 0</>
                     ) : (
-                      currentPaymentItems.map((p: BkashPayment) => (
-                        <tr key={p._id} className="border-t">
-                          {/* <td className="px-3 py-2">{p.studentId || "N/A"}</td> */}
-                          <td className="px-3 py-2">{p.tutorId || "N/A"}</td>
-                          <td className="px-3 py-2 font-mono text-xs">
-                            {p.trxId || p.transactionId || "N/A"}
+                      <>
+                        Showing {(paymentsPage - 1) * PAGE_SIZE + 1} -{" "}
+                        {Math.min(
+                          paymentsPage * PAGE_SIZE,
+                          filteredPayments.length,
+                        )}{" "}
+                        of {filteredPayments.length}
+                      </>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 border rounded px-2 py-1">
+                    <input
+                      type="search"
+                      value={paymentTutorIdQuery}
+                      onChange={(e) =>
+                        setPaymentTutorIdQuery(
+                          e.target.value.replace(/\D/g, ""),
+                        )
+                      }
+                      placeholder="Search by Tutor ID"
+                      className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
+                    />
+                    {paymentTutorIdQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setPaymentTutorIdQuery("")}
+                        className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="text-left">
+                        {/* <th className="px-3 py-2">Student ID</th> */}
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Tutor ID
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Transaction ID
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Plan
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Amount
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Phone
+                        </th>
+                        {/* <th className="px-3 py-2">Status</th> */}
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentPaymentItems.length === 0 ? (
+                        <tr className="border-t">
+                          <td
+                            className="px-3 py-4 text-gray-400 text-center"
+                            colSpan={8}
+                          >
+                            No payments found
                           </td>
-                          <td className="px-3 py-2 capitalize">
-                            {p.plan || "N/A"}
-                          </td>
-                          <td className="px-3 py-2">৳{p.amount || "0"}</td>
-                          <td className="px-3 py-2">{p.sender || "N/A"}</td>
-                          {/* <td className="px-3 py-2">
+                        </tr>
+                      ) : (
+                        currentPaymentItems.map((p: BkashPayment) => (
+                          <tr
+                            key={p._id}
+                            className="border-t hover:bg-blue-50/40 transition-colors"
+                          >
+                            {/* <td className="px-3 py-2">{p.studentId || "N/A"}</td> */}
+                            <td className="px-3 py-2">{p.tutorId || "N/A"}</td>
+                            <td className="px-3 py-2 font-mono text-xs">
+                              {p.trxId || p.transactionId || "N/A"}
+                            </td>
+                            <td className="px-3 py-2 capitalize">
+                              {p.plan || "N/A"}
+                            </td>
+                            <td className="px-3 py-2">৳{p.amount || "0"}</td>
+                            <td className="px-3 py-2">{p.sender || "N/A"}</td>
+                            {/* <td className="px-3 py-2">
                             <span
                               className={`px-2 py-1 rounded text-xs font-semibold ${
                                 p.status === "verified"
@@ -635,19 +989,19 @@ export default function AdminDashboard({
                               {p.status || "pending"}
                             </span>
                           </td> */}
-                          <td className="px-3 py-2 text-xs text-gray-500">
-                            {p.createdAt
-                              ? new Date(p.createdAt).toLocaleDateString()
-                              : "N/A"}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              {/* Pagination */}
-              {/* <div className="flex justify-center gap-2 mt-4">
+                            <td className="px-3 py-2 text-xs text-gray-500">
+                              {p.createdAt
+                                ? new Date(p.createdAt).toLocaleDateString()
+                                : "N/A"}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Pagination */}
+                {/* <div className="flex justify-center gap-2 mt-4">
                 <button
                   disabled={paymentsPage === 1}
                   onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
@@ -668,345 +1022,380 @@ export default function AdminDashboard({
                   Next
                 </button>
               </div> */}
-              <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
-                {/* Previous Button */}
-                <button
-                  disabled={paymentsPage === 1}
-                  onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-
-                {/* Page Numbers */}
-                {(() => {
-                  const pages = [];
-                  const start = Math.max(1, paymentsPage - 2);
-                  const end = Math.min(paymentsTotalPages, paymentsPage + 2);
-
-                  // First Page
-                  if (start > 1) {
-                    pages.push(
-                      <button
-                        key={1}
-                        onClick={() => setPaymentsPage(1)}
-                        className="px-3 py-2 bg-gray-100 rounded"
-                      >
-                        1
-                      </button>,
-                    );
-                    if (start > 2) {
-                      pages.push(<span key="start-ellipsis">...</span>);
-                    }
-                  }
-
-                  // Middle Pages
-                  for (let i = start; i <= end; i++) {
-                    pages.push(
-                      <button
-                        key={i}
-                        onClick={() => setPaymentsPage(i)}
-                        className={`px-3 py-2 rounded ${
-                          i === paymentsPage
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100"
-                        }`}
-                      >
-                        {i}
-                      </button>,
-                    );
-                  }
-
-                  // Last Page
-                  if (end < paymentsTotalPages) {
-                    if (end < paymentsTotalPages - 1) {
-                      pages.push(<span key="end-ellipsis">...</span>);
-                    }
-                    pages.push(
-                      <button
-                        key={paymentsTotalPages}
-                        onClick={() => setPaymentsPage(paymentsTotalPages)}
-                        className="px-3 py-2 bg-gray-100 rounded"
-                      >
-                        {paymentsTotalPages}
-                      </button>,
-                    );
-                  }
-
-                  return pages;
-                })()}
-
-                {/* Next Button */}
-                <button
-                  disabled={paymentsPage === paymentsTotalPages}
-                  onClick={() =>
-                    setPaymentsPage((p) => Math.min(paymentsTotalPages, p + 1))
-                  }
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          ) : view === "tutors" ? (
-            // Tutors
-            <div className="bg-white border rounded p-4">
-              <h2 className="text-lg font-medium mb-2">Tutors</h2>
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-sm text-gray-500">
-                  {filteredTutors.length === 0 ? (
-                    <>Showing 0 of 0</>
-                  ) : (
-                    <>
-                      Showing {(tutorPage - 1) * PAGE_SIZE + 1} -{" "}
-                      {Math.min(tutorPage * PAGE_SIZE, filteredTutors.length)}{" "}
-                      of {filteredTutors.length}
-                    </>
-                  )}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 bg-white p-2 rounded-lg shadow-sm">
-                  {/* Search by Email */}
-                  <div className="flex items-center gap-2 border rounded px-2 py-1">
-                    <input
-                      type="search"
-                      value={tutorEmailQuery}
-                      onChange={(e) => setTutorEmailQuery(e.target.value)}
-                      placeholder="Search by email"
-                      className="outline-none px-2 py-1 text-sm w-72 bg-transparent"
-                    />
-                    {tutorEmailQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setTutorEmailQuery("")}
-                        className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
-                      >
-                        Clear
-                      </button>
-                    )}
-                  </div>
-                  {/* Search by Tutor ID */}
-                  <div className="flex items-center gap-2 border rounded px-2 py-1">
-                    <input
-                      type="search"
-                      value={tutorIdQuery}
-                      onChange={
-                        (e) =>
-                          setTutorIdQuery(e.target.value.replace(/\D/g, "")) // numbers only
-                      }
-                      placeholder="Search by Tutor ID"
-                      className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
-                    />
-                    {tutorIdQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setTutorIdQuery("")}
-                        className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
-                      >
-                        Clear
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left">
-                      <th className="px-3 py-2">Name</th>
-                      <th className="px-3 py-2">Email</th>
-                      <th className="px-3 py-2">Phone</th>
-                      <th className="px-3 py-2">Id</th>
-                      <th className="px-3 py-2">Location</th>
-                      <th className="px-3 py-2">Profile %</th>
-                      <th className="px-3 py-2">Verified</th>
-                      <th className="px-3 py-2">Approved</th>
-                      <th className="px-3 py-2">Premium</th>
-                      <th className="px-3 py-2">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentTutorItems.length === 0 ? (
-                      <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={9}>
-                          No tutors found
-                        </td>
-                      </tr>
-                    ) : (
-                      currentTutorItems.map((t) => {
-                        const profilePercentage = calculateProfileCompletion(t);
-                        const isLow = profilePercentage < 80;
-                        return (
-                          <tr key={t.id} className="border-t">
-                            <td className="px-3 py-2">{t.fullName}</td>
-                            <td className="px-3 py-2">{t.email}</td>
-                            <td className="px-3 py-2">{t.phone}</td>
-                            <td className="px-3 py-2">{t.id}</td>
-                            <td className="px-3 py-2">{t.location}</td>
-                            <td className="px-3 py-2">
-                              <div className="flex items-center gap-2">
-                                <div className="w-16 bg-gray-200 rounded-full h-2 overflow-hidden">
-                                  <div
-                                    className={`h-full transition-all duration-300 ${
-                                      isLow ? "bg-red-500" : "bg-green-500"
-                                    }`}
-                                    style={{ width: `${profilePercentage}%` }}
-                                  />
-                                </div>
-                                <span
-                                  className={`text-xs font-medium ${isLow ? "text-red-600" : "text-green-600"}`}
-                                >
-                                  {profilePercentage}%
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-3 py-2">
-                              <input
-                                type="checkbox"
-                                checked={!!t.isVerified}
-                                disabled={!!loadingMap[`tutor-${t.id}`]}
-                                onChange={(e) =>
-                                  toggleField(
-                                    "tutor",
-                                    t.id,
-                                    t._id,
-                                    "isVerified",
-                                    e.target.checked,
-                                  )
-                                }
-                                title="Toggle verified status"
-                              />
-                            </td>
-                            <td className="px-3 py-2">
-                              <input
-                                type="checkbox"
-                                checked={!!t.isApproved}
-                                disabled={!!loadingMap[`tutor-${t.id}`]}
-                                onChange={(e) =>
-                                  toggleField(
-                                    "tutor",
-                                    t.id,
-                                    t._id,
-                                    "isApproved",
-                                    e.target.checked,
-                                  )
-                                }
-                                title="Toggle approved status"
-                              />
-                            </td>
-                            <td className="px-3 py-2">
-                              <input
-                                type="checkbox"
-                                checked={!!t.isPremium}
-                                disabled={!!loadingMap[`tutor-${t.id}`]}
-                                onChange={(e) =>
-                                  toggleField(
-                                    "tutor",
-                                    t.id,
-                                    t._id,
-                                    "isPremium",
-                                    e.target.checked,
-                                  )
-                                }
-                                title="Toggle premium status"
-                              />
-                            </td>
-                            <td className="px-3 py-2">
-                              <div className="flex gap-2">
-                                <Link
-                                  href={`/admin/edit-tutor/${t.id}`}
-                                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                  Update
-                                </Link>
-
-                                <button
-                                  onClick={async () => {
-                                    try {
-                                      const result = await confirmAction(
-                                        t.isDeleted,
-                                      );
-                                      if (!result.isConfirmed) return;
-
-                                      const endpoint = t.isDeleted
-                                        ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
-                                        : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
-
-                                      const res = await fetch(endpoint, {
-                                        method: "PATCH",
-                                      });
-                                      if (!res.ok) {
-                                        const text = await res.text();
-                                        throw new Error(
-                                          text || "Action failed",
-                                        );
-                                      }
-
-                                      // ✅ Update local state
-                                      setTutors((prev) =>
-                                        prev.map((u) =>
-                                          u.id === t.id || u._id === t._id
-                                            ? { ...u, isDeleted: !t.isDeleted }
-                                            : u,
-                                        ),
-                                      );
-
-                                      // ✅ Success toast
-                                      Swal.fire({
-                                        toast: true,
-                                        position: "top-end",
-                                        icon: "success",
-                                        title: t.isDeleted
-                                          ? "Tutor restored"
-                                          : "Tutor deleted",
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        timerProgressBar: true,
-                                        background: "#111827",
-                                        color: "#F9FAFB",
-                                      });
-                                    } catch (error: unknown) {
-                                      Swal.fire({
-                                        icon: "error",
-                                        title: "Update Failed",
-                                        text:
-                                          error instanceof Error
-                                            ? error.message
-                                            : "Something went wrong",
-                                      });
-                                    }
-                                  }}
-                                  className={`px-2 py-1 text-xs rounded ${
-                                    t.isDeleted
-                                      ? "bg-green-600 hover:bg-green-700 text-white"
-                                      : "bg-red-600 hover:bg-red-700 text-white"
-                                  }`}
-                                >
-                                  {t.isDeleted ? "Restore" : "Delete"}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="flex items-center justify-between mt-3">
-                <div className="text-sm text-gray-500">
-                  Page {tutorPage} of {tutorTotalPages}
-                </div>
-                <div className="flex items-center gap-2">
+                <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
+                  {/* Previous Button */}
                   <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() => setTutorPage((p) => Math.max(1, p - 1))}
-                    disabled={tutorPage === 1}
+                    disabled={paymentsPage === 1}
+                    onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
+                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
                   >
-                    Prev
+                    Previous
                   </button>
-                  {/* {Array.from({ length: tutorTotalPages }).map((_, i) => (
+
+                  {/* Page Numbers */}
+                  {(() => {
+                    const pages = [];
+                    const start = Math.max(1, paymentsPage - 2);
+                    const end = Math.min(paymentsTotalPages, paymentsPage + 2);
+
+                    // First Page
+                    if (start > 1) {
+                      pages.push(
+                        <button
+                          key={1}
+                          onClick={() => setPaymentsPage(1)}
+                          className="px-3 py-2 bg-gray-100 rounded"
+                        >
+                          1
+                        </button>,
+                      );
+                      if (start > 2) {
+                        pages.push(<span key="start-ellipsis">...</span>);
+                      }
+                    }
+
+                    // Middle Pages
+                    for (let i = start; i <= end; i++) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => setPaymentsPage(i)}
+                          className={`px-3 py-2 rounded ${
+                            i === paymentsPage
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100"
+                          }`}
+                        >
+                          {i}
+                        </button>,
+                      );
+                    }
+
+                    // Last Page
+                    if (end < paymentsTotalPages) {
+                      if (end < paymentsTotalPages - 1) {
+                        pages.push(<span key="end-ellipsis">...</span>);
+                      }
+                      pages.push(
+                        <button
+                          key={paymentsTotalPages}
+                          onClick={() => setPaymentsPage(paymentsTotalPages)}
+                          className="px-3 py-2 bg-gray-100 rounded"
+                        >
+                          {paymentsTotalPages}
+                        </button>,
+                      );
+                    }
+
+                    return pages;
+                  })()}
+
+                  {/* Next Button */}
+                  <button
+                    disabled={paymentsPage === paymentsTotalPages}
+                    onClick={() =>
+                      setPaymentsPage((p) =>
+                        Math.min(paymentsTotalPages, p + 1),
+                      )
+                    }
+                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            ) : view === "tutors" ? (
+              // Tutors
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Users size={20} className="text-blue-500" />
+                  Tutors
+                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-gray-500">
+                    {filteredTutors.length === 0 ? (
+                      <>Showing 0 of 0</>
+                    ) : (
+                      <>
+                        Showing {(tutorPage - 1) * PAGE_SIZE + 1} -{" "}
+                        {Math.min(tutorPage * PAGE_SIZE, filteredTutors.length)}{" "}
+                        of {filteredTutors.length}
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Search by Email */}
+                    <div className="flex items-center gap-2 border rounded px-2 py-1">
+                      <input
+                        type="search"
+                        value={tutorEmailQuery}
+                        onChange={(e) => setTutorEmailQuery(e.target.value)}
+                        placeholder="Search by email"
+                        className="outline-none px-2 py-1 text-sm w-72 bg-transparent"
+                      />
+                      {tutorEmailQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setTutorEmailQuery("")}
+                          className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                    {/* Search by Tutor ID */}
+                    <div className="flex items-center gap-2 border rounded px-2 py-1">
+                      <input
+                        type="search"
+                        value={tutorIdQuery}
+                        onChange={
+                          (e) =>
+                            setTutorIdQuery(e.target.value.replace(/\D/g, "")) // numbers only
+                        }
+                        placeholder="Search by Tutor ID"
+                        className="outline-none px-2 py-1 text-sm w-40 bg-transparent"
+                      />
+                      {tutorIdQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setTutorIdQuery("")}
+                          className="text-xs px-2 py-1 rounded-md text-gray-500 hover:text-white hover:bg-red-500 transition"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="text-left bg-gray-50">
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Name
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Email
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Phone
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Id
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Location
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Profile %
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Verified
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Approved
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Premium
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentTutorItems.length === 0 ? (
+                        <tr className="border-t">
+                          <td
+                            className="px-3 py-4 text-gray-400 text-center"
+                            colSpan={9}
+                          >
+                            No tutors found
+                          </td>
+                        </tr>
+                      ) : (
+                        currentTutorItems.map((t) => {
+                          const profilePercentage =
+                            calculateProfileCompletion(t);
+                          const isLow = profilePercentage < 80;
+                          return (
+                            <tr
+                              key={t.id}
+                              className="border-t hover:bg-blue-50/40 transition-colors"
+                            >
+                              <td className="px-3 py-2">{t.fullName}</td>
+                              <td className="px-3 py-2">{t.email}</td>
+                              <td className="px-3 py-2">{t.phone}</td>
+                              <td className="px-3 py-2">{t.id}</td>
+                              <td className="px-3 py-2">{t.location}</td>
+                              <td className="px-3 py-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-16 bg-gray-200 rounded-full h-2 overflow-hidden">
+                                    <div
+                                      className={`h-full transition-all duration-300 ${
+                                        isLow ? "bg-red-500" : "bg-green-500"
+                                      }`}
+                                      style={{ width: `${profilePercentage}%` }}
+                                    />
+                                  </div>
+                                  <span
+                                    className={`text-xs font-medium ${isLow ? "text-red-600" : "text-green-600"}`}
+                                  >
+                                    {profilePercentage}%
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="checkbox"
+                                  checked={!!t.isVerified}
+                                  disabled={!!loadingMap[`tutor-${t.id}`]}
+                                  onChange={(e) =>
+                                    toggleField(
+                                      "tutor",
+                                      t.id,
+                                      t._id,
+                                      "isVerified",
+                                      e.target.checked,
+                                    )
+                                  }
+                                  title="Toggle verified status"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="checkbox"
+                                  checked={!!t.isApproved}
+                                  disabled={!!loadingMap[`tutor-${t.id}`]}
+                                  onChange={(e) =>
+                                    toggleField(
+                                      "tutor",
+                                      t.id,
+                                      t._id,
+                                      "isApproved",
+                                      e.target.checked,
+                                    )
+                                  }
+                                  title="Toggle approved status"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="checkbox"
+                                  checked={!!t.isPremium}
+                                  disabled={!!loadingMap[`tutor-${t.id}`]}
+                                  onChange={(e) =>
+                                    toggleField(
+                                      "tutor",
+                                      t.id,
+                                      t._id,
+                                      "isPremium",
+                                      e.target.checked,
+                                    )
+                                  }
+                                  title="Toggle premium status"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <div className="flex gap-2">
+                                  <Link
+                                    href={`/admin/edit-tutor/${t.id}`}
+                                    className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                                  >
+                                    Update
+                                  </Link>
+
+                                  <button
+                                    onClick={async () => {
+                                      try {
+                                        const result = await confirmAction(
+                                          t.isDeleted,
+                                        );
+                                        if (!result.isConfirmed) return;
+
+                                        const endpoint = t.isDeleted
+                                          ? `${BACKEND_BASE}/allTutors/restore/${t.id}`
+                                          : `${BACKEND_BASE}/allTutors/delete/${t.id}`;
+
+                                        const res = await fetch(endpoint, {
+                                          method: "PATCH",
+                                        });
+                                        if (!res.ok) {
+                                          const text = await res.text();
+                                          throw new Error(
+                                            text || "Action failed",
+                                          );
+                                        }
+
+                                        // ✅ Update local state
+                                        setTutors((prev) =>
+                                          prev.map((u) =>
+                                            u.id === t.id || u._id === t._id
+                                              ? {
+                                                  ...u,
+                                                  isDeleted: !t.isDeleted,
+                                                }
+                                              : u,
+                                          ),
+                                        );
+
+                                        // ✅ Success toast
+                                        Swal.fire({
+                                          toast: true,
+                                          position: "top-end",
+                                          icon: "success",
+                                          title: t.isDeleted
+                                            ? "Tutor restored"
+                                            : "Tutor deleted",
+                                          showConfirmButton: false,
+                                          timer: 2000,
+                                          timerProgressBar: true,
+                                          background: "#111827",
+                                          color: "#F9FAFB",
+                                        });
+                                      } catch (error: unknown) {
+                                        Swal.fire({
+                                          icon: "error",
+                                          title: "Update Failed",
+                                          text:
+                                            error instanceof Error
+                                              ? error.message
+                                              : "Something went wrong",
+                                        });
+                                      }
+                                    }}
+                                    className={`px-2 py-1 text-xs rounded ${
+                                      t.isDeleted
+                                        ? "bg-green-600 hover:bg-green-700 text-white"
+                                        : "bg-red-600 hover:bg-red-700 text-white"
+                                    }`}
+                                  >
+                                    {t.isDeleted ? "Restore" : "Delete"}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="flex items-center justify-between mt-3">
+                  <div className="text-sm text-gray-500">
+                    Page {tutorPage} of {tutorTotalPages}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() => setTutorPage((p) => Math.max(1, p - 1))}
+                      disabled={tutorPage === 1}
+                    >
+                      Prev
+                    </button>
+                    {/* {Array.from({ length: tutorTotalPages }).map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setTutorPage(i + 1)}
@@ -1019,481 +1408,516 @@ export default function AdminDashboard({
                       {i + 1}
                     </button>
                   ))} */}
-                  {(() => {
-                    const pages = [];
-                    // const maxVisible = 5;
-                    const start = Math.max(1, tutorPage - 2);
-                    const end = Math.min(tutorTotalPages, tutorPage + 2);
+                    {(() => {
+                      const pages = [];
+                      // const maxVisible = 5;
+                      const start = Math.max(1, tutorPage - 2);
+                      const end = Math.min(tutorTotalPages, tutorPage + 2);
 
-                    // First page
-                    if (start > 1) {
-                      pages.push(
-                        <button
-                          key={1}
-                          onClick={() => setTutorPage(1)}
-                          className="px-2 py-1 rounded bg-gray-100"
-                        >
-                          1
-                        </button>,
-                      );
-                      if (start > 2) {
-                        pages.push(<span key="start-ellipsis">...</span>);
+                      // First page
+                      if (start > 1) {
+                        pages.push(
+                          <button
+                            key={1}
+                            onClick={() => setTutorPage(1)}
+                            className="px-2 py-1 rounded bg-gray-100"
+                          >
+                            1
+                          </button>,
+                        );
+                        if (start > 2) {
+                          pages.push(<span key="start-ellipsis">...</span>);
+                        }
                       }
-                    }
 
-                    // Middle pages
-                    for (let i = start; i <= end; i++) {
-                      pages.push(
-                        <button
-                          key={i}
-                          onClick={() => setTutorPage(i)}
-                          className={`px-2 py-1 rounded ${
-                            i === tutorPage
-                              ? "bg-blue-600 text-white"
-                              : "bg-gray-100"
-                          }`}
-                        >
-                          {i}
-                        </button>,
-                      );
-                    }
-
-                    // Last page
-                    if (end < tutorTotalPages) {
-                      if (end < tutorTotalPages - 1) {
-                        pages.push(<span key="end-ellipsis">...</span>);
+                      // Middle pages
+                      for (let i = start; i <= end; i++) {
+                        pages.push(
+                          <button
+                            key={i}
+                            onClick={() => setTutorPage(i)}
+                            className={`px-2 py-1 rounded ${
+                              i === tutorPage
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-100"
+                            }`}
+                          >
+                            {i}
+                          </button>,
+                        );
                       }
-                      pages.push(
-                        <button
-                          key={tutorTotalPages}
-                          onClick={() => setTutorPage(tutorTotalPages)}
-                          className="px-2 py-1 rounded bg-gray-100"
-                        >
-                          {tutorTotalPages}
-                        </button>,
-                      );
-                    }
 
-                    return pages;
-                  })()}
+                      // Last page
+                      if (end < tutorTotalPages) {
+                        if (end < tutorTotalPages - 1) {
+                          pages.push(<span key="end-ellipsis">...</span>);
+                        }
+                        pages.push(
+                          <button
+                            key={tutorTotalPages}
+                            onClick={() => setTutorPage(tutorTotalPages)}
+                            className="px-2 py-1 rounded bg-gray-100"
+                          >
+                            {tutorTotalPages}
+                          </button>,
+                        );
+                      }
 
-                  <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() =>
-                      setTutorPage((p) => Math.min(tutorTotalPages, p + 1))
-                    }
-                    disabled={tutorPage === tutorTotalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : view === "jobs" ? (
-            // Jobs
-            <div className="bg-white border rounded p-4">
-              <h2 className="text-lg font-medium mb-2">Tuition Jobs</h2>
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-sm text-gray-500">
-                  Showing {filteredJobs.length} of {counts.jobs}
-                </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="search"
-                    value={jobTitleQuery}
-                    onChange={(e) => setJobTitleQuery(e.target.value)}
-                    placeholder="Search by title"
-                    className="border rounded px-3 py-2 text-sm w-72"
-                  />
-                  {jobTitleQuery && (
+                      return pages;
+                    })()}
+
                     <button
-                      className="text-sm text-gray-600 hover:text-gray-800"
-                      onClick={() => setJobTitleQuery("")}
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() =>
+                        setTutorPage((p) => Math.min(tutorTotalPages, p + 1))
+                      }
+                      disabled={tutorPage === tutorTotalPages}
                     >
-                      Clear
+                      Next
                     </button>
-                  )}
+                  </div>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left">
-                      <th className="px-3 py-2">Title</th>
-                      <th className="px-3 py-2">Subject</th>
-                      <th className="px-3 py-2">Location</th>
-                      <th className="px-3 py-2">Budget</th>
-                      <th className="px-3 py-2">Approved</th>
-                      <th className="px-3 py-2">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentJobItems.length === 0 ? (
-                      <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={6}>
-                          No jobs found
-                        </td>
+            ) : view === "jobs" ? (
+              // Jobs
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Briefcase size={20} className="text-emerald-500" />
+                  Tuition Jobs
+                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-gray-500">
+                    Showing {filteredJobs.length} of {counts.jobs}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="search"
+                      value={jobTitleQuery}
+                      onChange={(e) => setJobTitleQuery(e.target.value)}
+                      placeholder="Search by title"
+                      className="border rounded px-3 py-2 text-sm w-72"
+                    />
+                    {jobTitleQuery && (
+                      <button
+                        className="text-sm text-gray-600 hover:text-gray-800"
+                        onClick={() => setJobTitleQuery("")}
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="text-left bg-gray-50">
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Title
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Subject
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Location
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Budget
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Approved
+                        </th>
+                        <th className="px-3 py-2 font-semibold text-gray-600">
+                          Action
+                        </th>
                       </tr>
-                    ) : (
-                      currentJobItems.map((j) => {
-                        // Dynamic Title
-                        const jobTitle = j.subjects?.length
-                          ? `${j.subjects.slice(0, 2).join(", ")} teacher needed for class ${j.class}`
-                          : `Job (${j.jobId})`;
+                    </thead>
+                    <tbody>
+                      {currentJobItems.length === 0 ? (
+                        <tr className="border-t">
+                          <td
+                            className="px-3 py-4 text-gray-400 text-center"
+                            colSpan={6}
+                          >
+                            No jobs found
+                          </td>
+                        </tr>
+                      ) : (
+                        currentJobItems.map((j) => {
+                          // Dynamic Title
+                          const jobTitle = j.subjects?.length
+                            ? `${j.subjects.slice(0, 2).join(", ")} teacher needed for class ${j.class}`
+                            : `Job (${j.jobId})`;
 
-                        // Subjects for table
-                        const jobSubjects = j.subjects?.join(", ") || "-";
+                          // Subjects for table
+                          const jobSubjects = j.subjects?.join(", ") || "-";
 
-                        // Full Location
-                        const jobLocation = j.preferredArea
-                          ? `${j.location}, ${j.preferredArea}`
-                          : j.location;
+                          // Full Location
+                          const jobLocation = j.preferredArea
+                            ? `${j.location}, ${j.preferredArea}`
+                            : j.location;
 
-                        return (
-                          <tr key={j.id || j._id} className="border-t">
-                            <td className="px-3 py-2">{jobTitle}</td>
-                            <td className="px-3 py-2">{jobSubjects}</td>
-                            <td className="px-3 py-2">{jobLocation}</td>
-                            <td className="px-3 py-2">{j.salary} ৳</td>
+                          return (
+                            <tr
+                              key={j.id || j._id}
+                              className="border-t hover:bg-blue-50/40 transition-colors"
+                            >
+                              <td className="px-3 py-2">{jobTitle}</td>
+                              <td className="px-3 py-2">{jobSubjects}</td>
+                              <td className="px-3 py-2">{jobLocation}</td>
+                              <td className="px-3 py-2">{j.salary} ৳</td>
 
-                            <td className="px-3 py-2">
-                              <input
-                                type="checkbox"
-                                checked={!!j.isApproved}
-                                disabled={!!loadingMap[`job-${j.id || j._id}`]}
-                                onChange={(e) =>
-                                  toggleField(
-                                    "job",
-                                    j.id || j._id,
-                                    String(j._id),
-                                    "isApproved",
-                                    e.target.checked,
-                                  )
-                                }
-                              />
-                            </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="checkbox"
+                                  checked={!!j.isApproved}
+                                  disabled={
+                                    !!loadingMap[`job-${j.id || j._id}`]
+                                  }
+                                  onChange={(e) =>
+                                    toggleField(
+                                      "job",
+                                      j.id || j._id,
+                                      String(j._id),
+                                      "isApproved",
+                                      e.target.checked,
+                                    )
+                                  }
+                                />
+                              </td>
 
-                            <td className="px-3 py-2">
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={async () => {
-                                    const result = await Swal.fire({
-                                      title: "Edit Job?",
-                                      text: "You are about to edit this job's details.",
-                                      icon: "question",
-                                      showCancelButton: true,
-                                      confirmButtonText: "Yes, Edit",
-                                      cancelButtonText: "Cancel",
-                                      confirmButtonColor: "#2563eb",
-                                      cancelButtonColor: "#6b7280",
-                                    });
-
-                                    if (!result.isConfirmed) return;
-
-                                    setEditingJob(j);
-                                  }}
-                                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                  Update
-                                </button>
-
-                                <button
-                                  onClick={async () => {
-                                    try {
+                              <td className="px-3 py-2">
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={async () => {
                                       const result = await Swal.fire({
-                                        title: j.isDeleted
-                                          ? "Restore Job?"
-                                          : "Delete Job?",
-                                        text: j.isDeleted
-                                          ? "This job will be restored."
-                                          : "This job will be deleted.",
-                                        icon: "warning",
+                                        title: "Edit Job?",
+                                        text: "You are about to edit this job's details.",
+                                        icon: "question",
                                         showCancelButton: true,
-                                        confirmButtonColor: j.isDeleted
-                                          ? "#16a34a"
-                                          : "#dc2626",
+                                        confirmButtonText: "Yes, Edit",
+                                        cancelButtonText: "Cancel",
+                                        confirmButtonColor: "#2563eb",
                                         cancelButtonColor: "#6b7280",
-                                        confirmButtonText: j.isDeleted
-                                          ? "Yes, Restore"
-                                          : "Yes, Delete",
                                       });
 
                                       if (!result.isConfirmed) return;
 
-                                      const endpoint = j.isDeleted
-                                        ? `${BACKEND_BASE}/allJobs/restore/${j.jobId || j._id}`
-                                        : `${BACKEND_BASE}/allJobs/delete/${j.jobId || j._id}`;
+                                      setEditingJob(j);
+                                    }}
+                                    className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                                  >
+                                    Update
+                                  </button>
 
-                                      const res = await fetch(endpoint, {
-                                        method: "PATCH",
-                                      });
+                                  <button
+                                    onClick={async () => {
+                                      try {
+                                        const result = await Swal.fire({
+                                          title: j.isDeleted
+                                            ? "Restore Job?"
+                                            : "Delete Job?",
+                                          text: j.isDeleted
+                                            ? "This job will be restored."
+                                            : "This job will be deleted.",
+                                          icon: "warning",
+                                          showCancelButton: true,
+                                          confirmButtonColor: j.isDeleted
+                                            ? "#16a34a"
+                                            : "#dc2626",
+                                          cancelButtonColor: "#6b7280",
+                                          confirmButtonText: j.isDeleted
+                                            ? "Yes, Restore"
+                                            : "Yes, Delete",
+                                        });
 
-                                      if (!res.ok) {
-                                        const text = await res.text();
-                                        throw new Error(
-                                          text || "Request failed",
+                                        if (!result.isConfirmed) return;
+
+                                        const endpoint = j.isDeleted
+                                          ? `${BACKEND_BASE}/allJobs/restore/${j.jobId || j._id}`
+                                          : `${BACKEND_BASE}/allJobs/delete/${j.jobId || j._id}`;
+
+                                        const res = await fetch(endpoint, {
+                                          method: "PATCH",
+                                        });
+
+                                        if (!res.ok) {
+                                          const text = await res.text();
+                                          throw new Error(
+                                            text || "Request failed",
+                                          );
+                                        }
+
+                                        setJobs((prev) =>
+                                          prev.map((job) =>
+                                            job.id === j.id || job._id === j._id
+                                              ? {
+                                                  ...job,
+                                                  isDeleted: !j.isDeleted,
+                                                }
+                                              : job,
+                                          ),
                                         );
+
+                                        Swal.fire({
+                                          toast: true,
+                                          position: "top-end",
+                                          icon: "success",
+                                          title: j.isDeleted
+                                            ? "Restored successfully"
+                                            : "Deleted successfully",
+                                          showConfirmButton: false,
+                                          timer: 2500,
+                                          timerProgressBar: true,
+                                        });
+                                      } catch (err) {
+                                        Swal.fire({
+                                          icon: "error",
+                                          title: "Action failed",
+                                          text:
+                                            err instanceof Error
+                                              ? err.message
+                                              : "Something went wrong",
+                                        });
                                       }
-
-                                      setJobs((prev) =>
-                                        prev.map((job) =>
-                                          job.id === j.id || job._id === j._id
-                                            ? {
-                                                ...job,
-                                                isDeleted: !j.isDeleted,
-                                              }
-                                            : job,
-                                        ),
-                                      );
-
-                                      Swal.fire({
-                                        toast: true,
-                                        position: "top-end",
-                                        icon: "success",
-                                        title: j.isDeleted
-                                          ? "Restored successfully"
-                                          : "Deleted successfully",
-                                        showConfirmButton: false,
-                                        timer: 2500,
-                                        timerProgressBar: true,
-                                      });
-                                    } catch (err) {
-                                      Swal.fire({
-                                        icon: "error",
-                                        title: "Action failed",
-                                        text:
-                                          err instanceof Error
-                                            ? err.message
-                                            : "Something went wrong",
-                                      });
-                                    }
-                                  }}
-                                  className={`px-2 py-1 text-xs rounded ${
-                                    j.isDeleted
-                                      ? "bg-green-600 hover:bg-green-700 text-white"
-                                      : "bg-red-600 hover:bg-red-700 text-white"
-                                  }`}
-                                >
-                                  {j.isDeleted ? "Restore" : "Delete"}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="flex items-center justify-between mt-3">
-                <div className="text-sm text-gray-500">
-                  Page {jobPage} of {jobTotalPages}
+                                    }}
+                                    className={`px-2 py-1 text-xs rounded ${
+                                      j.isDeleted
+                                        ? "bg-green-600 hover:bg-green-700 text-white"
+                                        : "bg-red-600 hover:bg-red-700 text-white"
+                                    }`}
+                                  >
+                                    {j.isDeleted ? "Restore" : "Delete"}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() => setJobPage((p) => Math.max(1, p - 1))}
-                    disabled={jobPage === 1}
-                  >
-                    Prev
-                  </button>
-                  {Array.from({ length: jobTotalPages }).map((_, i) => (
+
+                <div className="flex items-center justify-between mt-3">
+                  <div className="text-sm text-gray-500">
+                    Page {jobPage} of {jobTotalPages}
+                  </div>
+                  <div className="flex items-center gap-2">
                     <button
-                      key={i}
-                      onClick={() => setJobPage(i + 1)}
-                      className={`px-2 py-1 rounded ${
-                        i + 1 === jobPage
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100"
-                      }`}
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() => setJobPage((p) => Math.max(1, p - 1))}
+                      disabled={jobPage === 1}
                     >
-                      {i + 1}
+                      Prev
                     </button>
-                  ))}
-                  <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() =>
-                      setJobPage((p) => Math.min(jobTotalPages, p + 1))
-                    }
-                    disabled={jobPage === jobTotalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            // Applications
-            <div className="bg-white border rounded p-4">
-              <h2 className="text-lg font-medium mb-4">Applications</h2>
-
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-sm text-gray-500">
-                  {applications.length === 0 ? (
-                    <>Showing 0 of 0</>
-                  ) : (
-                    <>
-                      Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
-                      {Math.min(
-                        applicationsPage * PAGE_SIZE,
-                        applications.length,
-                      )}{" "}
-                      of {applications.length}
-                    </>
-                  )}
-                </div>
-                <div />
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left bg-gray-50">
-                      <th className="px-3 py-2">ID</th>
-                      {/* <th className="px-3 py-2">Job Title</th> */}
-                      <th className="px-3 py-2">Subject</th>
-                      <th className="px-3 py-2">Tutor Name</th>
-                      <th className="px-3 py-2">Email</th>
-                      <th className="px-3 py-2">Phone</th>
-                      <th className="px-3 py-2">Rate</th>
-                      <th className="px-3 py-2">Schedule</th>
-                      <th className="px-3 py-2">Created</th>
-                      <th className="px-3 py-2">Status</th>
-                      <th className="px-3 py-2">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentApplicationItems.length === 0 ? (
-                      <tr className="border-t">
-                        <td className="px-3 py-2" colSpan={10}>
-                          No applications found
-                        </td>
-                      </tr>
-                    ) : (
-                      currentApplicationItems.map((a) => {
-                        // Use aggregated job from response
-                        // const jobTitle =
-                        //   a.job?.title || `Job (${a.tuitionJobId})`;
-                        const jobSubject = a.job?.subjects?.length
-                          ? a.job.subjects.join(", ")
-                          : "-";
-                        const tutorName =
-                          a.tutor?.fullName || `Tutor (${a.tutorId})`;
-                        const tutorEmail = a.tutor?.email || "-";
-                        const tutorPhone = a.tutor?.phone || "-";
-                        const isDeleted = a.isDeleted || false;
-
-                        return (
-                          <tr
-                            key={a._id}
-                            className={`border-t ${
-                              isDeleted ? "bg-red-50" : ""
-                            }`}
-                          >
-                            <td className="px-3 py-2 text-xs font-mono">
-                              {String(a._id).slice(-8)}
-                            </td>
-                            {/* <td className="px-3 py-2 font-medium">
-                              {jobTitle}
-                            </td> */}
-                            <td className="px-3 py-2">{jobSubject}</td>
-                            <td className="px-3 py-2 font-medium">
-                              {tutorName}
-                            </td>
-                            <td className="px-3 py-2 text-xs">{tutorEmail}</td>
-                            <td className="px-3 py-2 text-xs">{tutorPhone}</td>
-                            <td className="px-3 py-2 font-semibold">
-                              {a.rate} Tk
-                            </td>
-                            <td className="px-3 py-2 text-xs truncate">
-                              {a.schedule}
-                            </td>
-                            <td className="px-3 py-2 text-xs">
-                              {new Date(a.createdAt).toLocaleDateString()}
-                            </td>
-                            <td className="px-3 py-2">
-                              <span
-                                className={`px-2 py-1 rounded text-xs font-semibold ${
-                                  isDeleted
-                                    ? "bg-red-100 text-red-800"
-                                    : "bg-green-100 text-green-800"
-                                }`}
-                              >
-                                {isDeleted ? "Deleted" : "Active"}
-                              </span>
-                            </td>
-                            <td className="px-3 py-2">
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() =>
-                                    toggleApplicationStatus(a._id, !isDeleted)
-                                  }
-                                  disabled={
-                                    !!loadingMap[`application-${a._id}`]
-                                  }
-                                  className={`px-2 py-1 text-xs rounded text-white transition-colors ${
-                                    isDeleted
-                                      ? "bg-green-600 hover:bg-green-700 disabled:opacity-50"
-                                      : "bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
-                                  }`}
-                                >
-                                  {isDeleted ? "Restore" : "Soft Delete"}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="flex items-center justify-between mt-3">
-                <div className="text-sm text-gray-500">
-                  Page {applicationsPage} of {applicationsTotalPages}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() =>
-                      setApplicationsPage((p) => Math.max(1, p - 1))
-                    }
-                    disabled={applicationsPage === 1}
-                  >
-                    Prev
-                  </button>
-                  {Array.from({ length: applicationsTotalPages }).map(
-                    (_, i) => (
+                    {Array.from({ length: jobTotalPages }).map((_, i) => (
                       <button
                         key={i}
-                        onClick={() => setApplicationsPage(i + 1)}
+                        onClick={() => setJobPage(i + 1)}
                         className={`px-2 py-1 rounded ${
-                          i + 1 === applicationsPage
+                          i + 1 === jobPage
                             ? "bg-blue-600 text-white"
                             : "bg-gray-100"
                         }`}
                       >
                         {i + 1}
                       </button>
-                    ),
-                  )}
-                  <button
-                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-                    onClick={() =>
-                      setApplicationsPage((p) =>
-                        Math.min(applicationsTotalPages, p + 1),
-                      )
-                    }
-                    disabled={applicationsPage === applicationsTotalPages}
-                  >
-                    Next
-                  </button>
+                    ))}
+                    <button
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() =>
+                        setJobPage((p) => Math.min(jobTotalPages, p + 1))
+                      }
+                      disabled={jobPage === jobTotalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            ) : (
+              // Applications
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <FileText size={20} className="text-violet-500" />
+                  Applications
+                </h2>
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-gray-500">
+                    {applications.length === 0 ? (
+                      <>Showing 0 of 0</>
+                    ) : (
+                      <>
+                        Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
+                        {Math.min(
+                          applicationsPage * PAGE_SIZE,
+                          applications.length,
+                        )}{" "}
+                        of {applications.length}
+                      </>
+                    )}
+                  </div>
+                  <div />
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="text-left bg-gray-50">
+                        <th className="px-3 py-2">ID</th>
+                        {/* <th className="px-3 py-2">Job Title</th> */}
+                        <th className="px-3 py-2">Subject</th>
+                        <th className="px-3 py-2">Tutor Name</th>
+                        <th className="px-3 py-2">Email</th>
+                        <th className="px-3 py-2">Phone</th>
+                        <th className="px-3 py-2">Rate</th>
+                        <th className="px-3 py-2">Schedule</th>
+                        <th className="px-3 py-2">Created</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentApplicationItems.length === 0 ? (
+                        <tr className="border-t">
+                          <td
+                            className="px-3 py-4 text-gray-400 text-center"
+                            colSpan={10}
+                          >
+                            No applications found
+                          </td>
+                        </tr>
+                      ) : (
+                        currentApplicationItems.map((a) => {
+                          // Use aggregated job from response
+                          // const jobTitle =
+                          //   a.job?.title || `Job (${a.tuitionJobId})`;
+                          const jobSubject = a.job?.subjects?.length
+                            ? a.job.subjects.join(", ")
+                            : "-";
+                          const tutorName =
+                            a.tutor?.fullName || `Tutor (${a.tutorId})`;
+                          const tutorEmail = a.tutor?.email || "-";
+                          const tutorPhone = a.tutor?.phone || "-";
+                          const isDeleted = a.isDeleted || false;
+
+                          return (
+                            <tr
+                              key={a._id}
+                              className={`border-t transition-colors ${
+                                isDeleted
+                                  ? "bg-red-50 hover:bg-red-100/60"
+                                  : "hover:bg-blue-50/40"
+                              }`}
+                            >
+                              <td className="px-3 py-2 text-xs font-mono">
+                                {String(a._id).slice(-8)}
+                              </td>
+                              {/* <td className="px-3 py-2 font-medium">
+                              {jobTitle}
+                            </td> */}
+                              <td className="px-3 py-2">{jobSubject}</td>
+                              <td className="px-3 py-2 font-medium">
+                                {tutorName}
+                              </td>
+                              <td className="px-3 py-2 text-xs">
+                                {tutorEmail}
+                              </td>
+                              <td className="px-3 py-2 text-xs">
+                                {tutorPhone}
+                              </td>
+                              <td className="px-3 py-2 font-semibold">
+                                {a.rate} Tk
+                              </td>
+                              <td className="px-3 py-2 text-xs truncate">
+                                {a.schedule}
+                              </td>
+                              <td className="px-3 py-2 text-xs">
+                                {new Date(a.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="px-3 py-2">
+                                <span
+                                  className={`px-2 py-1 rounded text-xs font-semibold ${
+                                    isDeleted
+                                      ? "bg-red-100 text-red-800"
+                                      : "bg-green-100 text-green-800"
+                                  }`}
+                                >
+                                  {isDeleted ? "Deleted" : "Active"}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2">
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() =>
+                                      toggleApplicationStatus(a._id, !isDeleted)
+                                    }
+                                    disabled={
+                                      !!loadingMap[`application-${a._id}`]
+                                    }
+                                    className={`px-2 py-1 text-xs rounded text-white transition-colors ${
+                                      isDeleted
+                                        ? "bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                        : "bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+                                    }`}
+                                  >
+                                    {isDeleted ? "Restore" : "Soft Delete"}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="flex items-center justify-between mt-3">
+                  <div className="text-sm text-gray-500">
+                    Page {applicationsPage} of {applicationsTotalPages}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() =>
+                        setApplicationsPage((p) => Math.max(1, p - 1))
+                      }
+                      disabled={applicationsPage === 1}
+                    >
+                      Prev
+                    </button>
+                    {Array.from({ length: applicationsTotalPages }).map(
+                      (_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setApplicationsPage(i + 1)}
+                          className={`px-2 py-1 rounded ${
+                            i + 1 === applicationsPage
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100"
+                          }`}
+                        >
+                          {i + 1}
+                        </button>
+                      ),
+                    )}
+                    <button
+                      className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                      onClick={() =>
+                        setApplicationsPage((p) =>
+                          Math.min(applicationsTotalPages, p + 1),
+                        )
+                      }
+                      disabled={applicationsPage === applicationsTotalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
         </section>
       </div>
 
