@@ -55,7 +55,6 @@ ApplyJobModalProps) {
     resolver: zodResolver(proposalSchema),
   });
 
-  
   const onSubmit = async (data: ProposalFormData) => {
     try {
       setSubmitError(null);
@@ -65,7 +64,7 @@ ApplyJobModalProps) {
 
       if (!finalTutorId || finalTutorId <= 0) {
         throw new Error(
-          "Unable to identify your tutor ID. Please log in again."
+          "Unable to identify your tutor ID. Please log in again.",
         );
       }
 
@@ -75,6 +74,7 @@ ApplyJobModalProps) {
         proposal: string;
         tutorId: string; // MongoDB ObjectId as string
         tuitionJobId: string; // MongoDB ObjectId as string
+        status: "applied";
       }
       const applicationPayload: ApplicationPayload = {
         rate: parseInt(data.rate, 10),
@@ -82,22 +82,26 @@ ApplyJobModalProps) {
         proposal: data.proposal,
         tutorId: String(finalTutorId), // Convert to string for MongoDB
         tuitionJobId: String(job?._id), // Use _id from job object
+        status: "applied",
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/applications`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationPayload),
         },
-        body: JSON.stringify(applicationPayload),
-      });
+      );
 
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result?.message || "Failed to submit application");
       }
-      
+
       setIsSubmitted(true);
 
       setTimeout(() => {
@@ -108,7 +112,7 @@ ApplyJobModalProps) {
     } catch (error) {
       console.error("Application submission error:", error);
       setSubmitError(
-        error instanceof Error ? error.message : "Failed to submit application"
+        error instanceof Error ? error.message : "Failed to submit application",
       );
     }
   };
@@ -196,8 +200,8 @@ ApplyJobModalProps) {
   }
 
   const subjectText = job.subjects?.length
-  ? job.subjects.join(", ")
-  : "Teacher";
+    ? job.subjects.join(", ")
+    : "Teacher";
   const className = job.class?.toLowerCase();
 
   return (
@@ -252,7 +256,9 @@ ApplyJobModalProps) {
                       <div>
                         <p className="text-gray-600 font-medium">Subject</p>
                         <p className="text-gray-800 font-semibold">
-                          {job.subjects?.length ? job.subjects.join(", ") : "N/A"}
+                          {job.subjects?.length
+                            ? job.subjects.join(", ")
+                            : "N/A"}
                         </p>
                       </div>
                       <div>

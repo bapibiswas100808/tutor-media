@@ -266,6 +266,13 @@ export default function AdminDashboard({
       : payments;
   }, [payments, paymentTutorIdQuery]);
 
+  // Filter applications to exclude shortlisted
+  const filteredApplications = useMemo(() => {
+    return applications.filter(
+      (app) => app.status?.toLowerCase()?.trim() !== "shortlisted",
+    );
+  }, [applications]);
+
   const tutorTotalPages = Math.max(
     1,
     Math.ceil(filteredTutors.length / PAGE_SIZE),
@@ -273,7 +280,7 @@ export default function AdminDashboard({
   const jobTotalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
   const applicationsTotalPages = Math.max(
     1,
-    Math.ceil(applications.length / PAGE_SIZE),
+    Math.ceil(filteredApplications.length / PAGE_SIZE),
   );
   const paymentsTotalPages = Math.max(
     1,
@@ -288,7 +295,7 @@ export default function AdminDashboard({
     (jobPage - 1) * PAGE_SIZE,
     jobPage * PAGE_SIZE,
   );
-  const currentApplicationItems = applications.slice(
+  const currentApplicationItems = filteredApplications.slice(
     (applicationsPage - 1) * PAGE_SIZE,
     applicationsPage * PAGE_SIZE,
   );
@@ -416,68 +423,163 @@ export default function AdminDashboard({
   }
 
   // Toggle Application Status (Soft Delete)
-  const toggleApplicationStatus = async (
+  // const toggleApplicationStatus = async (
+  //   applicationId: string,
+  //   shouldDelete: boolean,
+  // ) => {
+  //   const key = `application-${applicationId}`;
+
+  //   // 🔔 Confirm first
+  //   const result = await Swal.fire({
+  //     title: shouldDelete ? "Delete application?" : "Restore application?",
+  //     text: shouldDelete
+  //       ? "This application will be soft deleted."
+  //       : "This application will be restored.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
+  //     cancelButtonColor: "#6b7280",
+  //     confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
+  //   });
+
+  //   if (!result.isConfirmed) return;
+
+  //   setLoadingMap((s) => ({ ...s, [key]: true }));
+  //   setError(null);
+
+  //   // ✅ Optimistic update
+  //   setApplications((prev) =>
+  //     prev.map((a) =>
+  //       a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
+  //     ),
+  //   );
+
+  //   try {
+  //     const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ isDeleted: shouldDelete }),
+  //     });
+
+  //     if (!res.ok) {
+  //       const text = await res.text();
+  //       throw new Error(text || "Update failed");
+  //     }
+
+  //     // ✅ Success toast
+  //     Swal.fire({
+  //       toast: true,
+  //       position: "top-end",
+  //       icon: "success",
+  //       title: shouldDelete ? "Application deleted" : "Application restored",
+  //       showConfirmButton: false,
+  //       timer: 2500,
+  //       timerProgressBar: true,
+  //     });
+  //   } catch (err) {
+  //     // 🔄 Revert optimistic update
+  //     setApplications((prev) =>
+  //       prev.map((a) =>
+  //         a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
+  //       ),
+  //     );
+
+  //     const message = err instanceof Error ? err.message : "Update failed";
+
+  //     setError(message);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Action failed",
+  //       text: message,
+  //     });
+  //   } finally {
+  //     setLoadingMap((s) => ({ ...s, [key]: false }));
+  //   }
+  // };
+
+  // Update Application Status (Under Review / Selected / Not Selected)
+  const updateApplicationStatus = async (
     applicationId: string,
-    shouldDelete: boolean,
+    action: "appointed" | "rejected",
   ) => {
     const key = `application-${applicationId}`;
 
-    // 🔔 Confirm first
+    // Status label for Swal
+    const statusLabel = action === "appointed" ? "Appoint" : "Reject";
+    const finalStatus = action === "appointed" ? "appointed" : "rejected";
+
+    // Confirm Dialog
     const result = await Swal.fire({
-      title: shouldDelete ? "Delete application?" : "Restore application?",
-      text: shouldDelete
-        ? "This application will be soft deleted."
-        : "This application will be restored.",
+      title: `${statusLabel} application?`,
+      text: `Application status will be changed to "${statusLabel}".`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
+      confirmButtonColor: action === "appointed" ? "#16a34a" : "#dc2626",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
+      confirmButtonText: `Yes, ${statusLabel}`,
     });
 
     if (!result.isConfirmed) return;
 
-    setLoadingMap((s) => ({ ...s, [key]: true }));
+    setLoadingMap((s) => ({
+      ...s,
+      [key]: true,
+    }));
+
     setError(null);
 
-    // ✅ Optimistic update
+    // Store old applications for rollback
+    const previousApplications = [...applications];
+
+    // Optimistic Update
     setApplications((prev) =>
       prev.map((a) =>
-        a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
+        a._id === applicationId
+          ? {
+              ...a,
+              status: finalStatus,
+            }
+          : a,
       ),
     );
 
     try {
-      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
+      const token = localStorage.getItem("token");
+      const endpoint =
+        action === "appointed"
+          ? `${BACKEND_BASE}/applications/${applicationId}/appointed`
+          : `${BACKEND_BASE}/applications/${applicationId}/rejected`;
+
+      const res = await fetch(endpoint, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isDeleted: shouldDelete }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || "Update failed");
+        throw new Error(text || "Status update failed");
       }
 
-      // ✅ Success toast
+      // Success Toast
       Swal.fire({
         toast: true,
         position: "top-end",
         icon: "success",
-        title: shouldDelete ? "Application deleted" : "Application restored",
+        title: `Application marked as ${statusLabel}`,
         showConfirmButton: false,
         timer: 2500,
         timerProgressBar: true,
       });
     } catch (err) {
-      // 🔄 Revert optimistic update
-      setApplications((prev) =>
-        prev.map((a) =>
-          a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
-        ),
-      );
+      // Rollback if failed
+      setApplications(previousApplications);
 
-      const message = err instanceof Error ? err.message : "Update failed";
+      const message =
+        err instanceof Error ? err.message : "Status update failed";
 
       setError(message);
 
@@ -487,7 +589,10 @@ export default function AdminDashboard({
         text: message,
       });
     } finally {
-      setLoadingMap((s) => ({ ...s, [key]: false }));
+      setLoadingMap((s) => ({
+        ...s,
+        [key]: false,
+      }));
     }
   };
 
@@ -976,19 +1081,6 @@ export default function AdminDashboard({
                             </td>
                             <td className="px-3 py-2">৳{p.amount || "0"}</td>
                             <td className="px-3 py-2">{p.sender || "N/A"}</td>
-                            {/* <td className="px-3 py-2">
-                            <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${
-                                p.status === "verified"
-                                  ? "bg-green-100 text-green-800"
-                                  : p.status === "pending"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {p.status || "pending"}
-                            </span>
-                          </td> */}
                             <td className="px-3 py-2 text-xs text-gray-500">
                               {p.createdAt
                                 ? new Date(p.createdAt).toLocaleDateString()
@@ -1000,28 +1092,6 @@ export default function AdminDashboard({
                     </tbody>
                   </table>
                 </div>
-                {/* Pagination */}
-                {/* <div className="flex justify-center gap-2 mt-4">
-                <button
-                  disabled={paymentsPage === 1}
-                  onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="px-3 py-2 text-sm">
-                  Page {paymentsPage} of {paymentsTotalPages}
-                </span>
-                <button
-                  disabled={paymentsPage === paymentsTotalPages}
-                  onClick={() =>
-                    setPaymentsPage((p) => Math.min(paymentsTotalPages, p + 1))
-                  }
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div> */}
                 <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
                   {/* Previous Button */}
                   <button
@@ -1512,7 +1582,7 @@ export default function AdminDashboard({
                     <thead>
                       <tr className="text-left bg-gray-50">
                         <th className="px-3 py-2 font-semibold text-gray-600">
-                          Title
+                          Title / Job ID
                         </th>
                         <th className="px-3 py-2 font-semibold text-gray-600">
                           Subject
@@ -1561,7 +1631,9 @@ export default function AdminDashboard({
                               key={j.id || j._id}
                               className="border-t hover:bg-blue-50/40 transition-colors"
                             >
-                              <td className="px-3 py-2">{jobTitle}</td>
+                              <td className="px-3 py-2">
+                                {jobTitle} - {j.jobId}
+                              </td>
                               <td className="px-3 py-2">{jobSubjects}</td>
                               <td className="px-3 py-2">{jobLocation}</td>
                               <td className="px-3 py-2">{j.salary} ৳</td>
@@ -1745,16 +1817,16 @@ export default function AdminDashboard({
 
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-sm text-gray-500">
-                    {applications.length === 0 ? (
+                    {filteredApplications.length === 0 ? (
                       <>Showing 0 of 0</>
                     ) : (
                       <>
                         Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
                         {Math.min(
                           applicationsPage * PAGE_SIZE,
-                          applications.length,
+                          filteredApplications.length,
                         )}{" "}
-                        of {applications.length}
+                        of {filteredApplications.length}
                       </>
                     )}
                   </div>
@@ -1763,10 +1835,9 @@ export default function AdminDashboard({
 
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    <thead>
+                    {/* <thead>
                       <tr className="text-left bg-gray-50">
                         <th className="px-3 py-2">ID</th>
-                        {/* <th className="px-3 py-2">Job Title</th> */}
                         <th className="px-3 py-2">Subject</th>
                         <th className="px-3 py-2">Tutor Name</th>
                         <th className="px-3 py-2">Email</th>
@@ -1777,99 +1848,111 @@ export default function AdminDashboard({
                         <th className="px-3 py-2">Status</th>
                         <th className="px-3 py-2">Action</th>
                       </tr>
+                    </thead> */}
+                    <thead>
+                      <tr className="text-left bg-gray-50">
+                        <th className="px-3 py-2">Tuition Code</th>
+                        <th className="px-3 py-2">Tutor ID</th>
+                        <th className="px-3 py-2">Tutor Name</th>
+                        <th className="px-3 py-2">Short CV</th>
+                        <th className="px-3 py-2">Phone</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Action</th>
+                      </tr>
                     </thead>
-                    <tbody>
-                      {currentApplicationItems.length === 0 ? (
-                        <tr className="border-t">
-                          <td
-                            className="px-3 py-4 text-gray-400 text-center"
-                            colSpan={10}
-                          >
-                            No applications found
-                          </td>
-                        </tr>
-                      ) : (
-                        currentApplicationItems.map((a) => {
-                          // Use aggregated job from response
-                          // const jobTitle =
-                          //   a.job?.title || `Job (${a.tuitionJobId})`;
-                          const jobSubject = a.job?.subjects?.length
-                            ? a.job.subjects.join(", ")
-                            : "-";
-                          const tutorName =
-                            a.tutor?.fullName || `Tutor (${a.tutorId})`;
-                          const tutorEmail = a.tutor?.email || "-";
-                          const tutorPhone = a.tutor?.phone || "-";
-                          const isDeleted = a.isDeleted || false;
 
-                          return (
-                            <tr
-                              key={a._id}
-                              className={`border-t transition-colors ${
-                                isDeleted
-                                  ? "bg-red-50 hover:bg-red-100/60"
-                                  : "hover:bg-blue-50/40"
-                              }`}
-                            >
-                              <td className="px-3 py-2 text-xs font-mono">
-                                {String(a._id).slice(-8)}
-                              </td>
-                              {/* <td className="px-3 py-2 font-medium">
-                              {jobTitle}
-                            </td> */}
-                              <td className="px-3 py-2">{jobSubject}</td>
-                              <td className="px-3 py-2 font-medium">
-                                {tutorName}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {tutorEmail}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {tutorPhone}
-                              </td>
-                              <td className="px-3 py-2 font-semibold">
-                                {a.rate} Tk
-                              </td>
-                              <td className="px-3 py-2 text-xs truncate">
-                                {a.schedule}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {new Date(a.createdAt).toLocaleDateString()}
-                              </td>
-                              <td className="px-3 py-2">
-                                <span
-                                  className={`px-2 py-1 rounded text-xs font-semibold ${
-                                    isDeleted
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-green-100 text-green-800"
-                                  }`}
+                    <tbody>
+                      {currentApplicationItems.map((a) => {
+                        const status = a.status ?? "applied";
+
+                        return (
+                          <tr
+                            key={a._id}
+                            className="border-t hover:bg-gray-50 transition"
+                          >
+                            {/* 1. Tuition Code */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              {a.job?.jobId}
+                            </td>
+
+                            {/* 2. Tutor ID */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              T-{a.tutor?.id}
+                            </td>
+
+                            {/* Tutor Name */}
+                            <td className="px-3 py-2 font-medium">
+                              {a.tutor?.fullName}
+                            </td>
+
+                            {/* 3. Teacher Short CV */}
+                            <td className="px-3 py-2 max-w-75">
+                              <div className="space-y-1 text-xs">
+                                <p className="font-medium">
+                                  {a.tutor?.qualification}
+                                </p>
+
+                                <p>Exp: {a.tutor?.experience}</p>
+
+                                <p className="line-clamp-2 text-gray-600">
+                                  {a.tutor?.personalInfo?.overview}
+                                </p>
+                              </div>
+                            </td>
+
+                            {/* Phone */}
+                            <td className="px-3 py-2 text-xs">
+                              {a.tutor?.phone}
+                            </td>
+
+                            {/* Status */}
+                            <td className="px-3 py-2">
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-semibold
+              ${
+                status === "appointed"
+                  ? "bg-green-100 text-green-700"
+                  : status === "rejected"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
+              }
+            `}
+                              >
+                                {status === "appointed"
+                                  ? "Appointed"
+                                  : status === "rejected"
+                                    ? "Rejected"
+                                    : "Applied"}
+                              </span>
+                            </td>
+
+                            {/* 4/5/6 Actions */}
+                            <td className="px-3 py-2">
+                              <div className="flex flex-wrap gap-2">
+                                {/* Appoint */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(a._id, "appointed")
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
                                 >
-                                  {isDeleted ? "Deleted" : "Active"}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2">
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() =>
-                                      toggleApplicationStatus(a._id, !isDeleted)
-                                    }
-                                    disabled={
-                                      !!loadingMap[`application-${a._id}`]
-                                    }
-                                    className={`px-2 py-1 text-xs rounded text-white transition-colors ${
-                                      isDeleted
-                                        ? "bg-green-600 hover:bg-green-700 disabled:opacity-50"
-                                        : "bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
-                                    }`}
-                                  >
-                                    {isDeleted ? "Restore" : "Soft Delete"}
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
+                                  Appoint
+                                </button>
+
+                                {/* Reject */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(a._id, "rejected")
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

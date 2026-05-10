@@ -63,7 +63,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
     applied: 0,
     shortlisted: 0,
     appointed: 0,
-    confirmed: 0,
     cancelled: 0,
   });
 
@@ -158,21 +157,20 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   // Fetch application stats for own profile
   useEffect(() => {
     if (!isOwnProfile || !tutor?.id || !token) return;
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/applications?tutorId=${tutor.id}`,
-      { headers: { authorization: `Bearer ${token}` } },
-    )
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data: { status?: string; isDeleted?: boolean }[]) => {
-        const list = Array.isArray(data) ? data : [];
-        setAppStats({
-          applied: list.length,
-          shortlisted: list.filter((a) => a.status === "shortlisted").length,
-          appointed: list.filter((a) => a.status === "appointed").length,
-          confirmed: list.filter((a) => a.status === "confirmed").length,
-          cancelled: list.filter((a) => a.status === "cancelled" || a.isDeleted)
-            .length,
-        });
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutor-job-stats/${tutor.id}`, {
+      headers: { authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setAppStats({
+            applied: data.applied || 0,
+            shortlisted: data.shortlisted || 0,
+            appointed: data.appointed || 0,
+            // confirmed: data.confirmed || 0,
+            cancelled: data.rejected || 0,
+          });
+        }
       })
       .catch(() => {});
   }, [isOwnProfile, tutor?.id, token]);
@@ -358,7 +356,7 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+              className="mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
             >
               {[
                 {
@@ -381,13 +379,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
                   color: "text-violet-600",
                   bg: "bg-violet-50",
                   icon: "🔒",
-                },
-                {
-                  label: "Confirmed Jobs",
-                  value: appStats.confirmed,
-                  color: "text-green-600",
-                  bg: "bg-green-50",
-                  icon: "✅",
                 },
                 {
                   label: "Cancelled Jobs",
