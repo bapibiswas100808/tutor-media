@@ -89,10 +89,26 @@ export default function TuitionJobCard({
       </div>
 
       {/* Title */}
-      <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
+      {/* <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
         Need a <span className="text-red-500">{tutorGenderCapitalized}</span>{" "}
         Tutor for {job.medium} {job.location} , {job.district}
-      </h3>
+      </h3> */}
+
+      <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
+  Need a{" "}
+  <span
+    className={
+      job.tutorGender === "male"
+        ? "text-blue-500"
+        : job.tutorGender === "female"
+        ? "text-red-500"
+        : "text-gray-500"
+    }
+  >
+    {tutorGenderCapitalized}
+  </span>{" "}
+  Tutor for {job.medium} in {job.location}, {job.district}
+</h3>
 
       {/* Info grid: 3 cols × 2 rows */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mb-4">

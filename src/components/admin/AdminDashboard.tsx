@@ -976,19 +976,6 @@ export default function AdminDashboard({
                             </td>
                             <td className="px-3 py-2">৳{p.amount || "0"}</td>
                             <td className="px-3 py-2">{p.sender || "N/A"}</td>
-                            {/* <td className="px-3 py-2">
-                            <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${
-                                p.status === "verified"
-                                  ? "bg-green-100 text-green-800"
-                                  : p.status === "pending"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {p.status || "pending"}
-                            </span>
-                          </td> */}
                             <td className="px-3 py-2 text-xs text-gray-500">
                               {p.createdAt
                                 ? new Date(p.createdAt).toLocaleDateString()
@@ -1000,28 +987,6 @@ export default function AdminDashboard({
                     </tbody>
                   </table>
                 </div>
-                {/* Pagination */}
-                {/* <div className="flex justify-center gap-2 mt-4">
-                <button
-                  disabled={paymentsPage === 1}
-                  onClick={() => setPaymentsPage((p) => Math.max(1, p - 1))}
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="px-3 py-2 text-sm">
-                  Page {paymentsPage} of {paymentsTotalPages}
-                </span>
-                <button
-                  disabled={paymentsPage === paymentsTotalPages}
-                  onClick={() =>
-                    setPaymentsPage((p) => Math.min(paymentsTotalPages, p + 1))
-                  }
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div> */}
                 <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
                   {/* Previous Button */}
                   <button
@@ -1512,7 +1477,7 @@ export default function AdminDashboard({
                     <thead>
                       <tr className="text-left bg-gray-50">
                         <th className="px-3 py-2 font-semibold text-gray-600">
-                          Title
+                          Title / Job ID
                         </th>
                         <th className="px-3 py-2 font-semibold text-gray-600">
                           Subject
@@ -1561,7 +1526,9 @@ export default function AdminDashboard({
                               key={j.id || j._id}
                               className="border-t hover:bg-blue-50/40 transition-colors"
                             >
-                              <td className="px-3 py-2">{jobTitle}</td>
+                              <td className="px-3 py-2">
+                                {jobTitle} - {j.jobId}
+                              </td>
                               <td className="px-3 py-2">{jobSubjects}</td>
                               <td className="px-3 py-2">{jobLocation}</td>
                               <td className="px-3 py-2">{j.salary} ৳</td>
@@ -1763,10 +1730,9 @@ export default function AdminDashboard({
 
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    <thead>
+                    {/* <thead>
                       <tr className="text-left bg-gray-50">
                         <th className="px-3 py-2">ID</th>
-                        {/* <th className="px-3 py-2">Job Title</th> */}
                         <th className="px-3 py-2">Subject</th>
                         <th className="px-3 py-2">Tutor Name</th>
                         <th className="px-3 py-2">Email</th>
@@ -1777,100 +1743,137 @@ export default function AdminDashboard({
                         <th className="px-3 py-2">Status</th>
                         <th className="px-3 py-2">Action</th>
                       </tr>
+                    </thead> */}
+                    <thead>
+                      <tr className="text-left bg-gray-50">
+                        <th className="px-3 py-2">Tuition Code</th>
+                        <th className="px-3 py-2">Tutor ID</th>
+                        <th className="px-3 py-2">Tutor Name</th>
+                        <th className="px-3 py-2">Short CV</th>
+                        <th className="px-3 py-2">Phone</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Action</th>
+                      </tr>
                     </thead>
-                    <tbody>
-                      {currentApplicationItems.length === 0 ? (
-                        <tr className="border-t">
-                          <td
-                            className="px-3 py-4 text-gray-400 text-center"
-                            colSpan={10}
-                          >
-                            No applications found
-                          </td>
-                        </tr>
-                      ) : (
-                        currentApplicationItems.map((a) => {
-                          // Use aggregated job from response
-                          // const jobTitle =
-                          //   a.job?.title || `Job (${a.tuitionJobId})`;
-                          const jobSubject = a.job?.subjects?.length
-                            ? a.job.subjects.join(", ")
-                            : "-";
-                          const tutorName =
-                            a.tutor?.fullName || `Tutor (${a.tutorId})`;
-                          const tutorEmail = a.tutor?.email || "-";
-                          const tutorPhone = a.tutor?.phone || "-";
-                          const isDeleted = a.isDeleted || false;
 
-                          return (
-                            <tr
-                              key={a._id}
-                              className={`border-t transition-colors ${
-                                isDeleted
-                                  ? "bg-red-50 hover:bg-red-100/60"
-                                  : "hover:bg-blue-50/40"
-                              }`}
-                            >
-                              <td className="px-3 py-2 text-xs font-mono">
-                                {String(a._id).slice(-8)}
-                              </td>
-                              {/* <td className="px-3 py-2 font-medium">
-                              {jobTitle}
-                            </td> */}
-                              <td className="px-3 py-2">{jobSubject}</td>
-                              <td className="px-3 py-2 font-medium">
-                                {tutorName}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {tutorEmail}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {tutorPhone}
-                              </td>
-                              <td className="px-3 py-2 font-semibold">
-                                {a.rate} Tk
-                              </td>
-                              <td className="px-3 py-2 text-xs truncate">
-                                {a.schedule}
-                              </td>
-                              <td className="px-3 py-2 text-xs">
-                                {new Date(a.createdAt).toLocaleDateString()}
-                              </td>
-                              <td className="px-3 py-2">
-                                <span
-                                  className={`px-2 py-1 rounded text-xs font-semibold ${
-                                    isDeleted
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-green-100 text-green-800"
-                                  }`}
-                                >
-                                  {isDeleted ? "Deleted" : "Active"}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2">
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() =>
-                                      toggleApplicationStatus(a._id, !isDeleted)
-                                    }
-                                    disabled={
-                                      !!loadingMap[`application-${a._id}`]
-                                    }
-                                    className={`px-2 py-1 text-xs rounded text-white transition-colors ${
-                                      isDeleted
-                                        ? "bg-green-600 hover:bg-green-700 disabled:opacity-50"
-                                        : "bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
-                                    }`}
-                                  >
-                                    {isDeleted ? "Restore" : "Soft Delete"}
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
+                    <tbody>
+  {currentApplicationItems.map((a) => {
+    const status = a.status || "under_review";
+
+    return (
+      <tr
+        key={a._id}
+        className="border-t hover:bg-gray-50 transition"
+      >
+        {/* 1. Tuition Code */}
+        <td className="px-3 py-2 font-mono text-xs">
+          {a.job?.jobId}
+        </td>
+
+        {/* 2. Tutor ID */}
+        <td className="px-3 py-2 font-mono text-xs">
+          T-{a.tutor?.id}
+        </td>
+
+        {/* Tutor Name */}
+        <td className="px-3 py-2 font-medium">
+          {a.tutor?.fullName}
+        </td>
+
+        {/* 3. Teacher Short CV */}
+        <td className="px-3 py-2 max-w-[300px]">
+          <div className="space-y-1 text-xs">
+            <p className="font-medium">
+              {a.tutor?.qualification}
+            </p>
+
+            <p>
+              Exp: {a.tutor?.experience}
+            </p>
+
+            <p className="line-clamp-2 text-gray-600">
+              {
+                a.tutor?.personalInfo?.overview
+              }
+            </p>
+          </div>
+        </td>
+
+        {/* Phone */}
+        <td className="px-3 py-2 text-xs">
+          {a.tutor?.phone}
+        </td>
+
+        {/* Status */}
+        <td className="px-3 py-2">
+          <span
+            className={`px-2 py-1 rounded text-xs font-semibold
+              ${
+                status === "selected"
+                  ? "bg-green-100 text-green-700"
+                  : status === "under_review"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+              }
+            `}
+          >
+            {status === "selected"
+              ? "Selected"
+              : status === "under_review"
+              ? "Under Review"
+              : "Not Selected"}
+          </span>
+        </td>
+
+        {/* 4/5/6 Actions */}
+        <td className="px-3 py-2">
+          <div className="flex flex-wrap gap-2">
+            
+            {/* Under Review */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "under_review"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
+            >
+              Review
+            </button>
+
+            {/* Selected */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "selected"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+            >
+              Select
+            </button>
+
+            {/* Not Selected */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "not_selected"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+            >
+              Reject
+            </button>
+
+          </div>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
                   </table>
                 </div>
 

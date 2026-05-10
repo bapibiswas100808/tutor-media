@@ -93,6 +93,7 @@ const subjectsList = [
   "Bangla",
   "English",
   "Math",
+  "Higher Math",
   "Science",
   "Commerce",
   "Accounting",
@@ -302,7 +303,7 @@ export default function HireTutorForm() {
             </div>
 
             <div>
-              <label>Student Gender (Optional)</label>
+              <label>Student Gender (optional)</label>
               <select
                 {...register("studentGender")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
@@ -324,7 +325,7 @@ export default function HireTutorForm() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label>Tutor Gender (Optional)</label>
+              <label>Tutor Gender (optional)</label>
               <select
                 {...register("tutorGender")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
@@ -414,7 +415,7 @@ export default function HireTutorForm() {
               )}
             </div>
             <div className="md:col-span-2">
-              <label>Tutor Description (Optional)</label>
+              <label>Tutor Description (optional)</label>
               <textarea
                 {...register("tutorDescription")}
                 rows={4}
@@ -568,7 +569,7 @@ export default function HireTutorForm() {
           </div>
 
           <div className="mt-4">
-            <label>Location Description (Optional)</label>
+            <label>Location Description (optional)</label>
             <textarea
               {...register("locationDescription")}
               rows={4}
