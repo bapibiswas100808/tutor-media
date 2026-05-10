@@ -168,17 +168,24 @@ export default function TuitionJobClient({
 
         {/* JOB LIST */}
         <div className="grid md:grid-cols-2 gap-6">
-          {filteredJobs.slice(0, visibleCount).map((job) => (
-            <TuitionJobCard
-              key={job.jobId}
-              job={job}
-              onApply={handleApply}
-              onViewDetails={(job: TuitionJob) => {
-                setSelectedJob(job);
-                setActiveModal("details");
-              }}
-            />
-          ))}
+          {[...filteredJobs]
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            )
+            .slice(0, visibleCount)
+            .map((job) => (
+              <TuitionJobCard
+                key={job.jobId}
+                job={job}
+                onApply={handleApply}
+                onViewDetails={(job: TuitionJob) => {
+                  setSelectedJob(job);
+                  setActiveModal("details");
+                }}
+              />
+            ))}
         </div>
 
         {/* LOAD MORE */}
