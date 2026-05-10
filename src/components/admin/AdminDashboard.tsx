@@ -416,80 +416,188 @@ export default function AdminDashboard({
   }
 
   // Toggle Application Status (Soft Delete)
-  const toggleApplicationStatus = async (
-    applicationId: string,
-    shouldDelete: boolean,
-  ) => {
-    const key = `application-${applicationId}`;
+  // const toggleApplicationStatus = async (
+  //   applicationId: string,
+  //   shouldDelete: boolean,
+  // ) => {
+  //   const key = `application-${applicationId}`;
 
-    // 🔔 Confirm first
-    const result = await Swal.fire({
-      title: shouldDelete ? "Delete application?" : "Restore application?",
-      text: shouldDelete
-        ? "This application will be soft deleted."
-        : "This application will be restored.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
-    });
+  //   // 🔔 Confirm first
+  //   const result = await Swal.fire({
+  //     title: shouldDelete ? "Delete application?" : "Restore application?",
+  //     text: shouldDelete
+  //       ? "This application will be soft deleted."
+  //       : "This application will be restored.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
+  //     cancelButtonColor: "#6b7280",
+  //     confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
+  //   });
 
-    if (!result.isConfirmed) return;
+  //   if (!result.isConfirmed) return;
 
-    setLoadingMap((s) => ({ ...s, [key]: true }));
-    setError(null);
+  //   setLoadingMap((s) => ({ ...s, [key]: true }));
+  //   setError(null);
 
-    // ✅ Optimistic update
-    setApplications((prev) =>
-      prev.map((a) =>
-        a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
-      ),
+  //   // ✅ Optimistic update
+  //   setApplications((prev) =>
+  //     prev.map((a) =>
+  //       a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
+  //     ),
+  //   );
+
+  //   try {
+  //     const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ isDeleted: shouldDelete }),
+  //     });
+
+  //     if (!res.ok) {
+  //       const text = await res.text();
+  //       throw new Error(text || "Update failed");
+  //     }
+
+  //     // ✅ Success toast
+  //     Swal.fire({
+  //       toast: true,
+  //       position: "top-end",
+  //       icon: "success",
+  //       title: shouldDelete ? "Application deleted" : "Application restored",
+  //       showConfirmButton: false,
+  //       timer: 2500,
+  //       timerProgressBar: true,
+  //     });
+  //   } catch (err) {
+  //     // 🔄 Revert optimistic update
+  //     setApplications((prev) =>
+  //       prev.map((a) =>
+  //         a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
+  //       ),
+  //     );
+
+  //     const message = err instanceof Error ? err.message : "Update failed";
+
+  //     setError(message);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Action failed",
+  //       text: message,
+  //     });
+  //   } finally {
+  //     setLoadingMap((s) => ({ ...s, [key]: false }));
+  //   }
+  // };
+
+  // Update Application Status (Under Review / Selected / Not Selected)
+ const updateApplicationStatus = async (
+  applicationId: string,
+  status: "under_review" | "selected" | "not_selected",
+) => {
+  const key = `application-${applicationId}`;
+
+  // Status label for Swal
+  const statusLabel =
+    status === "selected"
+      ? "Select"
+      : status === "under_review"
+      ? "Under Review"
+      : "Reject";
+
+  // Confirm Dialog
+  const result = await Swal.fire({
+    title: `${statusLabel} application?`,
+    text: `Application status will be changed to "${statusLabel}".`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor:
+      status === "selected"
+        ? "#16a34a"
+        : status === "under_review"
+        ? "#eab308"
+        : "#dc2626",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: `Yes, ${statusLabel}`,
+  });
+
+  if (!result.isConfirmed) return;
+
+  setLoadingMap((s) => ({
+    ...s,
+    [key]: true,
+  }));
+
+  setError(null);
+
+  // Store old applications for rollback
+  const previousApplications = [...applications];
+
+  // Optimistic Update
+  setApplications((prev) =>
+    prev.map((a) =>
+      a._id === applicationId
+        ? {
+            ...a,
+            status,
+          }
+        : a,
+    ),
+  );
+
+  try {
+    const res = await fetch(
+      `${BACKEND_BASE}/applications/${applicationId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      },
     );
 
-    try {
-      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isDeleted: shouldDelete }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Update failed");
-      }
-
-      // ✅ Success toast
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: shouldDelete ? "Application deleted" : "Application restored",
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-      });
-    } catch (err) {
-      // 🔄 Revert optimistic update
-      setApplications((prev) =>
-        prev.map((a) =>
-          a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
-        ),
-      );
-
-      const message = err instanceof Error ? err.message : "Update failed";
-
-      setError(message);
-
-      Swal.fire({
-        icon: "error",
-        title: "Action failed",
-        text: message,
-      });
-    } finally {
-      setLoadingMap((s) => ({ ...s, [key]: false }));
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Status update failed");
     }
-  };
+
+    // Success Toast
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: `Application marked as ${statusLabel}`,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  } catch (err) {
+    // Rollback if failed
+    setApplications(previousApplications);
+
+    const message =
+      err instanceof Error
+        ? err.message
+        : "Status update failed";
+
+    setError(message);
+
+    Swal.fire({
+      icon: "error",
+      title: "Action failed",
+      text: message,
+    });
+  } finally {
+    setLoadingMap((s) => ({
+      ...s,
+      [key]: false,
+    }));
+  }
+};
 
   // confirm Action function
   const confirmAction = async (isDeleted: boolean) => {
