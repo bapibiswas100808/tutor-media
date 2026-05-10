@@ -158,21 +158,20 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   // Fetch application stats for own profile
   useEffect(() => {
     if (!isOwnProfile || !tutor?.id || !token) return;
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/applications?tutorId=${tutor.id}`,
-      { headers: { authorization: `Bearer ${token}` } },
-    )
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data: { status?: string; isDeleted?: boolean }[]) => {
-        const list = Array.isArray(data) ? data : [];
-        setAppStats({
-          applied: list.length,
-          shortlisted: list.filter((a) => a.status === "shortlisted").length,
-          appointed: list.filter((a) => a.status === "appointed").length,
-          confirmed: list.filter((a) => a.status === "confirmed").length,
-          cancelled: list.filter((a) => a.status === "cancelled" || a.isDeleted)
-            .length,
-        });
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutor-job-stats/${tutor.id}`, {
+      headers: { authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setAppStats({
+            applied: data.applied || 0,
+            shortlisted: data.shortlisted || 0,
+            appointed: data.appointed || 0,
+            confirmed: data.confirmed || 0,
+            cancelled: data.cancelled || 0,
+          });
+        }
       })
       .catch(() => {});
   }, [isOwnProfile, tutor?.id, token]);

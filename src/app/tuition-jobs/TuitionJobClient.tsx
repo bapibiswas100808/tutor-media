@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Filter,
-  RotateCcw,
-} from "lucide-react";
+import { Filter, RotateCcw } from "lucide-react";
 
 import TuitionJobCard from "@/components/tuition/TuitionJobCard";
 import ApplyJobModal from "@/components/tuition/ApplyJobModal";
@@ -55,21 +52,26 @@ export default function TuitionJobClient({
   const normalize = (value?: string) =>
     value?.toLowerCase().replace(/\s+/g, "");
 
-  const filteredJobs = tuitionJobs.filter((job) => {
-    const matchesClass =
-      selectedClass === "all" ||
-      normalize(job.class) === normalize(selectedClass);
+  const filteredJobs = tuitionJobs
+    .filter((job) => {
+      const matchesClass =
+        selectedClass === "all" ||
+        normalize(job.class) === normalize(selectedClass);
 
-    const matchesMedium =
-      selectedMedium === "all" ||
-      normalize(job.medium) === normalize(selectedMedium);
+      const matchesMedium =
+        selectedMedium === "all" ||
+        normalize(job.medium) === normalize(selectedMedium);
 
-    const matchesDivision =
-      selectedDivision === "all" ||
-      normalize(job.division) === normalize(selectedDivision);
+      const matchesDivision =
+        selectedDivision === "all" ||
+        normalize(job.division) === normalize(selectedDivision);
 
-    return job.isApproved && matchesClass && matchesMedium && matchesDivision;
-  });
+      return job.isApproved && matchesClass && matchesMedium && matchesDivision;
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
 
   useEffect(() => {
     setVisibleCount(ITEMS_PER_LOAD);
@@ -160,7 +162,6 @@ export default function TuitionJobClient({
               <option value="englishmedium">English Medium</option>
               <option value="englishversion">English Version</option>
               <option value="madrasahbackground">Madrasah Background</option>
-              
             </select>
           </div>
         </div>
@@ -194,87 +195,93 @@ export default function TuitionJobClient({
       </div>
 
       {/* ================= DETAILS MODAL ================= */}
-  {activeModal === "details" && selectedJob && (
-  <div
-    className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-    onClick={() => {
-      setActiveModal(null);
-      setSelectedJob(null);
-    }}
-  >
-    <div
-      className="bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl border border-gray-100"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Header */}
-      <div className="sticky top-0 bg-white/90 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">
-            {selectedJob.class}
-          </h2>
-          <p className="text-xs text-gray-500">
-            Job ID: {selectedJob.jobId}
-          </p>
-        </div>
-
-        <button
-          onClick={() => setActiveModal(null)}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 text-lg"
+      {activeModal === "details" && selectedJob && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => {
+            setActiveModal(null);
+            setSelectedJob(null);
+          }}
         >
-          ✕
-        </button>
-      </div>
+          <div
+            className="bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl border border-gray-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="sticky top-0 bg-white/90 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  {selectedJob.class}
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Job ID: {selectedJob.jobId}
+                </p>
+              </div>
 
-      <div className="p-6 space-y-6">
-        {/* Subjects */}
-        <div className="flex flex-wrap gap-2">
-          {selectedJob.subjects?.map((sub: string, i: number) => (
-            <span
-              key={i}
-              className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100"
-            >
-              {sub}
-            </span>
-          ))}
-        </div>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 text-lg"
+              >
+                ✕
+              </button>
+            </div>
 
-        {/* Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Info
-            label="📍 Location"
-            value={`${selectedJob.location}, ${selectedJob.district}`}
-          />
-          <Info label="🏙 Division" value={selectedJob.division} />
-          <Info label="💰 Salary" value={selectedJob.salary} />
-          <Info label="📅 Days" value={`${selectedJob.days} days/week`} />
-          <Info label="⏰ Duration" value={selectedJob.duration} />
-          <Info label="📘 Medium" value={selectedJob.medium} />
-          <Info label="👩‍🎓 Student Gender" value={selectedJob.studentGender} />
-          <Info label="👨‍🏫 Tutor Gender" value={selectedJob.tutorGender} />
-          <Info label="📌 Preferred Area" value={selectedJob.preferredArea} />
-        </div>
+            <div className="p-6 space-y-6">
+              {/* Subjects */}
+              <div className="flex flex-wrap gap-2">
+                {selectedJob.subjects?.map((sub: string, i: number) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100"
+                  >
+                    {sub}
+                  </span>
+                ))}
+              </div>
 
-        {/* Description */}
-        {selectedJob.tutorDescription && (
-          <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">
-              📌 Requirement
-            </h4>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {selectedJob.tutorDescription}
-            </p>
-          </div>
-        )}
+              {/* Info Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Info
+                  label="📍 Location"
+                  value={`${selectedJob.location}, ${selectedJob.district}`}
+                />
+                <Info label="🏙 Division" value={selectedJob.division} />
+                <Info label="💰 Salary" value={selectedJob.salary} />
+                <Info label="📅 Days" value={`${selectedJob.days} days/week`} />
+                <Info label="⏰ Duration" value={selectedJob.duration} />
+                <Info label="📘 Medium" value={selectedJob.medium} />
+                <Info
+                  label="👩‍🎓 Student Gender"
+                  value={selectedJob.studentGender}
+                />
+                <Info label="👨‍🏫 Tutor Gender" value={selectedJob.tutorGender} />
+                <Info
+                  label="📌 Preferred Area"
+                  value={selectedJob.preferredArea}
+                />
+              </div>
 
-        {/* Location Description */}
-        {selectedJob.locationDescription && (
-          <div className="text-sm text-gray-500 bg-blue-50 border border-blue-100 rounded-xl p-3">
-            📍 {selectedJob.locationDescription}
-          </div>
-        )}
+              {/* Description */}
+              {selectedJob.tutorDescription && (
+                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    📌 Requirement
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {selectedJob.tutorDescription}
+                  </p>
+                </div>
+              )}
 
-        {/* Status */}
-        {/* <div className="flex flex-wrap gap-2">
+              {/* Location Description */}
+              {selectedJob.locationDescription && (
+                <div className="text-sm text-gray-500 bg-blue-50 border border-blue-100 rounded-xl p-3">
+                  📍 {selectedJob.locationDescription}
+                </div>
+              )}
+
+              {/* Status */}
+              {/* <div className="flex flex-wrap gap-2">
           <span
             className={`px-3 py-1 text-xs font-semibold rounded-full border ${
               selectedJob.isApproved
@@ -297,10 +304,10 @@ export default function TuitionJobClient({
             </span>
           )}
         </div> */}
-      </div>
-    </div>
-  </div>
-)}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ================= APPLY MODAL ================= */}
       <ApplyJobModal
