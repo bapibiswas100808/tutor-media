@@ -266,6 +266,13 @@ export default function AdminDashboard({
       : payments;
   }, [payments, paymentTutorIdQuery]);
 
+  // Filter applications to exclude shortlisted
+  const filteredApplications = useMemo(() => {
+    return applications.filter(
+      (app) => app.status?.toLowerCase()?.trim() !== "shortlisted",
+    );
+  }, [applications]);
+
   const tutorTotalPages = Math.max(
     1,
     Math.ceil(filteredTutors.length / PAGE_SIZE),
@@ -273,7 +280,7 @@ export default function AdminDashboard({
   const jobTotalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
   const applicationsTotalPages = Math.max(
     1,
-    Math.ceil(applications.length / PAGE_SIZE),
+    Math.ceil(filteredApplications.length / PAGE_SIZE),
   );
   const paymentsTotalPages = Math.max(
     1,
@@ -288,7 +295,7 @@ export default function AdminDashboard({
     (jobPage - 1) * PAGE_SIZE,
     jobPage * PAGE_SIZE,
   );
-  const currentApplicationItems = applications.slice(
+  const currentApplicationItems = filteredApplications.slice(
     (applicationsPage - 1) * PAGE_SIZE,
     applicationsPage * PAGE_SIZE,
   );
@@ -492,112 +499,102 @@ export default function AdminDashboard({
   // };
 
   // Update Application Status (Under Review / Selected / Not Selected)
- const updateApplicationStatus = async (
-  applicationId: string,
-  status: "under_review" | "selected" | "not_selected",
-) => {
-  const key = `application-${applicationId}`;
+  const updateApplicationStatus = async (
+    applicationId: string,
+    action: "appointed" | "rejected",
+  ) => {
+    const key = `application-${applicationId}`;
 
-  // Status label for Swal
-  const statusLabel =
-    status === "selected"
-      ? "Select"
-      : status === "under_review"
-      ? "Under Review"
-      : "Reject";
+    // Status label for Swal
+    const statusLabel = action === "appointed" ? "Appoint" : "Reject";
+    const finalStatus = action === "appointed" ? "appointed" : "rejected";
 
-  // Confirm Dialog
-  const result = await Swal.fire({
-    title: `${statusLabel} application?`,
-    text: `Application status will be changed to "${statusLabel}".`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor:
-      status === "selected"
-        ? "#16a34a"
-        : status === "under_review"
-        ? "#eab308"
-        : "#dc2626",
-    cancelButtonColor: "#6b7280",
-    confirmButtonText: `Yes, ${statusLabel}`,
-  });
-
-  if (!result.isConfirmed) return;
-
-  setLoadingMap((s) => ({
-    ...s,
-    [key]: true,
-  }));
-
-  setError(null);
-
-  // Store old applications for rollback
-  const previousApplications = [...applications];
-
-  // Optimistic Update
-  setApplications((prev) =>
-    prev.map((a) =>
-      a._id === applicationId
-        ? {
-            ...a,
-            status,
-          }
-        : a,
-    ),
-  );
-
-  try {
-    const res = await fetch(
-      `${BACKEND_BASE}/applications/${applicationId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Status update failed");
-    }
-
-    // Success Toast
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: "success",
-      title: `Application marked as ${statusLabel}`,
-      showConfirmButton: false,
-      timer: 2500,
-      timerProgressBar: true,
+    // Confirm Dialog
+    const result = await Swal.fire({
+      title: `${statusLabel} application?`,
+      text: `Application status will be changed to "${statusLabel}".`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: action === "appointed" ? "#16a34a" : "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: `Yes, ${statusLabel}`,
     });
-  } catch (err) {
-    // Rollback if failed
-    setApplications(previousApplications);
 
-    const message =
-      err instanceof Error
-        ? err.message
-        : "Status update failed";
+    if (!result.isConfirmed) return;
 
-    setError(message);
-
-    Swal.fire({
-      icon: "error",
-      title: "Action failed",
-      text: message,
-    });
-  } finally {
     setLoadingMap((s) => ({
       ...s,
-      [key]: false,
+      [key]: true,
     }));
-  }
-};
+
+    setError(null);
+
+    // Store old applications for rollback
+    const previousApplications = [...applications];
+
+    // Optimistic Update
+    setApplications((prev) =>
+      prev.map((a) =>
+        a._id === applicationId
+          ? {
+              ...a,
+              status: finalStatus,
+            }
+          : a,
+      ),
+    );
+
+    try {
+      const token = localStorage.getItem("token");
+      const endpoint =
+        action === "appointed"
+          ? `${BACKEND_BASE}/applications/${applicationId}/appointed`
+          : `${BACKEND_BASE}/applications/${applicationId}/rejected`;
+
+      const res = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Status update failed");
+      }
+
+      // Success Toast
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: `Application marked as ${statusLabel}`,
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
+    } catch (err) {
+      // Rollback if failed
+      setApplications(previousApplications);
+
+      const message =
+        err instanceof Error ? err.message : "Status update failed";
+
+      setError(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Action failed",
+        text: message,
+      });
+    } finally {
+      setLoadingMap((s) => ({
+        ...s,
+        [key]: false,
+      }));
+    }
+  };
 
   // confirm Action function
   const confirmAction = async (isDeleted: boolean) => {
@@ -1820,16 +1817,16 @@ export default function AdminDashboard({
 
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-sm text-gray-500">
-                    {applications.length === 0 ? (
+                    {filteredApplications.length === 0 ? (
                       <>Showing 0 of 0</>
                     ) : (
                       <>
                         Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
                         {Math.min(
                           applicationsPage * PAGE_SIZE,
-                          applications.length,
+                          filteredApplications.length,
                         )}{" "}
-                        of {applications.length}
+                        of {filteredApplications.length}
                       </>
                     )}
                   </div>
@@ -1865,123 +1862,98 @@ export default function AdminDashboard({
                     </thead>
 
                     <tbody>
-  {currentApplicationItems.map((a) => {
-    const status = a.status || "under_review";
+                      {currentApplicationItems.map((a) => {
+                        const status = a.status ?? "applied";
 
-    return (
-      <tr
-        key={a._id}
-        className="border-t hover:bg-gray-50 transition"
-      >
-        {/* 1. Tuition Code */}
-        <td className="px-3 py-2 font-mono text-xs">
-          {a.job?.jobId}
-        </td>
+                        return (
+                          <tr
+                            key={a._id}
+                            className="border-t hover:bg-gray-50 transition"
+                          >
+                            {/* 1. Tuition Code */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              {a.job?.jobId}
+                            </td>
 
-        {/* 2. Tutor ID */}
-        <td className="px-3 py-2 font-mono text-xs">
-          T-{a.tutor?.id}
-        </td>
+                            {/* 2. Tutor ID */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              T-{a.tutor?.id}
+                            </td>
 
-        {/* Tutor Name */}
-        <td className="px-3 py-2 font-medium">
-          {a.tutor?.fullName}
-        </td>
+                            {/* Tutor Name */}
+                            <td className="px-3 py-2 font-medium">
+                              {a.tutor?.fullName}
+                            </td>
 
-        {/* 3. Teacher Short CV */}
-        <td className="px-3 py-2 max-w-[300px]">
-          <div className="space-y-1 text-xs">
-            <p className="font-medium">
-              {a.tutor?.qualification}
-            </p>
+                            {/* 3. Teacher Short CV */}
+                            <td className="px-3 py-2 max-w-75">
+                              <div className="space-y-1 text-xs">
+                                <p className="font-medium">
+                                  {a.tutor?.qualification}
+                                </p>
 
-            <p>
-              Exp: {a.tutor?.experience}
-            </p>
+                                <p>Exp: {a.tutor?.experience}</p>
 
-            <p className="line-clamp-2 text-gray-600">
-              {
-                a.tutor?.personalInfo?.overview
-              }
-            </p>
-          </div>
-        </td>
+                                <p className="line-clamp-2 text-gray-600">
+                                  {a.tutor?.personalInfo?.overview}
+                                </p>
+                              </div>
+                            </td>
 
-        {/* Phone */}
-        <td className="px-3 py-2 text-xs">
-          {a.tutor?.phone}
-        </td>
+                            {/* Phone */}
+                            <td className="px-3 py-2 text-xs">
+                              {a.tutor?.phone}
+                            </td>
 
-        {/* Status */}
-        <td className="px-3 py-2">
-          <span
-            className={`px-2 py-1 rounded text-xs font-semibold
+                            {/* Status */}
+                            <td className="px-3 py-2">
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-semibold
               ${
-                status === "selected"
+                status === "appointed"
                   ? "bg-green-100 text-green-700"
-                  : status === "under_review"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
+                  : status === "rejected"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
               }
             `}
-          >
-            {status === "selected"
-              ? "Selected"
-              : status === "under_review"
-              ? "Under Review"
-              : "Not Selected"}
-          </span>
-        </td>
+                              >
+                                {status === "appointed"
+                                  ? "Appointed"
+                                  : status === "rejected"
+                                    ? "Rejected"
+                                    : "Applied"}
+                              </span>
+                            </td>
 
-        {/* 4/5/6 Actions */}
-        <td className="px-3 py-2">
-          <div className="flex flex-wrap gap-2">
-            
-            {/* Under Review */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "under_review"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
-            >
-              Review
-            </button>
+                            {/* 4/5/6 Actions */}
+                            <td className="px-3 py-2">
+                              <div className="flex flex-wrap gap-2">
+                                {/* Appoint */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(a._id, "appointed")
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+                                >
+                                  Appoint
+                                </button>
 
-            {/* Selected */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "selected"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
-            >
-              Select
-            </button>
-
-            {/* Not Selected */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "not_selected"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
-            >
-              Reject
-            </button>
-
-          </div>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                                {/* Reject */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(a._id, "rejected")
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   </table>
                 </div>
 
