@@ -8,7 +8,17 @@ export interface ApplicationData {
   proposal: string;
   tutorId: string; // MongoDB ObjectId
   tuitionJobId: string; // MongoDB ObjectId
-  status?: "under_review" | "selected" | "not_selected";
+  status?:
+    | "under_review"
+    | "selected"
+    | "not_selected"
+    | "shortlisted"
+    | "applied"
+    | "appointed"
+    | "confirmed"
+    | "cancelled"
+    | "rejected"
+    | "";
 }
 
 export interface Application extends ApplicationData {

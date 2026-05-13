@@ -266,6 +266,13 @@ export default function AdminDashboard({
       : payments;
   }, [payments, paymentTutorIdQuery]);
 
+  // Filter applications to exclude shortlisted
+  const filteredApplications = useMemo(() => {
+    return applications.filter(
+      (app) => app.status?.toLowerCase()?.trim() !== "shortlisted",
+    );
+  }, [applications]);
+
   const tutorTotalPages = Math.max(
     1,
     Math.ceil(filteredTutors.length / PAGE_SIZE),
@@ -273,7 +280,7 @@ export default function AdminDashboard({
   const jobTotalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
   const applicationsTotalPages = Math.max(
     1,
-    Math.ceil(applications.length / PAGE_SIZE),
+    Math.ceil(filteredApplications.length / PAGE_SIZE),
   );
   const paymentsTotalPages = Math.max(
     1,
@@ -288,7 +295,7 @@ export default function AdminDashboard({
     (jobPage - 1) * PAGE_SIZE,
     jobPage * PAGE_SIZE,
   );
-  const currentApplicationItems = applications.slice(
+  const currentApplicationItems = filteredApplications.slice(
     (applicationsPage - 1) * PAGE_SIZE,
     applicationsPage * PAGE_SIZE,
   );
@@ -415,81 +422,6 @@ export default function AdminDashboard({
     }
   }
 
-  // Toggle Application Status (Soft Delete)
-  // const toggleApplicationStatus = async (
-  //   applicationId: string,
-  //   shouldDelete: boolean,
-  // ) => {
-  //   const key = `application-${applicationId}`;
-
-  //   // 🔔 Confirm first
-  //   const result = await Swal.fire({
-  //     title: shouldDelete ? "Delete application?" : "Restore application?",
-  //     text: shouldDelete
-  //       ? "This application will be soft deleted."
-  //       : "This application will be restored.",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: shouldDelete ? "#dc2626" : "#16a34a",
-  //     cancelButtonColor: "#6b7280",
-  //     confirmButtonText: shouldDelete ? "Yes, Delete" : "Yes, Restore",
-  //   });
-
-  //   if (!result.isConfirmed) return;
-
-  //   setLoadingMap((s) => ({ ...s, [key]: true }));
-  //   setError(null);
-
-  //   // ✅ Optimistic update
-  //   setApplications((prev) =>
-  //     prev.map((a) =>
-  //       a._id === applicationId ? { ...a, isDeleted: shouldDelete } : a,
-  //     ),
-  //   );
-
-  //   try {
-  //     const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
-  //       method: "PATCH",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ isDeleted: shouldDelete }),
-  //     });
-
-  //     if (!res.ok) {
-  //       const text = await res.text();
-  //       throw new Error(text || "Update failed");
-  //     }
-
-  //     // ✅ Success toast
-  //     Swal.fire({
-  //       toast: true,
-  //       position: "top-end",
-  //       icon: "success",
-  //       title: shouldDelete ? "Application deleted" : "Application restored",
-  //       showConfirmButton: false,
-  //       timer: 2500,
-  //       timerProgressBar: true,
-  //     });
-  //   } catch (err) {
-  //     // 🔄 Revert optimistic update
-  //     setApplications((prev) =>
-  //       prev.map((a) =>
-  //         a._id === applicationId ? { ...a, isDeleted: !shouldDelete } : a,
-  //       ),
-  //     );
-
-  //     const message = err instanceof Error ? err.message : "Update failed";
-
-  //     setError(message);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Action failed",
-  //       text: message,
-  //     });
-  //   } finally {
-  //     setLoadingMap((s) => ({ ...s, [key]: false }));
-  //   }
-  // };
 
   // Update Application Status (Under Review / Selected / Not Selected)
   const updateApplicationStatus = async (
@@ -498,15 +430,13 @@ export default function AdminDashboard({
   ) => {
     const key = `application-${applicationId}`;
 
-    // Status label for Swal
     const statusLabel =
       status === "selected"
         ? "Select"
         : status === "under_review"
-          ? "Under Review"
-          : "Reject";
+        ? "Under Review"
+        : "Reject";
 
-    // Confirm Dialog
     const result = await Swal.fire({
       title: `${statusLabel} application?`,
       text: `Application status will be changed to "${statusLabel}".`,
@@ -516,8 +446,8 @@ export default function AdminDashboard({
         status === "selected"
           ? "#16a34a"
           : status === "under_review"
-            ? "#eab308"
-            : "#dc2626",
+          ? "#eab308"
+          : "#dc2626",
       cancelButtonColor: "#6b7280",
       confirmButtonText: `Yes, ${statusLabel}`,
     });
@@ -547,15 +477,20 @@ export default function AdminDashboard({
     );
 
     try {
-      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${BACKEND_BASE}/applications/${applicationId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status,
+          }),
         },
-        body: JSON.stringify({
-          status,
-        }),
-      });
+      );
 
       if (!res.ok) {
         const text = await res.text();
@@ -1815,16 +1750,16 @@ export default function AdminDashboard({
 
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-sm text-gray-500">
-                    {applications.length === 0 ? (
+                    {filteredApplications.length === 0 ? (
                       <>Showing 0 of 0</>
                     ) : (
                       <>
                         Showing {(applicationsPage - 1) * PAGE_SIZE + 1} -{" "}
                         {Math.min(
                           applicationsPage * PAGE_SIZE,
-                          applications.length,
+                          filteredApplications.length,
                         )}{" "}
-                        of {applications.length}
+                        of {filteredApplications.length}
                       </>
                     )}
                   </div>
@@ -1833,20 +1768,6 @@ export default function AdminDashboard({
 
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    {/* <thead>
-                      <tr className="text-left bg-gray-50">
-                        <th className="px-3 py-2">ID</th>
-                        <th className="px-3 py-2">Subject</th>
-                        <th className="px-3 py-2">Tutor Name</th>
-                        <th className="px-3 py-2">Email</th>
-                        <th className="px-3 py-2">Phone</th>
-                        <th className="px-3 py-2">Rate</th>
-                        <th className="px-3 py-2">Schedule</th>
-                        <th className="px-3 py-2">Created</th>
-                        <th className="px-3 py-2">Status</th>
-                        <th className="px-3 py-2">Action</th>
-                      </tr>
-                    </thead> */}
                     <thead>
                       <tr className="text-left bg-gray-50">
                         <th className="px-3 py-2">Tuition Code</th>
@@ -1860,8 +1781,8 @@ export default function AdminDashboard({
                     </thead>
 
                     <tbody>
-                      {currentApplicationItems.map((a) => {
-                        const status = a.status || "under_review";
+  {currentApplicationItems.map((a) => {
+    const status = a.status || "under_review";
 
                         return (
                           <tr
@@ -1883,137 +1804,134 @@ export default function AdminDashboard({
                               {a.tutor?.fullName}
                             </td>
 
-                            {/* 3. Teacher Short CV */}
-                            <td className="px-3 py-3 min-w-[320px]">
-                              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm space-y-3">
-                                {/* Experience */}
-                                <div className="flex flex-wrap gap-2 text-[11px]">
-                                  <span className="px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                                    Exp: {a.tutor?.experience}
-                                  </span>
+        {/* 3. Teacher Short CV */}
+<td className="px-3 py-3 min-w-[320px]">
+  <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm space-y-3">
 
-                                  <span className="px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
-                                    {a.tutor?.basicInfo?.mode}
-                                  </span>
+    {/* Experience */}
+    <div className="flex flex-wrap gap-2 text-[11px]">
+      <span className="px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+        Exp: {a.tutor?.experience}
+      </span>
 
-                                  <span className="px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
-                                    {a.tutor?.division}
-                                  </span>
-                                </div>
+      <span className="px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
+        {a.tutor?.basicInfo?.mode}
+      </span>
 
-                                {/* Education */}
-                                <div className="space-y-2">
-                                  {/* Graduation */}
-                                  {a.tutor?.education?.grad?.[0] && (
-                                    <div className="border rounded-lg border-gray-200 p-2 bg-gray-50 text-lg text-gray-800">
-                                      <p className="text-sm capitalize font-semibold text-gray-800">
-                                        {a.tutor.education.grad[0]?.academy}
-                                      </p>
+      <span className="px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+        {a.tutor?.division}
+      </span>
+    </div>
 
-                                      <p className="text-sm capitalize text-gray-600">
-                                        {a.tutor.education.grad[0]?.department}
-                                      </p>
+    {/* Education */}
+    <div className="space-y-2">
+      {/* Graduation */}
+      {a.tutor?.education?.grad?.[0] && (
+        <div className="border border-gray-200 rounded-lg p-2 bg-gray-50">
 
-                                      <p className="text-sm text-gray-500">
-                                        Session: {a.tutor.education.grad[0]?.session}
-                                      </p>
-                                    </div>
-                                  )}
+          <p className="text-md text-gray-700">
+            {
+              a.tutor.education.grad[0]
+                ?.academy
+            }
+          </p>
 
-                                  {/* HSC */}
-                                  {/* {a.tutor?.education?.hsc?.[0] && (
-                                    <div className="border rounded-lg p-2 bg-gray-50">
-                                      <p className="text-xs font-semibold text-gray-800">
-                                        HSC
-                                      </p>
+          <p className="text-md text-gray-500">
+            {
+              a.tutor.education.grad[0]
+                ?.department
+            }
+          </p>
 
-                                      <p className="text-xs text-gray-700">
-                                        {a.tutor.education.hsc[0]?.academy}
-                                      </p>
+          <p className="text-xs text-gray-500">
+            Session:{" "}
+            {
+              a.tutor.education.grad[0]
+                ?.session
+            }
+          </p>
+        </div>
+      )}
 
-                                      <p className="text-[11px] text-gray-500">
-                                        Passing Year:{" "}
-                                        {a.tutor.education.hsc[0]?.passingYear}
-                                      </p>
+    </div>
+  </div>
+</td>
 
-                                      <p className="text-[11px] text-gray-500">
-                                        GPA: {a.tutor.education.hsc[0]?.result}
-                                      </p>
-                                    </div>
-                                  )} */}
-                                </div>
-                              </div>
-                            </td>
-                            {/* Phone */}
-                            <td className="px-3 py-2 text-xs">
-                              {a.tutor?.phone}
-                            </td>
+        {/* Phone */}
+        <td className="px-3 py-2 text-xs">
+          {a.tutor?.phone}
+        </td>
 
                             {/* Status */}
                             <td className="px-3 py-2">
                               <span
                                 className={`px-2 py-1 rounded text-xs font-semibold
               ${
-                status === "selected"
+                status === "appointed"
                   ? "bg-green-100 text-green-700"
                   : status === "under_review"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-red-100 text-red-700"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
               }
             `}
-                              >
-                                {status === "selected"
-                                  ? "Selected"
-                                  : status === "under_review"
-                                    ? "Under Review"
-                                    : "Not Selected"}
-                              </span>
-                            </td>
+          >
+            {status === "selected"
+              ? "Selected"
+              : status === "under_review"
+              ? "Under Review"
+              : "Not Selected"}
+          </span>
+        </td>
 
-                            {/* 4/5/6 Actions */}
-                            <td className="px-3 py-2">
-                              <div className="flex flex-wrap gap-2">
-                                {/* Under Review */}
-                                <button
-                                  onClick={() =>
-                                    updateApplicationStatus(
-                                      a._id,
-                                      "under_review",
-                                    )
-                                  }
-                                  className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
-                                >
-                                  Review
-                                </button>
+        {/* 4/5/6 Actions */}
+        <td className="px-3 py-2">
+          <div className="flex flex-wrap gap-2">
+            
+            {/* Under Review */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "under_review"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
+            >
+              Review
+            </button>
 
-                                {/* Selected */}
-                                <button
-                                  onClick={() =>
-                                    updateApplicationStatus(a._id, "selected")
-                                  }
-                                  className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
-                                >
-                                  Select
-                                </button>
+            {/* Selected */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "selected"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+            >
+              Select
+            </button>
 
-                                {/* Not Selected */}
-                                <button
-                                  onClick={() =>
-                                    updateApplicationStatus(
-                                      a._id,
-                                      "not_selected",
-                                    )
-                                  }
-                                  className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
-                                >
-                                  Reject
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
+            {/* Not Selected */}
+            <button
+              onClick={() =>
+                updateApplicationStatus(
+                  a._id,
+                  "not_selected"
+                )
+              }
+              className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+            >
+              Reject
+            </button>
+
+          </div>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
                   </table>
                 </div>
 

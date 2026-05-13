@@ -9,12 +9,24 @@ import {
   BookOpen,
   FileText,
   CheckSquare,
+  Heart,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 interface TuitionJobCardProps {
   job: TuitionJob;
   onApply: (job: TuitionJob) => void;
   onViewDetails?: (job: TuitionJob) => void;
+}
+
+interface ApplicationData {
+  _id: string;
+  tutorId: string;
+  tuitionJobId: string;
+  status: "applied" | "shortlisted" | "appointed" | "confirmed" | "cancelled";
+  isDeleted?: boolean;
 }
 
 function timeAgo(dateString: string): string {
@@ -63,6 +75,152 @@ export default function TuitionJobCard({
   onApply,
   onViewDetails,
 }: TuitionJobCardProps) {
+  const { user, isLoading } = useAuth();
+  const [isShortlisted, setIsShortlisted] = useState(false);
+  const [isLoadingShortlist, setIsLoadingShortlist] = useState(false);
+  const [shortlistedAppId, setShortlistedAppId] = useState<string | null>(null);
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // Check if job is already shortlisted on mount
+  useEffect(() => {
+    if (!user || !token || !job._id) return;
+
+    const checkShortlistStatus = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/applications?tutorId=${user._id}&tuitionJobId=${job._id}`,
+          {
+            headers: { authorization: `Bearer ${token}` },
+          },
+        );
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const applications = Array.isArray(data) ? data : [];
+
+        // Check if there's a shortlisted or applied application for this job
+        const existingApp = applications.find(
+          (app: ApplicationData) =>
+            String(app.tuitionJobId) === String(job._id) &&
+            (app.status === "shortlisted" || app.status === "applied"),
+        );
+
+        if (existingApp) {
+          setIsShortlisted(true);
+          setShortlistedAppId(existingApp._id);
+        }
+      } catch (error) {
+        console.error("Error checking shortlist status:", error);
+      }
+    };
+
+    checkShortlistStatus();
+  }, [user, token, job._id]);
+
+  const handleShortlist = async () => {
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login to shortlist jobs.",
+        confirmButtonText: "Go to Login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/login";
+        }
+      });
+      return;
+    }
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Authentication Error",
+        text: "Please login again.",
+      });
+      return;
+    }
+
+    setIsLoadingShortlist(true);
+
+    try {
+      if (isShortlisted) {
+        // REMOVE: Send PATCH to update status to cancelled
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/applications/${shortlistedAppId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              status: "cancelled", // or isDeleted: true
+            }),
+          },
+        );
+
+        if (!res.ok) throw new Error("Failed to remove shortlist");
+
+        setIsShortlisted(false);
+        setShortlistedAppId(null);
+        Swal.fire({
+          icon: "success",
+          title: "Removed from Shortlist",
+          text: "Job removed from your shortlist.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } else {
+        // ADD: Send POST to create application with status
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/applications`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              tutorId: user._id, // Use MongoDB ObjectId, not numeric id
+              tuitionJobId: job._id, // Use MongoDB ObjectId, not jobId
+              status: "shortlisted",
+              rate: user.rate || 0,
+              schedule: "flexible",
+              proposal: "Added to shortlist",
+            }),
+          },
+        );
+
+        if (!res.ok) throw new Error("Failed to shortlist");
+
+        const data = await res.json();
+        setIsShortlisted(true);
+        setShortlistedAppId(data.data._id); // Store app ID for later removal
+
+        Swal.fire({
+          icon: "success",
+          title: "Added to Shortlist",
+          text: "Job added to your shortlist.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      console.error("Shortlist error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update shortlist. Please try again.",
+      });
+    } finally {
+      setIsLoadingShortlist(false);
+    }
+  };
+
   const tutorGenderCapitalized =
     job.tutorGender.charAt(0).toUpperCase() + job.tutorGender.slice(1);
   const subjectDisplay = job.subjects?.join(", ") || "N/A";
@@ -160,6 +318,19 @@ export default function TuitionJobCard({
         >
           <Eye className="w-4 h-4" />
           View Details
+        </button>
+
+        <button
+          onClick={handleShortlist}
+          disabled={isLoadingShortlist}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            isShortlisted
+              ? "bg-red-100 text-red-600 border border-red-200 hover:bg-red-200"
+              : "text-gray-600 border border-gray-200 hover:bg-gray-50"
+          } ${isLoadingShortlist ? "opacity-50 cursor-not-allowed" : ""}`}
+        >
+          <Heart className={`w-4 h-4 ${isShortlisted ? "fill-current" : ""}`} />
+          Shortlist
         </button>
 
         <span className="text-xs text-gray-400 whitespace-nowrap">

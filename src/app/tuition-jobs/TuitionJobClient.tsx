@@ -52,21 +52,26 @@ export default function TuitionJobClient({
   const normalize = (value?: string) =>
     value?.toLowerCase().replace(/\s+/g, "");
 
-  const filteredJobs = tuitionJobs.filter((job) => {
-    const matchesClass =
-      selectedClass === "all" ||
-      normalize(job.class) === normalize(selectedClass);
+  const filteredJobs = tuitionJobs
+    .filter((job) => {
+      const matchesClass =
+        selectedClass === "all" ||
+        normalize(job.class) === normalize(selectedClass);
 
-    const matchesMedium =
-      selectedMedium === "all" ||
-      normalize(job.medium) === normalize(selectedMedium);
+      const matchesMedium =
+        selectedMedium === "all" ||
+        normalize(job.medium) === normalize(selectedMedium);
 
-    const matchesDivision =
-      selectedDivision === "all" ||
-      normalize(job.division) === normalize(selectedDivision);
+      const matchesDivision =
+        selectedDivision === "all" ||
+        normalize(job.division) === normalize(selectedDivision);
 
-    return job.isApproved && matchesClass && matchesMedium && matchesDivision;
-  });
+      return job.isApproved && matchesClass && matchesMedium && matchesDivision;
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
 
   useEffect(() => {
     setVisibleCount(ITEMS_PER_LOAD);
