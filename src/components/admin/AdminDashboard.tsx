@@ -1398,19 +1398,6 @@ export default function AdminDashboard({
                     >
                       Prev
                     </button>
-                    {/* {Array.from({ length: tutorTotalPages }).map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setTutorPage(i + 1)}
-                      className={`px-2 py-1 rounded ${
-                        i + 1 === tutorPage
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100"
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))} */}
                     {(() => {
                       const pages = [];
                       // const maxVisible = 5;
@@ -1825,7 +1812,6 @@ export default function AdminDashboard({
 
     {/* Education */}
     <div className="space-y-2">
-      {/* Graduation */}
       {a.tutor?.education?.grad?.[0] && (
         <div className="border border-gray-200 rounded-lg p-2 bg-gray-50">
 
