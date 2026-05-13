@@ -75,8 +75,11 @@ const classes = [
   "Class 8",
   "Class 9",
   "Class 10",
+  "SSC",
+  "Admission",
   "Class 11",
   "Class 12",
+  "HSC",
   "A Level",
   "O Level",
 ];
@@ -106,6 +109,8 @@ const subjectsList = [
   "Admission",
   "Arts",
   "Music",
+  "Somaj",
+  "Dormo",
 ];
 
 /* ---------------- COMPONENT ---------------- */
@@ -382,7 +387,21 @@ export default function HireTutorForm() {
                 }`}
               >
                 <option value="">Select Days</option>
-                {[1, 2, 3, 4, 5, 6, 7].map((d) => (
+                {[
+                  1,
+                  "1 / 2",
+                  2,
+                  "2 / 3",
+                  3,
+                  "3 / 4",
+                  4,
+                  "4 / 5",
+                  5,
+                  "5 / 6",
+                  6,
+                  "6 / 7",
+                  7,
+                ].map((d) => (
                   <option key={d}>{d}</option>
                 ))}
               </select>
@@ -578,7 +597,6 @@ export default function HireTutorForm() {
           </div>
 
           <div className="flex justify-end mt-6">
-
             <button
               type="submit"
               disabled={loading}

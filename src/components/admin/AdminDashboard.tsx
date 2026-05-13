@@ -492,64 +492,62 @@ export default function AdminDashboard({
   // };
 
   // Update Application Status (Under Review / Selected / Not Selected)
- const updateApplicationStatus = async (
-  applicationId: string,
-  status: "under_review" | "selected" | "not_selected",
-) => {
-  const key = `application-${applicationId}`;
+  const updateApplicationStatus = async (
+    applicationId: string,
+    status: "under_review" | "selected" | "not_selected",
+  ) => {
+    const key = `application-${applicationId}`;
 
-  // Status label for Swal
-  const statusLabel =
-    status === "selected"
-      ? "Select"
-      : status === "under_review"
-      ? "Under Review"
-      : "Reject";
-
-  // Confirm Dialog
-  const result = await Swal.fire({
-    title: `${statusLabel} application?`,
-    text: `Application status will be changed to "${statusLabel}".`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor:
+    // Status label for Swal
+    const statusLabel =
       status === "selected"
-        ? "#16a34a"
+        ? "Select"
         : status === "under_review"
-        ? "#eab308"
-        : "#dc2626",
-    cancelButtonColor: "#6b7280",
-    confirmButtonText: `Yes, ${statusLabel}`,
-  });
+          ? "Under Review"
+          : "Reject";
 
-  if (!result.isConfirmed) return;
+    // Confirm Dialog
+    const result = await Swal.fire({
+      title: `${statusLabel} application?`,
+      text: `Application status will be changed to "${statusLabel}".`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor:
+        status === "selected"
+          ? "#16a34a"
+          : status === "under_review"
+            ? "#eab308"
+            : "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: `Yes, ${statusLabel}`,
+    });
 
-  setLoadingMap((s) => ({
-    ...s,
-    [key]: true,
-  }));
+    if (!result.isConfirmed) return;
 
-  setError(null);
+    setLoadingMap((s) => ({
+      ...s,
+      [key]: true,
+    }));
 
-  // Store old applications for rollback
-  const previousApplications = [...applications];
+    setError(null);
 
-  // Optimistic Update
-  setApplications((prev) =>
-    prev.map((a) =>
-      a._id === applicationId
-        ? {
-            ...a,
-            status,
-          }
-        : a,
-    ),
-  );
+    // Store old applications for rollback
+    const previousApplications = [...applications];
 
-  try {
-    const res = await fetch(
-      `${BACKEND_BASE}/applications/${applicationId}`,
-      {
+    // Optimistic Update
+    setApplications((prev) =>
+      prev.map((a) =>
+        a._id === applicationId
+          ? {
+              ...a,
+              status,
+            }
+          : a,
+      ),
+    );
+
+    try {
+      const res = await fetch(`${BACKEND_BASE}/applications/${applicationId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -557,47 +555,44 @@ export default function AdminDashboard({
         body: JSON.stringify({
           status,
         }),
-      },
-    );
+      });
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Status update failed");
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Status update failed");
+      }
+
+      // Success Toast
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: `Application marked as ${statusLabel}`,
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
+    } catch (err) {
+      // Rollback if failed
+      setApplications(previousApplications);
+
+      const message =
+        err instanceof Error ? err.message : "Status update failed";
+
+      setError(message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Action failed",
+        text: message,
+      });
+    } finally {
+      setLoadingMap((s) => ({
+        ...s,
+        [key]: false,
+      }));
     }
-
-    // Success Toast
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: "success",
-      title: `Application marked as ${statusLabel}`,
-      showConfirmButton: false,
-      timer: 2500,
-      timerProgressBar: true,
-    });
-  } catch (err) {
-    // Rollback if failed
-    setApplications(previousApplications);
-
-    const message =
-      err instanceof Error
-        ? err.message
-        : "Status update failed";
-
-    setError(message);
-
-    Swal.fire({
-      icon: "error",
-      title: "Action failed",
-      text: message,
-    });
-  } finally {
-    setLoadingMap((s) => ({
-      ...s,
-      [key]: false,
-    }));
-  }
-};
+  };
 
   // confirm Action function
   const confirmAction = async (isDeleted: boolean) => {
@@ -1865,123 +1860,160 @@ export default function AdminDashboard({
                     </thead>
 
                     <tbody>
-  {currentApplicationItems.map((a) => {
-    const status = a.status || "under_review";
+                      {currentApplicationItems.map((a) => {
+                        const status = a.status || "under_review";
 
-    return (
-      <tr
-        key={a._id}
-        className="border-t hover:bg-gray-50 transition"
-      >
-        {/* 1. Tuition Code */}
-        <td className="px-3 py-2 font-mono text-xs">
-          {a.job?.jobId}
-        </td>
+                        return (
+                          <tr
+                            key={a._id}
+                            className="border-t hover:bg-gray-50 transition"
+                          >
+                            {/* 1. Tuition Code */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              {a.job?.jobId}
+                            </td>
 
-        {/* 2. Tutor ID */}
-        <td className="px-3 py-2 font-mono text-xs">
-          T-{a.tutor?.id}
-        </td>
+                            {/* 2. Tutor ID */}
+                            <td className="px-3 py-2 font-mono text-xs">
+                              T-{a.tutor?.id}
+                            </td>
 
-        {/* Tutor Name */}
-        <td className="px-3 py-2 font-medium">
-          {a.tutor?.fullName}
-        </td>
+                            {/* Tutor Name */}
+                            <td className="px-3 py-2 font-medium">
+                              {a.tutor?.fullName}
+                            </td>
 
-        {/* 3. Teacher Short CV */}
-        <td className="px-3 py-2 max-w-[300px]">
-          <div className="space-y-1 text-xs">
-            <p className="font-medium">
-              {a.tutor?.qualification}
-            </p>
+                            {/* 3. Teacher Short CV */}
+                            <td className="px-3 py-3 min-w-[320px]">
+                              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm space-y-3">
+                                {/* Experience */}
+                                <div className="flex flex-wrap gap-2 text-[11px]">
+                                  <span className="px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                                    Exp: {a.tutor?.experience}
+                                  </span>
 
-            <p>
-              Exp: {a.tutor?.experience}
-            </p>
+                                  <span className="px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
+                                    {a.tutor?.basicInfo?.mode}
+                                  </span>
 
-            <p className="line-clamp-2 text-gray-600">
-              {
-                a.tutor?.personalInfo?.overview
-              }
-            </p>
-          </div>
-        </td>
+                                  <span className="px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+                                    {a.tutor?.division}
+                                  </span>
+                                </div>
 
-        {/* Phone */}
-        <td className="px-3 py-2 text-xs">
-          {a.tutor?.phone}
-        </td>
+                                {/* Education */}
+                                <div className="space-y-2">
+                                  {/* Graduation */}
+                                  {a.tutor?.education?.grad?.[0] && (
+                                    <div className="border rounded-lg border-gray-200 p-2 bg-gray-50 text-lg text-gray-800">
+                                      <p className="text-sm capitalize font-semibold text-gray-800">
+                                        {a.tutor.education.grad[0]?.academy}
+                                      </p>
 
-        {/* Status */}
-        <td className="px-3 py-2">
-          <span
-            className={`px-2 py-1 rounded text-xs font-semibold
+                                      <p className="text-sm capitalize text-gray-600">
+                                        {a.tutor.education.grad[0]?.department}
+                                      </p>
+
+                                      <p className="text-sm text-gray-500">
+                                        Session: {a.tutor.education.grad[0]?.session}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* HSC */}
+                                  {/* {a.tutor?.education?.hsc?.[0] && (
+                                    <div className="border rounded-lg p-2 bg-gray-50">
+                                      <p className="text-xs font-semibold text-gray-800">
+                                        HSC
+                                      </p>
+
+                                      <p className="text-xs text-gray-700">
+                                        {a.tutor.education.hsc[0]?.academy}
+                                      </p>
+
+                                      <p className="text-[11px] text-gray-500">
+                                        Passing Year:{" "}
+                                        {a.tutor.education.hsc[0]?.passingYear}
+                                      </p>
+
+                                      <p className="text-[11px] text-gray-500">
+                                        GPA: {a.tutor.education.hsc[0]?.result}
+                                      </p>
+                                    </div>
+                                  )} */}
+                                </div>
+                              </div>
+                            </td>
+                            {/* Phone */}
+                            <td className="px-3 py-2 text-xs">
+                              {a.tutor?.phone}
+                            </td>
+
+                            {/* Status */}
+                            <td className="px-3 py-2">
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-semibold
               ${
                 status === "selected"
                   ? "bg-green-100 text-green-700"
                   : status === "under_review"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700"
               }
             `}
-          >
-            {status === "selected"
-              ? "Selected"
-              : status === "under_review"
-              ? "Under Review"
-              : "Not Selected"}
-          </span>
-        </td>
+                              >
+                                {status === "selected"
+                                  ? "Selected"
+                                  : status === "under_review"
+                                    ? "Under Review"
+                                    : "Not Selected"}
+                              </span>
+                            </td>
 
-        {/* 4/5/6 Actions */}
-        <td className="px-3 py-2">
-          <div className="flex flex-wrap gap-2">
-            
-            {/* Under Review */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "under_review"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
-            >
-              Review
-            </button>
+                            {/* 4/5/6 Actions */}
+                            <td className="px-3 py-2">
+                              <div className="flex flex-wrap gap-2">
+                                {/* Under Review */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(
+                                      a._id,
+                                      "under_review",
+                                    )
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600"
+                                >
+                                  Review
+                                </button>
 
-            {/* Selected */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "selected"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
-            >
-              Select
-            </button>
+                                {/* Selected */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(a._id, "selected")
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+                                >
+                                  Select
+                                </button>
 
-            {/* Not Selected */}
-            <button
-              onClick={() =>
-                updateApplicationStatus(
-                  a._id,
-                  "not_selected"
-                )
-              }
-              className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
-            >
-              Reject
-            </button>
-
-          </div>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                                {/* Not Selected */}
+                                <button
+                                  onClick={() =>
+                                    updateApplicationStatus(
+                                      a._id,
+                                      "not_selected",
+                                    )
+                                  }
+                                  className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   </table>
                 </div>
 
