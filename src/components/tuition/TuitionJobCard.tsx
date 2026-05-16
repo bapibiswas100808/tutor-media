@@ -253,20 +253,20 @@ export default function TuitionJobCard({
       </h3> */}
 
       <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
-  Need a{" "}
-  <span
-    className={
-      job.tutorGender === "male"
-        ? "text-blue-500"
-        : job.tutorGender === "female"
-        ? "text-red-500"
-        : "text-gray-500"
-    }
-  >
-    {tutorGenderCapitalized}
-  </span>{" "}
-  Tutor for {job.medium} in {job.location}, {job.district}
-</h3>
+        Need a{" "}
+        <span
+          className={
+            job.tutorGender === "male"
+              ? "text-blue-500"
+              : job.tutorGender === "female"
+                ? "text-red-500"
+                : "text-gray-500"
+          }
+        >
+          {tutorGenderCapitalized}
+        </span>{" "}
+        Tutor for {job.medium} in {job.location}, {job.district}
+      </h3>
 
       {/* Info grid: 3 cols × 2 rows */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
@@ -311,7 +311,7 @@ export default function TuitionJobCard({
       )}
 
       {/* Footer */}
-      <div className="border-t border-gray-100 pt-3 flex items-center justify-between gap-2">
+      <div className="border-t border-gray-100 pt-3 flex items-center justify-between gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-wrap">
         <button
           onClick={() => onViewDetails?.(job)}
           className="flex items-center gap-1.5 text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-xs font-semibold hover:bg-gray-50 transition-colors cursor-pointer"
