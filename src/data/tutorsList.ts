@@ -88,6 +88,7 @@ export interface EducationEntry {
   studyType: string;
   department: string;
   cgpa: string;
+  session: string;
 }
 
 
