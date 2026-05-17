@@ -13,6 +13,8 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 export const metadata: Metadata = {
   title: "Tutor Media - Connect Students with Perfect Tutors",
   description:
@@ -49,6 +51,27 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
+        {GA_ID ? (
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          />
+        ) : null}
+        {GA_ID ? (
+          <Script
+            id="google-analytics-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `,
+            }}
+          />
+        ) : null}
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"

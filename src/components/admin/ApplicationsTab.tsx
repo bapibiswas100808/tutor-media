@@ -21,8 +21,17 @@ export default function ApplicationsTab({
   const [applicationsPage, setApplicationsPage] = useState(1);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
+  const [filterJobId, setFilterJobId] = useState("");
 
-  const filteredApplications = useMemo(() => applications, [applications]);
+  const filteredApplications = useMemo(() => {
+    const normalizedFilter = filterJobId.trim().toLowerCase();
+    if (!normalizedFilter) return applications;
+
+    return applications.filter((application) => {
+      const jobId = application.job?.jobId || application.tuitionJobId || "";
+      return String(jobId).toLowerCase().includes(normalizedFilter);
+    });
+  }, [applications, filterJobId]);
 
   const applicationsTotalPages = Math.max(
     1,
@@ -38,6 +47,10 @@ export default function ApplicationsTab({
     if (applicationsPage > applicationsTotalPages)
       setApplicationsPage(applicationsTotalPages);
   }, [applicationsTotalPages, applicationsPage]);
+
+  useEffect(() => {
+    setApplicationsPage(1);
+  }, [filterJobId]);
 
   const updateApplicationStatus = async (
     applicationId: string,
@@ -135,7 +148,7 @@ export default function ApplicationsTab({
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         <div className="text-sm text-gray-500">
           {filteredApplications.length === 0 ? (
             <>Showing 0 of 0</>
@@ -150,7 +163,22 @@ export default function ApplicationsTab({
             </>
           )}
         </div>
-        <div />
+        <div className="flex items-center gap-2">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="job-filter"
+          >
+            Filter by tuition job ID:
+          </label>
+          <input
+            id="job-filter"
+            type="text"
+            value={filterJobId}
+            onChange={(event) => setFilterJobId(event.target.value)}
+            placeholder="e.g. 12345"
+            className="w-48 rounded border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-violet-500 focus:outline-none"
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto">
