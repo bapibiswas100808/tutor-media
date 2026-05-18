@@ -173,19 +173,49 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
   };
 
   const handleStatCardClick = async (label: string, apiStatus: string) => {
+    if (!tutor?._id || !token) return;
+
     setActiveStatCategory(label);
     setStatJobs([]);
     setStatJobsLoading(true);
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/applications?tutorId=${tutor._id}`;
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/tutor-applications/${tutor?.id}?status=${apiStatus}`,
-        { headers: { authorization: `Bearer ${token}` } },
-      );
-      if (res.ok) {
-        const data = await res.json();
-        setStatJobs(Array.isArray(data) ? data : []);
+      const res = await fetch(url, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        console.error(
+          "Failed to fetch stat jobs:",
+          res.status,
+          await res.text(),
+        );
+        setStatJobs([]);
+        return;
       }
-    } catch {
+
+      const rawData = await res.json();
+      const applications = Array.isArray(rawData)
+        ? rawData
+        : Array.isArray(rawData?.data)
+          ? rawData.data
+          : [];
+
+      const filteredApps = applications.filter((app: StatApplication) => {
+        if (apiStatus === "rejected") {
+          return app.status === "rejected" || app.status === "cancelled";
+        }
+        if (apiStatus === "applied") {
+          return app.status === "applied" || !app.status;
+        }
+        return app.status === apiStatus;
+      });
+
+      setStatJobs(filteredApps);
+    } catch (error) {
+      console.error("Error fetching stat jobs:", error);
       setStatJobs([]);
     } finally {
       setStatJobsLoading(false);
