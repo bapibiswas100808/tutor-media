@@ -23,7 +23,7 @@ export default function TuitionJobsTab({
   applications = [],
   setApplications,
 }: TuitionJobsTabProps) {
-  const [jobTitleQuery, setJobTitleQuery] = useState("");
+  const [jobIdQuery, setJobIdQuery] = useState("");
   const [jobPage, setJobPage] = useState(1);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [editingJob, setEditingJob] = useState<TuitionJob | null>(null);
@@ -31,11 +31,15 @@ export default function TuitionJobsTab({
   const [shortlistedJob, setShortlistedJob] = useState<TuitionJob | null>(null);
 
   const filteredJobs = useMemo(() => {
-    const q = jobTitleQuery.trim().toLowerCase();
+    const q = jobIdQuery.trim().toLowerCase();
     return q
-      ? jobs.filter((j) => (j.title ?? "").toLowerCase().includes(q))
+      ? jobs.filter((j) =>
+          String(j.jobId ?? j.id ?? j._id)
+            .toLowerCase()
+            .includes(q),
+        )
       : jobs;
-  }, [jobs, jobTitleQuery]);
+  }, [jobs, jobIdQuery]);
 
   const jobTotalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
 
@@ -48,7 +52,7 @@ export default function TuitionJobsTab({
     if (jobPage > jobTotalPages) setJobPage(jobTotalPages);
   }, [jobTotalPages, jobPage]);
 
-  useEffect(() => setJobPage(1), [jobTitleQuery]);
+  useEffect(() => setJobPage(1), [jobIdQuery]);
 
   useEffect(() => {
     if (!editingJob) return;
@@ -224,15 +228,15 @@ export default function TuitionJobsTab({
           <div className="flex items-center gap-2">
             <input
               type="search"
-              value={jobTitleQuery}
-              onChange={(e) => setJobTitleQuery(e.target.value)}
-              placeholder="Search by title"
+              value={jobIdQuery}
+              onChange={(e) => setJobIdQuery(e.target.value)}
+              placeholder="Search by job ID"
               className="border rounded px-3 py-2 text-sm w-72"
             />
-            {jobTitleQuery && (
+            {jobIdQuery && (
               <button
                 className="text-sm text-gray-600 hover:text-gray-800"
-                onClick={() => setJobTitleQuery("")}
+                onClick={() => setJobIdQuery("")}
               >
                 Clear
               </button>
