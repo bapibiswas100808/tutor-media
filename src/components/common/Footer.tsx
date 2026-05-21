@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpRight, Facebook, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -133,43 +134,90 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Contact Info */}
-        <div className="border-t border-blue-800 mt-6 pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="relative text-lg font-semibold mb-4 inline-block">
-                Contact Us
-                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
-              </h4>
-              {/* <p className="text-gray-300">📧 tutor.media9301@gmail.com</p> */}
-              <p className="text-gray-300">📧 contact@tutormediabd.com</p>
-              <p className="text-gray-300">📞 +880 1990-539200</p>
-            </div>
-            <div>
-              <h4 className="relative text-lg font-semibold mb-4 inline-block">
-                Office Address
-                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
-              </h4>
-              <p className="text-gray-300">
-                Khulna,
-                <br />
-                Khulna Division, Bangladesh
-              </p>
-            </div>
-            <div>
-              <h4 className="relative text-lg font-semibold mb-4 inline-block">
-                Support Hours
-                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
-              </h4>
-              <p className="text-gray-300">
-                Monday – Thursday: 9:00 AM – 6:00 PM
-              </p>
-              <p className="text-gray-300">
-                Friday – Saturday: 10:00 AM – 4:00 PM
-              </p>
-            </div>
-          </div>
-        </div>
+       {/* Contact Info */}
+<div className="border-t border-blue-800 mt-6 pt-6">
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    
+    {/* Contact */}
+    <div>
+      <h4 className="relative text-lg font-semibold mb-4 inline-block">
+        Contact Us
+        <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
+      </h4>
+
+      <div className="space-y-2 text-gray-300">
+        <p>📧 contact@tutormediabd.com</p>
+        <p>📞 +880 1990-539200</p>
+      </div>
+    </div>
+
+    {/* Address */}
+    <div>
+      <h4 className="relative text-lg font-semibold mb-4 inline-block">
+        Office Address
+        <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
+      </h4>
+
+      <p className="text-gray-300 leading-relaxed">
+        Khulna,
+        <br />
+        Khulna Division, Bangladesh
+      </p>
+    </div>
+
+    {/* Support */}
+    <div>
+      <h4 className="relative text-lg font-semibold mb-4 inline-block">
+        Support Hours
+        <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
+      </h4>
+
+      <div className="space-y-2 text-gray-300">
+        <p>Monday – Thursday: 9:00 AM – 6:00 PM</p>
+        <p>Friday – Saturday: 10:00 AM – 4:00 PM</p>
+      </div>
+    </div>
+
+    {/* Community */}
+    <div>
+      <h4 className="relative text-lg font-semibold mb-4 inline-block">
+        Join Our Community
+        <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
+      </h4>
+
+      <p className="text-gray-300 mb-4 leading-relaxed">
+        Connect with tutors & students, get updates, and stay active in our learning community.
+      </p>
+
+      <Link
+  href="https://www.facebook.com/tutormedia247?rdid=x9aJ4lcaUJDj3jDe&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CCEtYXsc8#"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-3 overflow-hidden rounded-xl border border-slate-600 bg-slate-800 px-5 py-3.5 md:px-6 md:py-4 text-sm md:text-base font-semibold text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-slate-800/40"
+>
+  {/* Glow Effect */}
+  <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10" />
+
+  {/* Icon */}
+  <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-md border border-white/20">
+    <Users className="h-5 w-5 md:h-6 md:w-6 text-white" />
+  </div>
+
+  {/* Text */}
+  <div className="relative flex flex-col items-start text-left leading-tight">
+
+    <span className="text-sm md:text-lg font-bold">
+      Join Our Facebook Group
+    </span>
+  </div>
+
+  {/* Arrow */}
+  <ArrowUpRight className="relative h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+</Link>
+    </div>
+
+  </div>
+</div>
 
         {/* Bottom Bar */}
         <div className="border-t border-blue-800 mt-6 pt-6 flex flex-col md:flex-row justify-between items-center">

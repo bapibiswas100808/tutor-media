@@ -210,13 +210,29 @@ export default function ApplicationsTab({
                   </td>
                   <td className="px-3 py-2 font-medium">{a.tutor?.fullName}</td>
                   <td className="px-3 py-2 max-w-75">
-                    <div className="space-y-1 text-xs">
+                    {a.tutor?.education?.grad?.[0] && (
+                      <div className="border border-gray-200 rounded-lg p-2 bg-gray-50 space-y-1">
+                        <p className="text-md text-gray-700">
+                          {a.tutor.education.grad[0]?.academy}
+                        </p>
+
+                        <p className="text-md text-gray-500">
+                          {a.tutor.education.grad[0]?.department}
+                        </p>
+
+                        <p className="text-xs text-gray-500">
+                          Session: {a.tutor.education.grad[0]?.session}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* <div className="space-y-1 text-xs">
                       <p className="font-medium">{a.tutor?.qualification}</p>
                       <p>Exp: {a.tutor?.experience}</p>
                       <p className="line-clamp-2 text-gray-600">
                         {a.tutor?.personalInfo?.overview}
                       </p>
-                    </div>
+                    </div> */}
                   </td>
                   <td className="px-3 py-2 text-xs">{a.tutor?.phone}</td>
                   <td className="px-3 py-2">

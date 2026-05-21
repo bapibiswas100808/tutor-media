@@ -158,10 +158,7 @@ export default function FlowChartTutor() {
               >
                 {/* Image */}
                 <div className={`${step.lightBg} w-full`}>
-                  <div
-                    className="relative w-full aspect-16
-                  \/9"
-                  >
+                  <div className="relative w-full aspect-[16/9]">
                     <Image
                       src={step.image}
                       alt={step.title}
