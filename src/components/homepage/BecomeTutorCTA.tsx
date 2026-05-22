@@ -40,7 +40,7 @@ export default function BecomeTutorCTA() {
       </h2>
 
       {/* Description */}
-      <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100/90 leading-snug max-w-3xl mx-auto mb-5 md:mb-8 px-1">
+      <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100/90 leading-snug max-w-4xl mx-auto mb-5 md:mb-8 px-1">
         If you have a passion for shaping the next generation, we invite you
         to apply and become part of Bangladesh&apos;s most trusted community
         of educators.
