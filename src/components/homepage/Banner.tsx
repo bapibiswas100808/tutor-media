@@ -107,19 +107,27 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             <div className="flex items-start sm:items-center gap-3 mt-4 w-full max-w-xl">
               {/* Icon */}
               <div
-                className="flex-shrink-0 flex items-center justify-center 
-                  w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11
-                  rounded-full bg-white/10 backdrop-blur-md 
-                  border border-white/20 shadow-lg"
+                className="relative flex-shrink-0 flex items-center justify-center 
+    w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12
+    rounded-full bg-gradient-to-br from-[#2B7FFF]/30 to-[#FFD230]/20
+    backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgba(43,127,255,0.25)]
+    overflow-hidden group"
               >
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                {/* Pulse ring */}
+                <span className="absolute inline-flex h-full w-full rounded-2xl bg-[#2B7FFF]/20 animate-ping opacity-4\0"></span>
+
+                {/* Icon */}
+                <MapPin className="relative w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-[#FFD230] drop-shadow-md" />
               </div>
 
               {/* Text */}
               <p
                 className="text-sm sm:text-base md:text-lg 
-                text-blue-100/90 leading-relaxed 
-                font-medium tracking-wide break-words"
+    text-blue-100/90 leading-relaxed 
+    font-medium tracking-wide break-words"
               >
                 {bannerData.subHeading}
               </p>
@@ -241,7 +249,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
           <div className="lg:hidden flex justify-center">
             <div className="relative w-52 h-52 rounded-2xl overflow-hidden shadow-xl border border-white/10 mb-6">
               <Image
-                src="/images/banner/1.png"
+                src="/images/banner/1.webp"
                 alt="Banner"
                 fill
                 className="object-cover"
