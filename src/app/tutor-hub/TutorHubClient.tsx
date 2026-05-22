@@ -7,7 +7,7 @@ import TutorCard from "@/components/tutors/TutorCard";
 import { Search } from "lucide-react";
 
 export default function TutorHubPage({ tutorHubs }: { tutorHubs: Tutor[] }) {
-  const [filter, setFilter] = useState<"all" | "premium" | "verified">("all");
+  const [filter] = useState<"all" | "premium" | "verified">("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   // 🔥 Load More System

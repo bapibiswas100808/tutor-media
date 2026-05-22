@@ -75,7 +75,7 @@ export default function TuitionJobCard({
   onApply,
   onViewDetails,
 }: TuitionJobCardProps) {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
   const [isShortlisted, setIsShortlisted] = useState(false);
   const [isLoadingShortlist, setIsLoadingShortlist] = useState(false);
   const [shortlistedAppId, setShortlistedAppId] = useState<string | null>(null);
@@ -225,6 +225,166 @@ export default function TuitionJobCard({
     job.tutorGender.charAt(0).toUpperCase() + job.tutorGender.slice(1);
   const subjectDisplay = job.subjects?.join(", ") || "N/A";
 
+  // Handle Apply Now click with confirmation
+const handleApplyClick = async () => {
+  // Login check
+  if (!user) {
+    Swal.fire({
+      icon: "warning",
+      title: "Login Required",
+      text: "Please login to apply for tuition jobs.",
+      confirmButtonText: "Go to Login",
+      confirmButtonColor: "#2563eb",
+      customClass: {
+        popup: "rounded-2xl",
+        confirmButton: "rounded-full px-5 py-2",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/login";
+      }
+    });
+
+    return;
+  }
+
+  // Token check
+  if (!token) {
+    Swal.fire({
+      icon: "error",
+      title: "Authentication Error",
+      text: "Please login again.",
+      confirmButtonColor: "#dc2626",
+      customClass: {
+        popup: "rounded-2xl",
+        confirmButton: "rounded-full px-5 py-2",
+      },
+    });
+
+    return;
+  }
+
+  // Job expired check
+  const isExpired =
+    new Date().getTime() - new Date(job.createdAt).getTime() >
+    24 * 60 * 60 * 1000;
+
+  // Expired warning popup
+  if (isExpired) {
+    const expiredResult = await Swal.fire({
+      icon: "warning",
+      title: "Older Tuition Job",
+      text: "This tuition job was posted more than 24 hours ago. Do you still want to apply?",
+      showCancelButton: true,
+      confirmButtonText: "Apply Anyway",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#2B7FFF",
+      cancelButtonColor: "#d1d5db",
+      reverseButtons: true,
+      customClass: {
+        popup: "rounded-2xl shadow-2xl",
+        confirmButton:
+          "rounded-full px-6 py-2 font-semibold text-sm",
+        cancelButton:
+          "rounded-full px-6 py-2 font-semibold text-sm",
+        title: "text-gray-800 text-xl font-bold",
+        htmlContainer: "text-gray-500",
+      },
+    });
+
+    if (!expiredResult.isConfirmed) return;
+  }
+
+  // Main confirmation popup
+  const result = await Swal.fire({
+    title: "Apply for this tuition?",
+    text: "Your application will be submitted instantly.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Apply",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#2563eb",
+    cancelButtonColor: "#d1d5db",
+    reverseButtons: true,
+    customClass: {
+      popup: "rounded-2xl shadow-2xl",
+      confirmButton:
+        "rounded-full px-6 py-2 font-semibold text-sm",
+      cancelButton:
+        "rounded-full px-6 py-2 font-semibold text-sm",
+      title: "text-gray-800 text-xl font-bold",
+      htmlContainer: "text-gray-500",
+    },
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    // Loading popup
+    Swal.fire({
+      title: "Submitting...",
+      text: "Please wait while we submit your application.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      customClass: {
+        popup: "rounded-2xl",
+      },
+    });
+
+    // API request
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/applications`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          tutorId: user._id,
+          tuitionJobId: job._id,
+          status: "applied",
+          rate: user.rate || 0,
+          schedule: "Flexible",
+          proposal: "I am interested in this tuition job.",
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.message || "Application failed");
+    }
+
+    // Success popup
+    Swal.fire({
+      icon: "success",
+      title: "Application Submitted",
+      text: "Your application has been submitted successfully.",
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: "rounded-2xl shadow-xl",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Application Failed",
+      text: "Something went wrong. Please try again.",
+      confirmButtonColor: "#dc2626",
+      customClass: {
+        popup: "rounded-2xl",
+        confirmButton: "rounded-full px-5 py-2",
+      },
+    });
+  }
+};
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -233,25 +393,40 @@ export default function TuitionJobCard({
       transition={{ duration: 0.4 }}
       className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 p-4"
     >
-      {/* Top row: badge · ID · time ago */}
+
+      {/* Top row: badge · status · ID · time ago */}
       <div className="flex items-center gap-3 mb-3 flex-wrap">
-        <span className="bg-green-100 text-green-700 border border-green-200 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
+        {/* Tuition Type */}
+        <span className="bg-green-100 text-green-700 border border-green-200 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm">
           Home Tuition
         </span>
-        <span className="text-xs text-gray-500 font-mono">
+
+        {/* Job ID */}
+        <span className="text-xs text-gray-500 font-mono bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">
           ID : {job.jobId}
         </span>
-        <span className="ml-auto text-xs text-gray-400 whitespace-nowrap">
+
+        {/* Live / Closed Status */}
+        {new Date().getTime() - new Date(job.createdAt).getTime() <
+        24 * 60 * 60 * 1000 ? (
+          <span className="flex items-center gap-1.5 bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold shadow-sm animate-pulse">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Live
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 bg-red-100 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            Closed
+          </span>
+        )}
+
+        {/* Time Ago */}
+        <span className="ml-auto text-xs text-gray-400 whitespace-nowrap font-medium">
           {timeAgo(job.createdAt)}
         </span>
       </div>
 
       {/* Title */}
-      {/* <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
-        Need a <span className="text-red-500">{tutorGenderCapitalized}</span>{" "}
-        Tutor for {job.medium} {job.location} , {job.district}
-      </h3> */}
-
       <h3 className="text-base font-bold text-gray-900 mb-4 leading-snug">
         Need a{" "}
         <span
@@ -341,12 +516,18 @@ export default function TuitionJobCard({
           })}
         </span>
 
-        <button
+        {/* <button
           onClick={() => onApply(job)}
           className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2 rounded-full font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
         >
           Apply Now
-        </button>
+        </button> */}
+        <button
+  onClick={handleApplyClick}
+  className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2 rounded-full font-semibold text-xs tracking-wide transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+>
+  Apply Now
+</button>
       </div>
     </motion.div>
   );

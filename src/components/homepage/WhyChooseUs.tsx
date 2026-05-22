@@ -100,7 +100,7 @@ const reasons = [
     title: "The Tutor Media Standard",
     description:
       "Our educators are not just skilled; they are true mentors. Each one passes a rigorous 4-step vetting process, ensuring they meet our decade-old standard of excellence and a true passion for teaching.",
-    icon: "/images/tutorMediaPromise/tutor-media-standard.png",
+    icon: "/images/tutorMediaPromise/tutor-media-standard.webp",
     gradient: "from-green-100 to-green-200",
   },
   {
@@ -108,7 +108,7 @@ const reasons = [
     title: "Reliable Price, Valuable Result",
     description:
       "We believe in transparent and honest pricing. With us, you invest in a premium, reliable service that delivers real academic growth and confidence—a value that lasts a lifetime.",
-    icon: "/images/tutorMediaPromise/reliable-valuable.png",
+    icon: "/images/tutorMediaPromise/reliable-valuable.webp",
     gradient: "from-blue-100 to-blue-200",
   },
   {
@@ -116,7 +116,7 @@ const reasons = [
     title: "A Decade of Parent Trust",
     description:
       "For over 10 years, we have been the trusted choice for discerning parents. Our 98% satisfaction rate is a testament to the peace of mind and success we deliver to families like yours.",
-    icon: "/images/tutorMediaPromise/parent-trust.png",
+    icon: "/images/tutorMediaPromise/parent-trust.webp",
     gradient: "from-purple-100 to-purple-200",
   },
   {
@@ -124,7 +124,7 @@ const reasons = [
     title: "A Partnership in Education",
     description:
       "We build lasting relationships. From our dedicated support team to our committed mentors, we work alongside you and your child at every step of the educational journey.",
-    icon: "/images/tutorMediaPromise/partnership-education.png",
+    icon: "/images/tutorMediaPromise/partnership-education.webp",
     gradient: "from-orange-100 to-orange-200",
   },
 ];

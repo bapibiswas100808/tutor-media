@@ -30,7 +30,7 @@ export default function FindTutorSection() {
               {/* Main image */}
               <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-blue-100">
                 <Image
-                  src="/images/findTutor.png"
+                  src="/images/findTutor.webp"
                   alt="Find a Tutor"
                   fill
                   sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 500px"

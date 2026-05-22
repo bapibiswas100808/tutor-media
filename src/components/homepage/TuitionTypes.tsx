@@ -9,14 +9,14 @@ const tuitionTypes = [
     title: "Home Tutoring",
     description:
       "Verified mentors at your doorstep. Experience safe, focused, 1-on-1 guidance in the comfort of your own home.",
-    image: "/images/learningMode/home-tutoring.png",
+    image: "/images/learningMode/home-tutoring.webp",
     color: "bg-blue-500",
   },
   {
     id: 2,
     title: "Online Tutoring",
     description: "Access Bangladesh’s top subject experts regardless of location. Interactive live sessions via Zoom or Google Meet.",
-    image: "/images/learningMode/online-tutoring.png",
+    image: "/images/learningMode/online-tutoring.webp",
     color: "bg-green-500",
   },
   {
@@ -24,14 +24,14 @@ const tuitionTypes = [
     title: "Group Tutoring",
     description:
       "Premium education made affordable. Your child learns, solves, and competes in small, focused groups.",
-    image: "/images/learningMode/group-tutoring.png",
+    image: "/images/learningMode/group-tutoring.webp",
     color: "bg-purple-500",
   },
   {
     id: 4,
     title: "Remote Learning",
     description: "Education on your schedule. Access curated digital resources and recorded modules for flexible, independent study.",
-    image: "/images/learningMode/remote-learning.png",
+    image: "/images/learningMode/remote-learning.webp",
     color: "bg-orange-500",
   },
 ];

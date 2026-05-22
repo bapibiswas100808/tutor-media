@@ -63,10 +63,10 @@ const stats = [
 ];
 
 const IMAGES = [
-  { src: "/images/banner/1.png", corner: "rounded-tl-none", delay: 0 },
-  { src: "/images/banner/2.png", corner: "rounded-tr-none", delay: 1.2 },
-  { src: "/images/banner/3.png", corner: "rounded-bl-none", delay: 0.6 },
-  { src: "/images/banner/4.png", corner: "rounded-br-none", delay: 1.8 },
+  { src: "/images/banner/1.webp", corner: "rounded-tl-none", delay: 0 },
+  { src: "/images/banner/2.webp", corner: "rounded-tr-none", delay: 1.2 },
+  { src: "/images/banner/3.webp", corner: "rounded-bl-none", delay: 0.6 },
+  { src: "/images/banner/4.webp", corner: "rounded-br-none", delay: 1.8 },
 ];
 
 export default function Banner({ bannerData }: { bannerData: BannerData }) {
@@ -199,9 +199,9 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
             className="hidden lg:flex items-center justify-center"
           >
             <div className="grid grid-cols-2 gap-4">
-              {IMAGES.map((img) => (
+              {IMAGES.map((img, index) => (
                 <motion.div
-                  key={img.src}
+                  key={index}
                   animate={{ y: [0, -7, 0] }}
                   transition={{
                     duration: 5.5,
@@ -212,14 +212,24 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                   }}
                   className={`relative w-40 h-40 xl:w-44 xl:h-44 rounded-2xl ${img.corner} overflow-hidden shadow-2xl border border-white/10`}
                 >
-                  <Image
+                  {/* <Image
                     src={img.src}
                     alt="Banner"
                     fill
                     sizes="176px"
                     className="object-cover"
                     priority
+                  /> */}
+                  <Image
+                    src={img.src}
+                    alt="Banner"
+                    fill
+                    sizes="176px"
+                    className="object-cover"
+                    priority={index === 0}
+                    quality={75}
                   />
+
                   {/* Subtle inner glow overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                 </motion.div>
