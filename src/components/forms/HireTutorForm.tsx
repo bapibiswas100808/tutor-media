@@ -115,6 +115,7 @@ const subjectsList = [
   "Agriculture",
   "Music",
   "Drawing",
+  "Handwriting",
   "Arabic",
   "MCQ Solve",
 ];
