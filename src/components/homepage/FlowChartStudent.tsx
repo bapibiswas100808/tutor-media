@@ -9,7 +9,7 @@ const steps = [
     title: "Submit Your Requirements",
     description:
       "Submit your requirements and we will match you with the best tutor within your budget.",
-    image: "/images/workForStudents/search-tutor.png",
+    image: "/images/workForStudents/search-tutor.webp",
     accent: "from-orange-400 to-amber-400",
     lightBg: "bg-amber-50",
     border: "border-amber-200",
@@ -20,7 +20,7 @@ const steps = [
     title: "Free Demo Session",
     description:
       "Get a free two-day demo session with the tutor at your preferred location.",
-    image: "/images/workForStudents/demo-session.png",
+    image: "/images/workForStudents/demo-session.webp",
     accent: "from-pink-400 to-rose-400",
     lightBg: "bg-pink-50",
     border: "border-pink-200",
@@ -30,7 +30,7 @@ const steps = [
     number: 3,
     title: "Select Your Tutor",
     description: "Evaluate tutors & start learning with your preferred tutor.",
-    image: "/images/workForStudents/hire-tutor.png",
+    image: "/images/workForStudents/hire-tutor.webp",
     accent: "from-blue-400 to-indigo-500",
     lightBg: "bg-blue-50",
     border: "border-blue-200",
@@ -41,7 +41,7 @@ const steps = [
     title: "Start Learning",
     description:
       "Gain knowledge, boost confidence and improve overall performance.",
-    image: "/images/workForStudents/get-results.png",
+    image: "/images/workForStudents/get-results.webp",
     accent: "from-teal-400 to-green-500",
     lightBg: "bg-teal-50",
     border: "border-teal-200",
@@ -158,10 +158,7 @@ export default function FlowChartStudent() {
               >
                 {/* Image */}
                 <div className={`${step.lightBg} w-full`}>
-                  <div
-                    className="relative w-full aspect-16
-                  \/9"
-                  >
+                  <div className="relative w-full aspect-[16/9]">
                     <Image
                       src={step.image}
                       alt={step.title}

@@ -135,6 +135,27 @@ export default function ApplicationsTab({
     }
   };
 
+  // Helper to generate pagination range with ellipses
+  const getPagination = (current: number, total: number) => {
+    const delta = 2;
+    const range: (number | string)[] = [];
+
+    const start = Math.max(2, current - delta);
+    const end = Math.min(total - 1, current + delta);
+
+    if (start > 2) range.push("...");
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    if (end < total - 1) range.push("...");
+
+    return [1, ...range, total].filter(
+      (v, i, arr) => arr.indexOf(v) === i && total > 1,
+    );
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
       <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -210,13 +231,29 @@ export default function ApplicationsTab({
                   </td>
                   <td className="px-3 py-2 font-medium">{a.tutor?.fullName}</td>
                   <td className="px-3 py-2 max-w-75">
-                    <div className="space-y-1 text-xs">
+                    {a.tutor?.education?.grad?.[0] && (
+                      <div className="border border-gray-200 rounded-lg p-2 bg-gray-50 space-y-1">
+                        <p className="text-md text-gray-700">
+                          {a.tutor.education.grad[0]?.academy}
+                        </p>
+
+                        <p className="text-md text-gray-500">
+                          {a.tutor.education.grad[0]?.department}
+                        </p>
+
+                        <p className="text-xs text-gray-500">
+                          Session: {a.tutor.education.grad[0]?.session}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* <div className="space-y-1 text-xs">
                       <p className="font-medium">{a.tutor?.qualification}</p>
                       <p>Exp: {a.tutor?.experience}</p>
                       <p className="line-clamp-2 text-gray-600">
                         {a.tutor?.personalInfo?.overview}
                       </p>
-                    </div>
+                    </div> */}
                   </td>
                   <td className="px-3 py-2 text-xs">{a.tutor?.phone}</td>
                   <td className="px-3 py-2">
@@ -286,39 +323,60 @@ export default function ApplicationsTab({
         <div className="text-sm text-gray-500">
           Page {applicationsPage} of {applicationsTotalPages}
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-            onClick={() => setApplicationsPage((p) => Math.max(1, p - 1))}
-            disabled={applicationsPage === 1}
-          >
-            Prev
-          </button>
-          {Array.from({ length: applicationsTotalPages }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setApplicationsPage(i + 1)}
-              className={`px-2 py-1 rounded ${
-                i + 1 === applicationsPage
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
-            onClick={() =>
-              setApplicationsPage((p) =>
-                Math.min(applicationsTotalPages, p + 1),
-              )
-            }
-            disabled={applicationsPage === applicationsTotalPages}
-          >
-            Next
-          </button>
-        </div>
+          <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
+            {/* Page Info */}
+            <div className="text-sm text-gray-500">
+              Page <span className="font-semibold">{applicationsPage}</span> of{" "}
+              <span className="font-semibold">{applicationsTotalPages}</span>
+            </div>
+
+            {/* Pagination Buttons */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* Prev */}
+              <button
+                className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
+                onClick={() => setApplicationsPage((p) => Math.max(1, p - 1))}
+                disabled={applicationsPage === 1}
+              >
+                Prev
+              </button>
+
+              {/* Pages */}
+              {getPagination(applicationsPage, applicationsTotalPages).map(
+                (page, i) =>
+                  page === "..." ? (
+                    <span key={i} className="px-2 text-gray-400">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={i}
+                      onClick={() => setApplicationsPage(page as number)}
+                      className={`px-3 py-1 rounded-md transition font-medium ${
+                        page === applicationsPage
+                          ? "bg-blue-600 text-white shadow"
+                          : "bg-gray-100 hover:bg-gray-200"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+              )}
+
+              {/* Next */}
+              <button
+                className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
+                onClick={() =>
+                  setApplicationsPage((p) =>
+                    Math.min(applicationsTotalPages, p + 1),
+                  )
+                }
+                disabled={applicationsPage === applicationsTotalPages}
+              >
+                Next
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   );

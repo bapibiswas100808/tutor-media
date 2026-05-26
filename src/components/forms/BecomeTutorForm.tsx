@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 import { divisionsAndDistricts } from "./location";
 import Swal from "sweetalert2";
 import { Eye, EyeOff } from "lucide-react";
-// import { createPublic } from "@/lib/strapi";
 
 const becomeTutorSchema = z
   .object({
@@ -198,98 +197,6 @@ export default function BecomeTutorForm() {
     return Array.from(new Set(allLocations)).sort();
   };
 
-  // const onSubmit = async (data: BecomeTutorFormData) => {
-  //   // Check if email is verified
-  //   if (!emailVerified) {
-  //     Swal.fire({
-  //       icon: "warning",
-  //       title: "Email Not Verified",
-  //       text: "Please verify your email address before submitting the application.",
-  //     });
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/allTutors`,
-  //       {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           fullName: data.fullName,
-  //           email: data.email,
-  //           phone: data.phone,
-  //           gender: data.gender,
-  //           division: data.division,
-  //           location: data.location,
-  //           locality: data.locality,
-  //           qualification: data.qualification,
-  //           experience: data.experience,
-  //           password: data.password,
-  //           isVerified: false,
-  //           isApproved: false,
-  //           isPremium: false,
-  //         }),
-  //       },
-  //     );
-
-  //     const result = await response.json();
-
-  //     if (!response.ok) {
-  //       throw new Error(result.message || "Failed to submit application");
-  //     }
-
-  //     // If ID exists → redirect
-  //     const tutorId = result.id || result._id || result.data?._id;
-
-  //     if (tutorId) {
-  //       const res = await Swal.fire({
-  //         icon: "success",
-  //         title: "Application Submitted Successfully!",
-  //         text: "Please complete your profile to continue.",
-  //         confirmButtonText: "Continue",
-  //       });
-
-  //       if (res.isConfirmed) {
-  //         router.push(`/complete-profile/${tutorId}`);
-  //       }
-  //     }
-  //     // if (result.id || result._id) {
-  //     //   await Swal.fire({
-  //     //     icon: "success",
-  //     //     title: "Application Submitted Successfully!",
-  //     //     text: "Please complete your profile to continue.",
-  //     //     confirmButtonText: "Continue",
-  //     //   });
-
-  //     //   router.push(`/complete-profile/${result.id || result._id}`);
-  //     // }
-
-  //     // If no ID → just success message
-  //     else {
-  //       await Swal.fire({
-  //         icon: "success",
-  //         title: "Application Submitted Successfully!",
-  //         text: "We'll review your application and get back to you within 2–3 business days.",
-  //         confirmButtonText: "Submit Another Application",
-  //       });
-
-  //       reset();
-  //     }
-  //   } catch (error) {
-  //     console.error("Submission error:", error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error submitting application",
-  //       text: error instanceof Error ? error.message : "Something went wrong",
-  //     });
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
 const onSubmit = async (data: BecomeTutorFormData) => {
   if (!emailVerified) {
@@ -393,13 +300,13 @@ const onSubmit = async (data: BecomeTutorFormData) => {
     }
 
     // ✅ 4. SUCCESS + REDIRECT
-    const resSwal = await Swal.fire({
-      icon: "success",
-      title: "Signup & Login Successful!",
-      text: "Redirecting to your dashboard...",
-      timer: 1500,
-      showConfirmButton: false,
-    });
+    // const resSwal = await Swal.fire({
+    //   icon: "success",
+    //   title: "Signup & Login Successful!",
+    //   text: "Redirecting to your dashboard...",
+    //   timer: 1500,
+    //   showConfirmButton: false,
+    // });
 
     // ✅ redirect
     router.push(`/tutor-hub/${tutorId}`);

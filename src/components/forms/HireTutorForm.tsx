@@ -40,8 +40,10 @@ const schema = z.object({
   medium: z.string().min(1, "Select medium"),
 
   studentGender: z.enum(["male", "female"]).optional(),
-  tutorGender: z.enum(["male", "female", "any"]).optional(),
-
+tutorGender: z.enum(["male", "female", "any"]).refine(
+  (val) => !!val,
+  { message: "Select tutor gender" }
+),
   salary: z.string().min(1, "Select salary"),
   days: z.string().min(1, "Select days"),
   duration: z.string().min(1, "Select duration"),
@@ -96,21 +98,29 @@ const subjectsList = [
   "Bangla",
   "English",
   "Math",
-  "Higher Math",
   "Science",
-  "Commerce",
-  "Accounting",
+  "Science All",
+  "Commerce All",
+  "Arts All",
+  "Higher Math",
   "Physics",
   "Chemistry",
   "Biology",
+  "Accounting",
+  "Economics",
+  "History",
+  "Geography",
   "ICT",
   "Religious studies",
-  "Economics",
   "Admission",
-  "Arts",
-  "Music",
   "Somaj",
   "Dormo",
+  "Agriculture",
+  "Music",
+  "Drawing",
+  "Handwriting",
+  "Arabic",
+  "MCQ Solve",
 ];
 
 /* ---------------- COMPONENT ---------------- */
@@ -330,16 +340,23 @@ export default function HireTutorForm() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label>Tutor Gender (optional)</label>
+              <label>Tutor Gender *</label>
               <select
                 {...register("tutorGender")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700 ${
+                  errors.tutorGender ? "border-red-500" : "border-gray-300"
+                }`}
               >
-                <option value="">Select Gender</option>
+                <option disabled  value="">Select Gender</option>
                 <option value="any">Any</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
+              {errors.tutorGender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.tutorGender.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -389,18 +406,18 @@ export default function HireTutorForm() {
                 <option value="">Select Days</option>
                 {[
                   1,
-                  "1 / 2",
                   2,
-                  "2 / 3",
                   3,
-                  "3 / 4",
                   4,
-                  "4 / 5",
                   5,
-                  "5 / 6",
                   6,
-                  "6 / 7",
                   7,
+                  "1 / 2",
+                  "2 / 3",
+                  "3 / 4",
+                  "4 / 5",
+                  "5 / 6",
+                  "6 / 7",
                 ].map((d) => (
                   <option key={d}>{d}</option>
                 ))}
