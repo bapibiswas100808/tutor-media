@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpRight, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,12 +23,6 @@ const footerLinks = {
     { name: "Learning Tips", href: "/blog" },
     { name: "Parent Guide", href: "/blog" },
   ],
-  //   Company: [
-  //     { name: "About Us", href: "#" },
-  //     { name: "Contact", href: "#" },
-  //     { name: "Privacy Policy", href: "#" },
-  //     { name: "Terms of Service", href: "#" },
-  //   ],
 };
 
 const socialLinks = [
@@ -135,38 +130,78 @@ export default function Footer() {
 
         {/* Contact Info */}
         <div className="border-t border-blue-800 mt-6 pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Contact */}
             <div>
               <h4 className="relative text-lg font-semibold mb-4 inline-block">
                 Contact Us
                 <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
-              {/* <p className="text-gray-300">📧 tutor.media9301@gmail.com</p> */}
-              <p className="text-gray-300">📧 contact@tutormediabd.com</p>
-              <p className="text-gray-300">📞 +880 1990-539200</p>
+
+              <div className="space-y-2 text-gray-300">
+                <p>📧 contact@tutormediabd.com</p>
+                <p>📞 +880 1990-539200</p>
+              </div>
             </div>
+
+            {/* Address */}
             <div>
               <h4 className="relative text-lg font-semibold mb-4 inline-block">
                 Office Address
                 <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
-              <p className="text-gray-300">
+
+              <p className="text-gray-300 leading-relaxed">
                 Khulna,
                 <br />
                 Khulna Division, Bangladesh
               </p>
             </div>
+
+            {/* Community */}
+            <div>
+              <h4 className="relative text-lg font-semibold mb-4 inline-block">
+                Join Our Community
+                {/* animated underline */}
+                <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
+              </h4>
+
+              <Link
+                href="https://www.facebook.com/share/g/1ARmGtg3fq"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-3 overflow-hidden rounded-xl border border-[#2B7FFF]/40 bg-blue-800 px-5 py-3 md:px-6 md:py-4 text-sm md:text-base font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-[#2B7FFF]/30"
+              >
+                {/* glow overlay */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-[#2B7FFF]/20 to-[#FFD230]/20" />
+
+                {/* Icon */}
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-inner">
+                  <Users className="h-5 w-5 md:h-7 md:w-7 text-[#FFD230]" />
+                </div>
+
+                {/* Text */}
+                <div className="relative flex flex-col items-start text-left -space-y-1">
+                  <span className="text-sm md:text-lg font-bold text-gray-100/80">Tutors</span>
+                  <span className="text-lg md:text-xl text-gray-100/80">Community</span>
+                </div>
+
+                {/* Arrow */}
+                <ArrowUpRight className="relative h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </Link>
+            </div>
+
+            {/* Support */}
             <div>
               <h4 className="relative text-lg font-semibold mb-4 inline-block">
                 Support Hours
                 <span className="absolute left-0 -bottom-1 h-0.5 w-8 bg-blue-300 rounded-full" />
               </h4>
-              <p className="text-gray-300">
-                Monday – Thursday: 9:00 AM – 6:00 PM
-              </p>
-              <p className="text-gray-300">
-                Friday – Saturday: 10:00 AM – 4:00 PM
-              </p>
+
+              <div className="space-y-2 text-gray-300">
+                <p>Monday – Thursday: 9:00 AM – 6:00 PM</p>
+                <p>Friday – Saturday: 10:00 AM – 4:00 PM</p>
+              </div>
             </div>
           </div>
         </div>

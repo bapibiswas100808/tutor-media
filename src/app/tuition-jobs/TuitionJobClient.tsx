@@ -195,7 +195,7 @@ export default function TuitionJobClient({
               onClick={() => setVisibleCount((p) => p + ITEMS_PER_LOAD)}
               className="px-6 py-2 bg-blue-600 text-white rounded"
             >
-              Load More
+              See More
             </button>
           </div>
         )}
@@ -286,31 +286,6 @@ export default function TuitionJobClient({
                   📍 {selectedJob.locationDescription}
                 </div>
               )}
-
-              {/* Status */}
-              {/* <div className="flex flex-wrap gap-2">
-          <span
-            className={`px-3 py-1 text-xs font-semibold rounded-full border ${
-              selectedJob.isApproved
-                ? "bg-green-50 text-green-700 border-green-200"
-                : "bg-red-50 text-red-600 border-red-200"
-            }`}
-          >
-            {selectedJob.isApproved ? "Approved" : "Pending"}
-          </span>
-
-          {selectedJob.isPremium && (
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200">
-              Premium Job
-            </span>
-          )}
-
-          {selectedJob.isVerified && (
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-              Verified
-            </span>
-          )}
-        </div> */}
             </div>
           </div>
         </div>

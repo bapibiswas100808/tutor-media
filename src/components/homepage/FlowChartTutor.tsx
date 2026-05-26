@@ -8,7 +8,7 @@ const steps = [
     number: 1,
     title: "Create Your Profile",
     description: "Create your profile in minutes with sign-up information.",
-    image: "/images/workForTutors/create-profile.png",
+    image: "/images/workForTutors/create-profile.webp",
     accent: "from-blue-400 to-cyan-500",
     lightBg: "bg-blue-50",
     border: "border-blue-200",
@@ -19,7 +19,7 @@ const steps = [
     title: "Complete Your Profile",
     description:
       "Make your profile 80% complete to get fast responses from students.",
-    image: "/images/workForTutors/get-verified.png",
+    image: "/images/workForTutors/get-verified.webp",
     accent: "from-emerald-400 to-green-500",
     lightBg: "bg-emerald-50",
     border: "border-emerald-200",
@@ -30,7 +30,7 @@ const steps = [
     title: "Apply for Tuitions",
     description:
       'Visit the "Job Board" daily & apply for tuition jobs that match your skills.',
-    image: "/images/workForTutors/apply-tuition.png",
+    image: "/images/workForTutors/apply-tuition.webp",
     accent: "from-purple-400 to-indigo-500",
     lightBg: "bg-purple-50",
     border: "border-purple-200",
@@ -41,7 +41,7 @@ const steps = [
     title: "Start Tutoring",
     description:
       "Be confident in the first meet & start tutoring your students.",
-    image: "/images/workForTutors/teaching-earning.png",
+    image: "/images/workForTutors/teaching-earning.webp",
     accent: "from-orange-400 to-red-500",
     lightBg: "bg-orange-50",
     border: "border-orange-200",
@@ -158,10 +158,7 @@ export default function FlowChartTutor() {
               >
                 {/* Image */}
                 <div className={`${step.lightBg} w-full`}>
-                  <div
-                    className="relative w-full aspect-16
-                  \/9"
-                  >
+                  <div className="relative w-full aspect-[16/9]">
                     <Image
                       src={step.image}
                       alt={step.title}
