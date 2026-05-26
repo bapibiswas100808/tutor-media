@@ -104,13 +104,10 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
               {bannerData.heading}
             </h1>
 
-            <div className="flex items-start sm:items-center gap-3 mt-4 w-full max-w-xl">
+            <div className="flex items-start sm:items-center gap-3 mt-2 w-full max-w-xl">
               {/* Icon */}
               <div
-                className="relative flex-shrink-0 flex items-center justify-center 
-    w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12
-    rounded-full bg-gradient-to-br from-[#2B7FFF]/30 to-[#FFD230]/20
-    backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgba(43,127,255,0.25)]
+                className="relative flex-shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-[#2B7FFF]/30 to-[#FFD230]/20 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgba(43,127,255,0.25)]
     overflow-hidden group"
               >
                 {/* Glow effect */}
@@ -124,11 +121,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
               </div>
 
               {/* Text */}
-              <p
-                className="text-sm sm:text-base md:text-lg 
-    text-blue-100/90 leading-relaxed 
-    font-medium tracking-wide break-words"
-              >
+              <p className="text-sm sm:text-base md:text-lg text-blue-100/90 leading-relaxed font-medium tracking-wide break-words">
                 {bannerData.subHeading}
               </p>
             </div>
@@ -157,7 +150,7 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
 
             {/* Stats */}
             <div className="w-full flex justify-center mt-4">
-              <div className="w-full max-w-6xl bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 rounded-3xl shadow-2xl p-5 md:p-8 text-white relative overflow-hidden border border-white/10">
+              <div className="w-full max-w-6xl bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 rounded-3xl shadow-2xl p-5 md:p-7 text-white relative overflow-hidden border border-white/10">
                 {/* Background Glow */}
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
                 <div className="absolute -bottom-10 -right-10 w-52 h-52 bg-cyan-300/10 rounded-full blur-3xl" />
@@ -173,12 +166,12 @@ export default function Banner({ bannerData }: { bannerData: BannerData }) {
                         className="group flex flex-col items-center gap-3 transition-all duration-300 hover:-translate-y-2 cursor-default"
                       >
                         {/* Icon */}
-                        <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 border border-white/20 backdrop-blur-xl shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:bg-white/20">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 backdrop-blur-xl shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:bg-white/20">
                           <Icon className="w-6 h-6 text-white" />
                         </div>
 
                         {/* Animated Value */}
-                        <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
                           <CountUp
                             end={item.value}
                             duration={3}
