@@ -11,29 +11,6 @@ interface BannerData {
   subHeading: string;
 }
 
-// const stats = [
-//   {
-//     icon: Users,
-//     value: "100k+",
-//     label: "Active Tutors",
-//   },
-//   {
-//     icon: Briefcase,
-//     value: "300+",
-//     label: "Live Tuition Jobs",
-//   },
-//   {
-//     icon: Smile,
-//     value: "10k+",
-//     label: "Happy Students",
-//   },
-//   {
-//     icon: Star,
-//     value: "4.8/5",
-//     label: "Average Rating",
-//   },
-// ];
-
 const stats = [
   {
     icon: Users,

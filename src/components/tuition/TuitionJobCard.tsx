@@ -72,7 +72,7 @@ function InfoCell({ icon, label, value }: InfoCellProps) {
 
 export default function TuitionJobCard({
   job,
-  onApply,
+  // onApply,
   onViewDetails,
 }: TuitionJobCardProps) {
   const { user } = useAuth();
