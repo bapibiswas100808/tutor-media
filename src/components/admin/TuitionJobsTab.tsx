@@ -216,24 +216,24 @@ export default function TuitionJobsTab({
 
   // Pagination helper to show limited page numbers with ellipsis
   const getPagination = (current: number, total: number) => {
-  const delta = 2;
-  const range: (number | string)[] = [];
+    const delta = 2;
+    const range: (number | string)[] = [];
 
-  const start = Math.max(2, current - delta);
-  const end = Math.min(total - 1, current + delta);
+    const start = Math.max(2, current - delta);
+    const end = Math.min(total - 1, current + delta);
 
-  if (start > 2) range.push("...");
+    if (start > 2) range.push("...");
 
-  for (let i = start; i <= end; i++) {
-    range.push(i);
-  }
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
 
-  if (end < total - 1) range.push("...");
+    if (end < total - 1) range.push("...");
 
-  return [1, ...range, total].filter(
-    (v, i, arr) => arr.indexOf(v) === i && total > 1
-  );
-};
+    return [1, ...range, total].filter(
+      (v, i, arr) => arr.indexOf(v) === i && total > 1,
+    );
+  };
 
   return (
     <>
@@ -302,7 +302,7 @@ export default function TuitionJobsTab({
               ) : (
                 currentJobItems.map((j) => {
                   const jobTitle = j.subjects?.length
-                    ? `${j.subjects.slice(0, 2).join(", ")} teacher needed for class ${j.class}`
+                    ? `${j.subjects.slice(0, 2).join(", ")} teacher needed for ${j.class}`
                     : `Job (${j.jobId})`;
                   const jobSubjects = j.subjects?.join(", ") || "-";
                   const jobLocation = j.preferredArea
@@ -444,58 +444,54 @@ export default function TuitionJobsTab({
         </div>
 
         <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
-  
-  {/* Info */}
-  <div className="text-sm text-gray-500">
-    Page <span className="font-semibold">{jobPage}</span> of{" "}
-    <span className="font-semibold">{jobTotalPages}</span>
-  </div>
+          {/* Info */}
+          <div className="text-sm text-gray-500">
+            Page <span className="font-semibold">{jobPage}</span> of{" "}
+            <span className="font-semibold">{jobTotalPages}</span>
+          </div>
 
-  {/* Pagination */}
-  <div className="flex items-center gap-2 flex-wrap">
-    
-    {/* Prev */}
-    <button
-      className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
-      onClick={() => setJobPage((p) => Math.max(1, p - 1))}
-      disabled={jobPage === 1}
-    >
-      Prev
-    </button>
+          {/* Pagination */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Prev */}
+            <button
+              className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
+              onClick={() => setJobPage((p) => Math.max(1, p - 1))}
+              disabled={jobPage === 1}
+            >
+              Prev
+            </button>
 
-    {/* Pages */}
-    {getPagination(jobPage, jobTotalPages).map((page, i) =>
-      page === "..." ? (
-        <span key={i} className="px-2 text-gray-400">
-          ...
-        </span>
-      ) : (
-        <button
-          key={i}
-          onClick={() => setJobPage(page as number)}
-          className={`px-3 py-1 rounded-md transition font-medium ${
-            page === jobPage
-              ? "bg-blue-600 text-white shadow"
-              : "bg-gray-100 hover:bg-gray-200"
-          }`}
-        >
-          {page}
-        </button>
-      )
-    )}
+            {/* Pages */}
+            {getPagination(jobPage, jobTotalPages).map((page, i) =>
+              page === "..." ? (
+                <span key={i} className="px-2 text-gray-400">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={i}
+                  onClick={() => setJobPage(page as number)}
+                  className={`px-3 py-1 rounded-md transition font-medium ${
+                    page === jobPage
+                      ? "bg-blue-600 text-white shadow"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  {page}
+                </button>
+              ),
+            )}
 
-    {/* Next */}
-    <button
-      className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
-      onClick={() =>
-        setJobPage((p) => Math.min(jobTotalPages, p + 1))
-      }
-      disabled={jobPage === jobTotalPages}
-    >
-      Next
-    </button>
-  </div>
-</div>
+            {/* Next */}
+            <button
+              className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-40 transition"
+              onClick={() => setJobPage((p) => Math.min(jobTotalPages, p + 1))}
+              disabled={jobPage === jobTotalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Shortlisted Candidates Modal */}
