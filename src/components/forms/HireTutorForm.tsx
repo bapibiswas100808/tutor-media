@@ -40,10 +40,9 @@ const schema = z.object({
   medium: z.string().min(1, "Select medium"),
 
   studentGender: z.enum(["male", "female"]).optional(),
-tutorGender: z.enum(["male", "female", "any"]).refine(
-  (val) => !!val,
-  { message: "Select tutor gender" }
-),
+  tutorGender: z
+    .enum(["male", "female", "any"])
+    .refine((val) => !!val, { message: "Select tutor gender" }),
   salary: z.string().min(1, "Select salary"),
   days: z.string().min(1, "Select days"),
   duration: z.string().min(1, "Select duration"),
@@ -97,7 +96,7 @@ const subjectsList = [
   "All",
   "Bangla",
   "English",
-  "Math",
+  "General Math",
   "Science",
   "Science All",
   "Commerce All",
@@ -107,20 +106,31 @@ const subjectsList = [
   "Chemistry",
   "Biology",
   "Accounting",
+  "Finance",
+  "Business Study ",
   "Economics",
   "History",
   "Geography",
   "ICT",
-  "Religious studies",
+  "BGS",
+  "Religious Studies",
   "Admission",
   "Somaj",
-  "Dormo",
+  "Dormo", 
+  "Pouronity", 
+  "Vugol", 
   "Agriculture",
   "Music",
   "Drawing",
-  "Handwriting",
   "Arabic",
   "MCQ Solve",
+  "Handwriting",
+  "Literature",
+  "General Knowledge",
+  "Computer Science",
+  "Math D",
+  "Civics",
+  "Language",
 ];
 
 /* ---------------- COMPONENT ---------------- */
@@ -269,7 +279,9 @@ export default function HireTutorForm() {
                   errors.class ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Class</option>
+                <option disabled value="">
+                  Select Class
+                </option>
                 {classes.map((c) => (
                   <option key={c}>{c}</option>
                 ))}
@@ -289,7 +301,9 @@ export default function HireTutorForm() {
                   errors.medium ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Medium</option>
+                <option disabled value="">
+                  Select Medium
+                </option>
                 {media.map((m) => (
                   <option key={m}>{m}</option>
                 ))}
@@ -323,7 +337,9 @@ export default function HireTutorForm() {
                 {...register("studentGender")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-700"
               >
-                <option value="">Select Gender</option>
+                <option disabled value="">
+                  Select Gender
+                </option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
@@ -347,7 +363,9 @@ export default function HireTutorForm() {
                   errors.tutorGender ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option disabled  value="">Select Gender</option>
+                <option disabled value="">
+                  Select Gender
+                </option>
                 <option value="any">Any</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -367,7 +385,9 @@ export default function HireTutorForm() {
                   errors.salary ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Salary</option>
+                <option disabled value="">
+                  Select Salary
+                </option>
                 <option>Negotiable</option>
                 <option>1500</option>
                 <option>2000</option>
@@ -387,6 +407,8 @@ export default function HireTutorForm() {
                 <option>9000</option>
                 <option>9500</option>
                 <option>10000</option>
+                <option>12000</option>
+                <option>15000</option>
               </select>
               {errors.salary && (
                 <p className="text-red-500 text-sm mt-1">
@@ -403,7 +425,9 @@ export default function HireTutorForm() {
                   errors.days ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Days</option>
+                <option disabled value="">
+                  Select Days
+                </option>
                 {[
                   1,
                   2,
@@ -437,7 +461,9 @@ export default function HireTutorForm() {
                   errors.duration ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Duration</option>
+                <option disabled value="">
+                  Select Duration
+                </option>
                 <option>1 Hour</option>
                 <option>1.5 Hours</option>
                 <option>2 Hours</option>
@@ -462,7 +488,7 @@ export default function HireTutorForm() {
 
           {/* SUBJECTS */}
 
-          <div className="mt-6">
+          <div className="mt-2">
             <label className="block mb-2">Subjects *</label>
 
             <div className="flex flex-wrap gap-2">
@@ -488,24 +514,6 @@ export default function HireTutorForm() {
               </p>
             )}
           </div>
-
-          {/* <div className="flex justify-between mt-6">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="px-6 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 cursor-pointer"
-              >
-                Back
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStep(3)}
-                className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
-              >
-                Next
-              </button>
-            </div> */}
         </motion.div>
 
         <div className="border border-dashed border-gray-300" />
@@ -524,7 +532,9 @@ export default function HireTutorForm() {
                   errors.division ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Division</option>
+                <option disabled value="">
+                  Select Division
+                </option>
                 {Object.entries(locationData).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value.name}
@@ -547,7 +557,9 @@ export default function HireTutorForm() {
                   errors.district ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select District</option>
+                <option disabled value="">
+                  Select District
+                </option>
                 {getDistricts().map((d) => (
                   <option key={d.key} value={d.key}>
                     {d.name}
@@ -570,7 +582,9 @@ export default function HireTutorForm() {
                   errors.location ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Location</option>
+                <option disabled value="">
+                  Select Location
+                </option>
                 {getLocalities().map((loc) => (
                   <option key={loc}>{loc}</option>
                 ))}
@@ -591,7 +605,9 @@ export default function HireTutorForm() {
                   errors.preferredArea ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">Select Area</option>
+                <option disabled value="">
+                  Select Area
+                </option>
                 {getLocalities().map((loc) => (
                   <option key={loc}>{loc}</option>
                 ))}
