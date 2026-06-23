@@ -109,6 +109,7 @@ const subjectsList = [
   "Finance",
   "Business Study ",
   "Economics",
+  "Psychology",
   "History",
   "Geography",
   "ICT",
