@@ -77,12 +77,16 @@ const classes = [
   "Class 9",
   "Class 10",
   "SSC",
-  "Admission",
   "Class 11",
   "Class 12",
   "HSC",
+  "Admission",
   "A Level",
   "O Level",
+  "Honours 1st Year",
+  "Honours 2nd Year",
+  "Honours 3rd Year",
+  "Honours 4th Year",
 ];
 
 const media = [
@@ -117,9 +121,9 @@ const subjectsList = [
   "Religious Studies",
   "Admission",
   "Somaj",
-  "Dormo", 
-  "Pouronity", 
-  "Vugol", 
+  "Dormo",
+  "Pouronity",
+  "Vugol",
   "Agriculture",
   "Music",
   "Drawing",
@@ -132,6 +136,7 @@ const subjectsList = [
   "Math D",
   "Civics",
   "Language",
+  "CSE(computer)",
 ];
 
 /* ---------------- COMPONENT ---------------- */
