@@ -136,7 +136,8 @@ const subjectsList = [
   "Math D",
   "Civics",
   "Language",
-  "CSE(computer)",
+  "CSE (computer)",
+  "Statistics",
 ];
 
 /* ---------------- COMPONENT ---------------- */
