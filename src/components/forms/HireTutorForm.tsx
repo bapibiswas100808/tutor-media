@@ -138,6 +138,7 @@ const subjectsList = [
   "Language",
   "CSE (computer)",
   "Statistics",
+  "Spoken English"
 ];
 
 /* ---------------- COMPONENT ---------------- */
