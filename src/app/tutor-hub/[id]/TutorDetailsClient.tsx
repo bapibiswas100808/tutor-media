@@ -1,42 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import {
-  NotebookText,
-  Paperclip,
-  AlertCircle,
-  Shield,
-  Users,
-  GraduationCap,
-  CheckCircle2,
-  StarIcon,
-  CheckCircleIcon,
-  CheckCircle,
-  CircleX,
-} from "lucide-react";
-import Info from "@/components/info/info";
 import { Tutor } from "@/data/tutorsList";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-// import CountdownTimer from "@/components/common/CountdownTimer";
 import { calculateProfileCompletion } from "@/lib/profileCompletion";
-
-type EducationEntry = {
-  id: string;
-  academy: string;
-  curriculum?: string;
-  group?: string;
-  passingYear?: string;
-  result?: string;
-  instituteType?: string;
-  studyType?: string;
-  department?: string;
-  cgpa?: string;
-  degreeTitle?: string;
-};
+import TutorProfileHeader from "./components/TutorProfileHeader";
+import ProfileStatsSection from "./components/ProfileStatsSection";
+import ProfileStatusSection from "./components/ProfileStatusSection";
+import OverviewSection from "./components/OverviewSection";
+import TuitionPreferencesSection from "./components/TuitionPreferencesSection";
+import EducationSection from "./components/EducationSection";
+import StatsJobsModal from "./components/StatsJobsModal";
+import PremiumModal from "./components/PremiumModal";
 
 type BkashPaymentData = {
   sender: string;
@@ -252,21 +229,6 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
 
   const completionPercentage = calculateProfileCompletion(tutor);
   const isProfileIncomplete = completionPercentage < 80;
-  const imageUrl = tutor?.basicInfo?.image || null;
-
-  // Tuition Preference Fields
-  const tuitionPreferenceFields = [
-    { label: "Expected Salary", key: "expectedSalary" },
-    { label: "Current Tuition Status", key: "currentTuitionStatus" },
-    { label: "Days Per Week", key: "daysPerWeek" },
-    { label: "Tutoring Experience", key: "tutoringExperience" },
-    { label: "Place of Learning", key: "placeOfLearning" },
-    { label: "Preferred Medium", key: "preferredMedium" },
-    { label: "Preferred Class", key: "preferredClass" },
-    { label: "Preferred Subject", key: "preferredSubjects" },
-    { label: "Preferred Time", key: "preferredTime" },
-    { label: "Preferred Area", key: "preferredArea" },
-  ];
 
   if (!tutor) {
     return (
@@ -321,788 +283,69 @@ export default function TutorProfilePage({ tutor }: { tutor: Tutor | null }) {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* <div className="max-w-7xl mx-auto"> */}
-          {/* Profile Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8"
-          >
-            {/* Top Banner Space */}
-            <div className="h-24 bg-linear-to-r from-blue-600 to-purple-600" />
-            <div className="p-8">
-              <div className="flex flex-col items-center md:flex-row gap-6 -mt-20">
-                {/* Profile Image */}
-                <div className="relative shrink-0 w-fit">
-                  <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-xl ring-4 ring-white bg-white">
-                    {imageUrl && !imageError ? (
-                      <Image
-                        src={imageUrl}
-                        alt={tutor.fullName}
-                        fill
-                        sizes="176px"
-                        className="object-cover"
-                        onError={() => setImageError(true)}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
-                        {tutor.fullName?.charAt(0)}
-                      </div>
-                    )}
-                  </div>
+        {/* Profile Header */}
+        <TutorProfileHeader
+          tutor={tutor}
+          isOwnProfile={isOwnProfile}
+          imageError={imageError}
+          onImageError={() => setImageError(true)}
+        />
 
-                  {/* Verified Badge */}
-                  {tutor.isVerified && (
-                    <div className="absolute top-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-lg border-2 border-white">
-                      <CheckCircleIcon className="w-6 h-6" />
-                    </div>
-                  )}
-                </div>
+        {/* Application Stats — only shown to own profile */}
+        <ProfileStatsSection
+          isOwnProfile={isOwnProfile}
+          appStats={appStats}
+          onSelect={handleStatCardClick}
+        />
 
-                {/* Header Info */}
-                <div className="flex-1 mt-4 md:mt-16">
-                  {/* Name + Premium */}
-                  <div className="flex flex-wrap items-center gap-3 mb-1">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                      {tutor.fullName}
-                    </h1>
+        {/* Profile Completion & Premium Request Section - Only visible to the tutor viewing their own profile */}
+        <ProfileStatusSection
+          isOwnProfile={isOwnProfile}
+          isProfileIncomplete={isProfileIncomplete}
+          completionPercentage={completionPercentage}
+          tutorId={tutor.id}
+          onOpenPremiumModal={() => setIsOpen(true)}
+        />
 
-                    {tutor.isPremium && (
-                      <span className="bg-linear-to-r from-orange-400 to-yellow-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-1 shadow">
-                        <StarIcon className="w-4 h-4" />
-                        Premium
-                      </span>
-                    )}
+        {/* Main Content */}
+        <div className="space-y-8">
+          {/* Overview */}
+          <OverviewSection tutor={tutor} />
 
-                    {/* ✅ Hire Mentor Button with Link */}
-                    {!isOwnProfile && (
-                      <Link
-                        href={`/hire-tutor`}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold shadow transition"
-                      >
-                        Hire a Mentor
-                      </Link>
-                    )}
-                  </div>
+          {/* Tuition Preferences */}
+          <TuitionPreferencesSection tutor={tutor} />
 
-                  {/* Meta Info */}
-                  <div className="flex flex-wrap gap-6 text-sm mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-400">ID:</span>
-                      <span className="text-gray-600">{tutor.id}</span>
-                    </div>
+          {/* Education */}
+          <EducationSection tutor={tutor} />
 
-                    {tutor.gender && (
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-400">
-                          Gender:
-                        </span>
-                        <span className="text-gray-600 capitalize">
-                          {tutor.gender}
-                        </span>
-                      </div>
-                    )}
-                  </div>
+          <StatsJobsModal
+            activeStatCategory={activeStatCategory}
+            statJobs={statJobs}
+            statJobsLoading={statJobsLoading}
+            onClose={() => setActiveStatCategory(null)}
+          />
 
-                  {/* Quick Stats */}
-                  <div className="space-y-2 text-sm text-gray-600">
-                    {tutor.qualification && (
-                      <div className="flex items-center">
-                        <Paperclip className="w-4 h-4 mr-2 text-gray-400" />
-                        {tutor.qualification}
-                      </div>
-                    )}
-                    {tutor.experience && (
-                      <div className="flex items-center capitalize">
-                        <NotebookText className="w-4 h-4 mr-2 text-gray-400 " />
-                        {tutor.experience} teaching experience
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Application Stats — only shown to own profile */}
-          {isOwnProfile && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-            >
-              {[
-                {
-                  label: "Applied Jobs",
-                  value: appStats.applied,
-                  color: "text-blue-600",
-                  bg: "bg-blue-50",
-                  icon: "📋",
-                  apiStatus: "applied",
-                },
-                {
-                  label: "Shortlisted Jobs",
-                  value: appStats.shortlisted,
-                  color: "text-indigo-600",
-                  bg: "bg-indigo-50",
-                  icon: "📌",
-                  apiStatus: "shortlisted",
-                },
-                {
-                  label: "Appointed Jobs",
-                  value: appStats.appointed,
-                  color: "text-violet-600",
-                  bg: "bg-violet-50",
-                  icon: "🔒",
-                  apiStatus: "appointed",
-                },
-                {
-                  label: "Cancelled Jobs",
-                  value: appStats.cancelled,
-                  color: "text-red-500",
-                  bg: "bg-red-50",
-                  icon: "❌",
-                  apiStatus: "rejected",
-                },
-              ].map(({ label, value, color, bg, icon, apiStatus }) => (
-                <button
-                  key={label}
-                  onClick={() => handleStatCardClick(label, apiStatus)}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col items-start gap-1 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all text-left w-full"
-                >
-                  <div
-                    className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center text-xl mb-1`}
-                  >
-                    {icon}
-                  </div>
-                  <span className={`text-2xl font-bold ${color}`}>{value}</span>
-                  <span className="text-xs text-gray-500 font-medium">
-                    {label}
-                  </span>
-                </button>
-              ))}
-            </motion.div>
-          )}
-
-          {/* Profile Completion & Premium Request Section - Only visible to the tutor viewing their own profile */}
-          {isOwnProfile && (
-            <div className="mb-8 flex flex-col gap-6 lg:flex-row">
-              {/* Profile Completion */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className={`flex-1 rounded-3xl shadow-lg p-8 flex flex-col ${
-                  isProfileIncomplete
-                    ? "bg-red-50 border-2 border-red-200"
-                    : "bg-green-50 border-2 border-green-200"
-                }`}
-              >
-                <div className="flex-1 flex flex-col items-center justify-center gap-2">
-                  {isProfileIncomplete && (
-                    <AlertCircle className="w-16 h-16 text-red-600 shrink-0 mt-1" />
-                  )}
-                  {!isProfileIncomplete && (
-                    <div className="w-16 h-16 text-green-600 shrink-0 mt-1">
-                      <CheckCircle2 className="w-16 h-16 text-green-500" />
-                    </div>
-                  )}
-
-                  <div className="flex-1 w-full">
-                    <h3
-                      className={`text-lg font-bold mb-2 text-center ${
-                        isProfileIncomplete ? "text-red-800" : "text-green-800"
-                      }`}
-                    >
-                      Profile Completion: {completionPercentage}%
-                    </h3>
-
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-300 rounded-full h-2 mb-2 overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-500 ${
-                          isProfileIncomplete ? "bg-red-500" : "bg-green-500"
-                        }`}
-                        style={{ width: `${completionPercentage}%` }}
-                      ></div>
-                    </div>
-
-                    {isProfileIncomplete ? (
-                      <p className="text-red-600 text-sm mb-2 text-center">
-                        Your profile will NOT be shown to students until it
-                        reaches 80% completion.
-                      </p>
-                    ) : (
-                      <p className="text-green-700 text-sm font-semibold text-center mb-2">
-                        ✓ Your profile is complete and visible to all students!
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="w-full mt-auto">
-                    {isProfileIncomplete ? (
-                      <Link
-                        href={`/complete-profile/${tutor.id}`}
-                        className="block w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white text-center transition hover:bg-red-700"
-                      >
-                        Complete Your Profile
-                      </Link>
-                    ) : (
-                      <Link
-                        href={`/complete-profile/${tutor.id}`}
-                        className="block w-full rounded-full bg-green-500 py-3 text-sm font-semibold text-white text-center transition hover:bg-green-600"
-                      >
-                        Update Your Profile
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Premium */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="rounded-3xl bg-linear-to-r from-yellow-100 to-orange-100 p-8 shadow-xl flex-1 border-2 border-orange-200 flex flex-col"
-              >
-                {/* Badge */}
-                <div className="flex justify-center">
-                  <div className="relative h-22 w-26">
-                    <Image
-                      src="/images/premium.png"
-                      alt="Premium"
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="mb-2 text-center text-2xl font-bold text-yellow-800">
-                  Premium Request
-                </h3>
-
-                {/* Description */}
-                <p className="mb-2 text-center text-md text-yellow-700">
-                  Premium members receive frequent tuition updates with priority
-                </p>
-
-                {/* Button wrapper with mt-auto */}
-                <div className="mt-auto">
-                  <Link
-                    href="BkashPaymentModal"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpen(true);
-                    }}
-                    className="block w-full text-center rounded-full bg-linear-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500 py-3 text-sm font-semibold text-white transition-colors duration-300"
-                  >
-                    Premium Tutor registration
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-          )}
-
-          {/* Main Content */}
-          <div className="space-y-8">
-            {/* Overview */}
-            {tutor?.personalInfo?.overview && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="bg-white rounded-2xl shadow-lg p-8"
-              >
-                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                  <Users className="w-6 h-6 mr-3 text-blue-600" />
-                  Overview
-                </h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {tutor?.personalInfo?.overview || "No overview available."}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Tuition Preferences */}
-            {tutor?.basicInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="bg-white rounded-2xl shadow-lg p-8"
-              >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <Shield className="w-6 h-6 mr-3 text-blue-600" />
-                  Tuition Preferences
-                </h2>
-
-                <div className="grid gap-6 md:grid-cols-2 text-gray-700">
-                  {tuitionPreferenceFields.map(({ label, key }) => {
-                    const rawValue =
-                      tutor.basicInfo?.[key as keyof typeof tutor.basicInfo];
-
-                    const value = Array.isArray(rawValue)
-                      ? rawValue.join(", ")
-                      : (rawValue ?? "Not specified");
-
-                    return <Info key={key} label={label} value={value} />;
-                  })}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Education */}
-            {tutor.education && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="bg-white rounded-2xl shadow-lg p-8 text-gray-800"
-              >
-                <h2 className="text-2xl font-bold mb-4 flex items-center">
-                  <GraduationCap className="w-6 h-6 mr-3 text-blue-600" />
-                  Education
-                </h2>
-
-                <ul className="space-y-3">
-                  {Object.entries(tutor.education).flatMap(([level, records]) =>
-                    (records || []).map((edu: EducationEntry) => (
-                      <Info
-                        key={edu.id}
-                        label={level.toUpperCase()}
-                        value={
-                          `${edu.academy || "N/A"}${
-                            edu.passingYear ? ` (${edu.passingYear})` : ""
-                          }` +
-                          (edu.group ? ` - ${edu.group}` : "") +
-                          (edu.degreeTitle ? ` - ${edu.degreeTitle}` : "") + // ✅ ADD HERE
-                          (edu.cgpa
-                            ? ` - CGPA: ${edu.cgpa}`
-                            : edu.result
-                              ? ` - Result: ${edu.result}`
-                              : "")
-                        }
-                      />
-                    )),
-                  )}
-                </ul>
-              </motion.div>
-            )}
-
-            {/* Stat Jobs Popup */}
-            {activeStatCategory && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-                onClick={() => setActiveStatCategory(null)}
-              >
-                <div
-                  className="bg-white rounded-3xl w-11/12 max-w-lg max-h-[80vh] flex flex-col shadow-2xl"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* Header */}
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-800">
-                      {activeStatCategory}
-                    </h2>
-                    <button
-                      onClick={() => setActiveStatCategory(null)}
-                      className="text-gray-400 hover:text-gray-600 transition"
-                    >
-                      <CircleX size={28} />
-                    </button>
-                  </div>
-
-                  {/* Body */}
-                  <div className="overflow-y-auto flex-1 px-6 py-4 space-y-3">
-                    {statJobsLoading ? (
-                      <div className="flex items-center justify-center py-12">
-                        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                      </div>
-                    ) : statJobs.length === 0 ? (
-                      <p className="text-center text-gray-500 py-10">
-                        No jobs found in this category.
-                      </p>
-                    ) : (
-                      statJobs.map((app, idx) => {
-                        const job = app.job ?? {};
-                        return (
-                          <div
-                            key={app._id ?? idx}
-                            className="rounded-2xl border border-gray-100 bg-gray-50 p-4 space-y-1"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-semibold text-blue-600">
-                                {job.jobId
-                                  ? `Job #${job.jobId}`
-                                  : `Application ${idx + 1}`}
-                              </span>
-                              {job.class && (
-                                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                                  {job.class}
-                                </span>
-                              )}
-                            </div>
-                            {job.subjects && job.subjects.length > 0 && (
-                              <p className="text-sm text-gray-700">
-                                <span className="font-medium">Subjects:</span>{" "}
-                                {job.subjects.join(", ")}
-                              </p>
-                            )}
-                            {job.medium && (
-                              <p className="text-sm text-gray-600">
-                                <span className="font-medium">Medium:</span>{" "}
-                                {job.medium}
-                              </p>
-                            )}
-                            {job.salary && (
-                              <p className="text-sm text-gray-600">
-                                <span className="font-medium">Salary:</span>{" "}
-                                {job.salary}
-                              </p>
-                            )}
-                            {(job.district || job.location) && (
-                              <p className="text-sm text-gray-600">
-                                <span className="font-medium">Location:</span>{" "}
-                                {[job.location, job.district]
-                                  .filter(Boolean)
-                                  .join(", ")}
-                              </p>
-                            )}
-                            {job.days && (
-                              <p className="text-sm text-gray-600">
-                                <span className="font-medium">Days:</span>{" "}
-                                {job.days}
-                              </p>
-                            )}
-                            {!job.jobId && !job.class && !job.subjects && (
-                              <p className="text-xs text-gray-400">
-                                Job ID: {app.tuitionJobId ?? "N/A"}
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Modal */}
-            {isOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                <div className="bg-white rounded-3xl w-11/12 max-w-md p-8 relative shadow-xl">
-                  {/* Crown Icon */}
-                  <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
-                    <Image
-                      src="/images/premium.png"
-                      alt="Crown"
-                      width={200}
-                      height={200}
-                      className="object-contain"
-                    />
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-2xl font-bold text-center text-yellow-600 mb-6 mt-12">
-                    Benefits of Becoming Premium Membership
-                  </h2>
-
-                  {/* Benefits */}
-                  <div className="flex justify-center mb-6">
-                    <ul className="flex flex-col gap-2 text-gray-700 font-medium">
-                      {[
-                        "Guaranteed at least one tuition",
-                        "Nearby tuition notification alerts",
-                        "Always on top of results",
-                        "Prioritized during selection process",
-                      ].map((feature, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <CheckCircle
-                            size={20}
-                            className="text-yellow-600 mt-0.5"
-                          />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/*Normal Price Plans */}
-                  <div className="flex gap-4 mb-6">
-                    <button
-                      onClick={() => {
-                        setSelectedPlan("1 year");
-                        setAmount(300);
-                      }}
-                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
-                        selectedPlan === "1 year"
-                          ? "bg-yellow-600 text-white border-yellow-600"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
-                      }`}
-                    >
-                      <div className="text-md font-bold">1 Year</div>
-                      <div className="text-lg font-bold">৳ 300.00</div>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setSelectedPlan("2 years");
-                        setAmount(500);
-                      }}
-                      className={`flex-1 py-2 rounded-xl border text-center transition cursor-pointer ${
-                        selectedPlan === "2 years"
-                          ? "bg-yellow-600 text-white border-yellow-600"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
-                      }`}
-                    >
-                      <div className="text-md font-bold">2 Years</div>
-                      <div className="text-lg font-bold">৳ 500.00</div>
-                    </button>
-                  </div>
-
-                  {/* Offer Price Plans*/}
-                  {/* <div className="flex flex-col md:flex-row gap-4 mb-6">
-                    <div className="relative flex-1">
-                      {(() => {
-                        const originalPrice = 500;
-                        const offerPrice = 270;
-                        const savings = originalPrice - offerPrice;
-
-                        return (
-                          <button
-                            onClick={() => {
-                              setSelectedPlan("2 years");
-                              setAmount(offerPrice);
-                            }}
-                            className={`w-full py-4 rounded-xl border text-center transition cursor-pointer flex flex-col gap-1 items-center ${
-                              selectedPlan === "2 years"
-                                ? "bg-yellow-600 text-white border-yellow-600"
-                                : "bg-white text-gray-700 border-gray-300 hover:bg-yellow-50"
-                            }`}
-                          >
-                            <div className="text-lg font-bold">2 Years</div>
-                            <div className="text-sm line-through opacity-70">
-                              ৳ {originalPrice}.00
-                            </div>
-                            <div className="text-2xl font-extrabold">
-                              ৳ {offerPrice}.00
-                            </div>
-                            <div className="text-xs font-medium opacity-80">
-                              Save ৳ {savings}
-                            </div>
-                          </button>
-                        );
-                      })()}
-
-                      <div className="mt-2 text-center">
-                        <CountdownTimer endTime="2026-02-05T23:59:59" />
-                      </div>
-                    </div>
-                  </div> */}
-
-                  {/* Pay Now Button */}
-                  <button
-                    disabled={!selectedPlan || submitting}
-                    className={`w-full py-3 rounded-xl text-white font-semibold transition cursor-pointer ${
-                      selectedPlan
-                        ? "bg-yellow-600 hover:bg-yellow-700"
-                        : "bg-gray-300 cursor-not-allowed"
-                    }`}
-                    onClick={() => {
-                      if (!selectedPlan || !tutorId) return;
-
-                      Swal.fire({
-                        title: "Pay with bKash (Send Money)",
-
-                        html: `
-
-                        <div style="margin-bottom:10px;font-size:18px;">
-  <span style="
-    margin-left:6px;
-    font-weight:600;
-    color:#2563eb;
-  ">
-    ${selectedPlan} (৳ ${amount}.00)
-  </span>
-</div>
-
-        <p style="margin-bottom:10px;font-size:16px;">
-          <b>Send money\</b> via <b>bKash</b> to the number below:
-        </p>
-
-        <div style="
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          gap:8px;
-          margin-bottom:12px;
-        ">
-          <span
-  style="
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-
-    font-size: 20px;
-    font-weight: 700;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    border-radius: 999px;
-    color: #92400e;
-    letter-spacing: 1.2px;
-    display: inline-block;
-  "
->
-  01990-539200
-</span>
-
-
-          <button
-            onclick="navigator.clipboard.writeText('01990539200')"
-            style="
-              padding:6px 10px;
-              background:#22c55e;
-              color:white;
-              border:none;
-              border-radius:6px;
-              cursor:pointer;
-            "
-          >
-            Copy
-          </button>
+          <PremiumModal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            selectedPlan={selectedPlan}
+            amount={amount}
+            submitting={submitting}
+            tutorId={tutorId}
+            onPlanSelect={(plan, nextAmount) => {
+              setSelectedPlan(plan);
+              setAmount(nextAmount);
+            }}
+            onSubmitPayment={async (payload) => {
+              setSubmitting(true);
+              try {
+                await handleBkashSubmit(payload);
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+          />
         </div>
-
-        <p style="font-size:16px;color:#555;margin-bottom:10px;line-height:1.5;">
-          After sending money, enter your <b>bKash number</b> and
-          <b>Transaction ID (CAPITAL LETTERS)</b>.
-        </p>
-
-        <div style="margin-bottom:8px;font-size:18px;">
-          <b>Tutor ID:</b>
-          <span style="
-            margin-left:6px;
-            font-weight:600;
-            color:#2563eb;
-          ">
-            ${tutorId}
-          </span>
-        </div>
-
-      <input
-  id="sender"
-  type="tel"
-  inputmode="numeric"
-  maxlength="11"
-  placeholder="Your bKash Number"
-  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,11)"
-  style="
-    width: 100%;
-    height: 44px;
-    padding: 10px 14px;
-    margin: 8px 0;
-    font-size: 15px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  "
-  onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 2px rgba(245,158,11,0.25)'"
-  onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
-/>
-
-        <input
-  id="trxId"
-  placeholder="Transaction ID (CAPITAL LETTERS)"
-  oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')"
-  style="
-    width: 100%;
-    height: 44px;
-    padding: 10px 14px;
-    margin-top: 8px;
-    font-size: 15px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  "
-  onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 2px rgba(245,158,11,0.25)'"
-  onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
-/>
-
-      `,
-                        confirmButtonText: "Submit Payment",
-                        confirmButtonColor: "#f59e0b",
-                        showCancelButton: true,
-
-                        preConfirm: (): BkashPaymentData | false => {
-                          const sender = (
-                            document.getElementById(
-                              "sender",
-                            ) as HTMLInputElement
-                          )?.value.trim();
-
-                          const trxId = (
-                            document.getElementById("trxId") as HTMLInputElement
-                          )?.value.trim();
-
-                          if (!sender || !trxId) {
-                            Swal.showValidationMessage(
-                              "bKash number and Transaction ID are required",
-                            );
-                            return false;
-                          }
-
-                          if (!/^01[3-9]\d{8}$/.test(sender)) {
-                            Swal.showValidationMessage("Invalid bKash number");
-                            return false;
-                          }
-
-                          if (!/^[A-Z0-9]{10,15}$/.test(trxId)) {
-                            Swal.showValidationMessage(
-                              "Invalid Transaction ID",
-                            );
-                            return false;
-                          }
-
-                          return {
-                            sender,
-                            trxId,
-                            plan: selectedPlan, // ✅
-                            amount, // ✅
-                            tutorId, // ✅ IMPORTANT
-                            method: "bkash",
-                          };
-                        },
-                      }).then((result) => {
-                        if (result.isConfirmed && result.value) {
-                          setSubmitting(true);
-                          handleBkashSubmit(result.value).finally(() => {
-                            setSubmitting(false);
-                          });
-                        }
-                      });
-                    }}
-                  >
-                    Pay Now
-                  </button>
-
-                  {/* Close Button */}
-                  <button
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <CircleX size={40} />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        {/* </div> */}
       </div>
     </div>
   );
